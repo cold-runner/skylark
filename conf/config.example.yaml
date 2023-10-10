@@ -1,0 +1,97 @@
+server:
+  mode: debug # core mode: release, debug, test，默认 debug
+  middlewares:  # 加载的中间件列表，多个中间件,recovery,logger,secure,auth，逗号(,)隔开
+  prefix: # /路由前缀
+  exitWaitTime: 0 # 对服务器发送终止信号后阻塞一段时间后退出，单位s
+  trustedProxies:   # 跨域信任源，以(,)隔开
+
+  sms: tencent
+  smsNumber: 6 # 短信验证码位数
+  smsExpiration: 5 # 短信验证码过期时间，单位：分钟
+
+  db: mysql   # 数据库
+  cache: redis  # 缓存组件
+  oss: tencent  # 对象存储，local/tencent
+  mq: local   # 消息队列，local/kafka
+
+  host: 0.0.0.0
+  port: 7599
+
+  cert-file:
+  private-key-file:
+
+# MySQL
+mysql:
+  host: 127.0.0.1
+  username:
+  password:
+  database: skylark
+  max-idle-connections: 100 # MySQL 最大空闲连接数，默认 100
+  max-open-connections: 100 # MySQL 最大打开的连接数，默认 100
+  max-connection-life-time: 10 # 空闲连接最大存活时间，默认 10s
+  log-level: 4 # GORM log level, 1: silent, 2:error, 3:warn, 4:info
+
+# Redis
+redis:
+  host: 127.0.0.1 # cache 地址，默认 127.0.0.1:6379
+  port: 6379 # cache 端口，默认 6379
+  password:  # cache 密码
+  username:  # cache 登录用户名
+  database: 0 # cache 数据库
+  #master-name: # cache 集群 master 名称
+  #optimisation-max-idle:  # cache 连接池中的最大空闲连接数
+  #optimisation-max-active: # 最大活跃连接数
+  #timeout: # 连接 cache 时的超时时间
+  #enable-cluster: # 是否开启集群模式
+  #use-ssl: # 是否启用 TLS
+  #ssl-insecure-skip-verify: # 当连接 cache 时允许使用自签名证书
+
+# JWT
+jwt:
+  realm:        # jwt 标识
+  tokenHeadName:
+  signingAlgorithm:    # 签名算法
+  key:      # 服务端密钥
+  identityKey:  # 校验的键
+  timeout: 24h        # token 过期时间(小时)
+  max-refresh: 24h    # token 更新时间(小时)
+
+# 日志
+log:
+  name:  # Logger的名字
+  development: true # 是否是开发模式。如果是开发模式，会对DPanicLevel进行堆栈跟踪。
+  level: debug # 日志级别，优先级从低到高依次为：debug, info, warn, error, dpanic, panic, fatal。
+  format: text # 支持的日志输出格式，目前支持console和json两种。console其实就是text格式。
+  enable-color: true # 是否开启颜色输出，true:是，false:否
+  disable-caller: false # 是否开启 caller，如果开启会在日志中显示调用日志所在的文件、函数和行号
+  disable-stacktrace: false # 是否再panic及以上级别禁止打印堆栈信息
+  output-paths: stdout # 支持输出到多个输出，逗号分开。支持输出到标准输出（stdout）和文件。
+  error-output-paths: error.log # zap内部(非业务)错误日志输出路径，多个输出，逗号分开
+
+# 腾讯云对象存储
+tencentCos:
+  secretId:
+  secretKey:
+  bucket:
+  region:
+  domain:   # 上传、访问域名
+  dictionary:   # 上传到存储桶的目录，可以嵌套，例：/upload/kkk
+
+# 七牛云对象存储
+qiniucloud:
+  accessKey:      # ak
+  secretKey:    # sk
+  bucket:    # 存储桶
+  region:   # 地区
+  useHttps: false # 是否启用https true/false
+  useCdnDomains: false # 是否启用CDN加速 true/false
+  domain:  # CDN加速域名
+
+# 腾讯云短信
+tencentSms:
+  secretId:
+  secretKey:
+  Region:  # ap-guangzhou/ap-beijing/ap-nanjing
+  applicationId:
+  signName:
+  templateId:

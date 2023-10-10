@@ -1,0 +1,7 @@
+node_modules
+.idea
+skylark.exe
+skylark
+conf/config.yaml
+*.log
+doc
