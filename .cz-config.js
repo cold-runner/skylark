@@ -17,6 +17,7 @@ module.exports = {
     scopes: [
         {name: 'core'},
         {name: 'user'},
+        {name: 'doc'}
     ],
 
     // it needs to match the value for field type. Eg.: 'fix'
