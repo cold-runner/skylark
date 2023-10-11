@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/marmotedu/errors"
 	"github.com/marmotedu/iam/pkg/log"
+	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
 
@@ -41,7 +41,7 @@ type conf struct {
 	*TencentSms `mapstructure:"tencentSms"`
 }
 
-// GetConfig 饿汉单例模式初始化全局配置对象
+// GetConfig 饿汉单例模式获取全局配置对象
 func GetConfig() Config {
 	return config
 }

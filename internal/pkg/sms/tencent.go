@@ -17,7 +17,7 @@ type tencentSms struct {
 	templateId    string
 }
 
-func NewTencentSms(opt *config.TencentSms) Sms {
+func newTencentSms(opt *config.TencentSms) Sms {
 	credential := common.NewCredential(opt.SecretId, opt.SecretKey)
 	client, err := sms.NewClient(credential, opt.Region, profile.NewClientProfile())
 	if err != nil {

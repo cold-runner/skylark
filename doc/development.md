@@ -52,10 +52,10 @@
 │  ├─service    # 服务层
     …………
 │  │
-│  └─store      # 持久层
+│  └─db      # 持久层
 │      │  post.go  # 文章持久层接口
 │      │  comment.go  # 评论持久层接口
-│      │  store.go    # 存储层接口
+│      │  db.go    # 存储层接口
 │      │  user.go     # 用户层接口
 │      │
 │      └─mysql  # 接口实现层

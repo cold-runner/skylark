@@ -17,7 +17,7 @@ type tencent struct {
 	dictionary string
 }
 
-func NewTencentOss(opt *config.TencentCos) Oss {
+func newTencentOss(opt *config.TencentCos) Oss {
 	u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", opt.Bucket, opt.Region))
 	c := cos.NewClient(&cos.BaseURL{BucketURL: u}, &http.Client{
 		Transport: &cos.AuthorizationTransport{

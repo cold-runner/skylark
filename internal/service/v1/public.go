@@ -90,7 +90,7 @@ func (s *serviceV1) Register(c context.Context, register *user.Register) error {
 		return e
 	}
 
-	err = s.storeIns.Register(c, &user.Lark{
+	err = s.storeIns.Create(c, &user.Lark{
 		StuNum:     register.StuNum,
 		Password:   cryptPassword,
 		College:    register.College,

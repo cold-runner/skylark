@@ -30,6 +30,6 @@ func (a *Application) publicRouter() {
 		log.L(c).Info("健康测试通过！")
 		ctx.JSON(consts.StatusOK, utils.H{"msg": "pong!"})
 	})
-	publicRouter.GET("/sendSms", a.controller.SendSms)
-	publicRouter.POST("/register", a.controller.Register)
+	publicRouter.GET("/sendSms", a.controllerIns.SendSms)
+	publicRouter.POST("/register", a.controllerIns.Register)
 }

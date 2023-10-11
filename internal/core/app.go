@@ -5,13 +5,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	hzConfig "github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cold-runner/skylark/internal/controller"
-	controllerV1 "github.com/cold-runner/skylark/internal/controller/v1"
-	"github.com/cold-runner/skylark/internal/pkg/cache"
 	"github.com/cold-runner/skylark/internal/pkg/config"
-	"github.com/cold-runner/skylark/internal/pkg/oss"
-	"github.com/cold-runner/skylark/internal/pkg/sms"
-	"github.com/cold-runner/skylark/internal/pkg/store"
-	serviceV1 "github.com/cold-runner/skylark/internal/service/v1"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/marmotedu/iam/pkg/log"
@@ -21,21 +15,14 @@ import (
 var App = new(Application)
 
 type Application struct {
-	router     *server.Hertz
-	controller controller.Interface
+	router        *server.Hertz
+	controllerIns controller.Interface
 }
 
-func DependencyInjection() {
-	globalConfig := config.GetConfig()
+func InitApp() {
+	App.controllerIns = initController()
 
-	// 根据配置文件注入所有依赖
-	serviceIns := serviceV1.NewFactory().NewInstance(
-		cache.NewInstance(globalConfig),
-		oss.NewInstance(globalConfig),
-		sms.NewInstance(globalConfig),
-		store.NewInstance(globalConfig),
-	)
-	App.controller = controllerV1.NewFactory().NewInstance(nil, serviceIns)
+	globalConfig := config.GetConfig()
 	log.Init(globalConfig.LogConfig())
 
 	var options []hzConfig.Option

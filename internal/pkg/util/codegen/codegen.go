@@ -387,7 +387,7 @@ func (f *File) genDecl(node ast.Node) bool {
 		}
 		// We now have a list of names (from one line of source code) all being
 		// declared with the desired type.
-		// Grab their names and actual values and store them in f.values.
+		// Grab their names and actual values and db them in f.values.
 		for _, name := range vspec.Names {
 			if name.Name == "_" {
 				continue

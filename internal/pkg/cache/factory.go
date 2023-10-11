@@ -13,7 +13,7 @@ const (
 func NewInstance(conf config.Config) Cache {
 	switch conf.ServerConfig().Cache {
 	case REDIS:
-		return NewRedis(conf.RedisConfig())
+		return newRedis(conf.RedisConfig())
 	}
 	panic("无效的缓存实例")
 }

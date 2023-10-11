@@ -13,7 +13,7 @@ type redisClient struct {
 	client *redis.Client
 }
 
-func NewRedis(opt *config.Redis) Cache {
+func newRedis(opt *config.Redis) Cache {
 	var err error
 	client := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", opt.Host, opt.Port),

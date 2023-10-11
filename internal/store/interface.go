@@ -14,8 +14,8 @@ type Store interface {
 
 // Lark 用户模块接口
 type Lark interface {
-	// Register 新用户注册
-	Register(c context.Context, user *user.Lark) error
+	// Create 创建新用户
+	Create(c context.Context, user *user.Lark) error
 }
 
 // Comment 评论模块接口

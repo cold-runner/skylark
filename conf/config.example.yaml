@@ -7,16 +7,17 @@ server:
 
   sms: tencent
   smsNumber: 6 # 短信验证码位数
-  smsExpiration: 5 # 短信验证码过期时间，单位：分钟
+  smsExpiration: 10 # 短信验证码过期时间，单位：分钟
 
+  # ----------------------------只有当模式为production时，这部分配置才生效-------------------------------
   db: mysql   # 数据库
   cache: redis  # 缓存组件
   oss: tencent  # 对象存储，local/tencent
   mq: local   # 消息队列，local/kafka
+  # ----------------------------只有当模式为production时，这部分配置才生效-------------------------------
 
   host: 0.0.0.0
   port: 7599
-
   cert-file:
   private-key-file:
 

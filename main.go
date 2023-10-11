@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	core.DependencyInjection()
+	core.InitApp()
 	core.App.InstallRouter().Run()
 }
