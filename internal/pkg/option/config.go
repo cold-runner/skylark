@@ -2,6 +2,7 @@ package option
 
 import (
 	"github.com/marmotedu/errors"
+	"github.com/marmotedu/iam/pkg/log"
 	"github.com/spf13/viper"
 )
 
@@ -9,7 +10,7 @@ type Conf struct {
 	*MySQL      `mapstructure:"mysql"`
 	*Redis      `mapstructure:"redis"`
 	*Jwt        `mapstructure:"jwt"`
-	*Log        `mapstructure:"log"`
+	Log         *log.Options `mapstructure:"log"`
 	*Server     `mapstructure:"server"`
 	*QiniuCloud `mapstructure:"qiNiuCloud"`
 	*TencentSms `mapstructure:"tencentSms"`

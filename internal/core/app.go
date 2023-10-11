@@ -15,8 +15,8 @@ import (
 	"github.com/cold-runner/skylark/internal/pkg/store"
 	service "github.com/cold-runner/skylark/internal/service/v1"
 	"github.com/hertz-contrib/logger/accesslog"
+	"github.com/marmotedu/iam/pkg/log"
 	"github.com/pkg/errors"
-	"log"
 	"strconv"
 )
 
@@ -56,6 +56,7 @@ func DependencyInjection() {
 		),
 	)
 
+	log.Init(appConfig.Log)
 	var options []config.Option
 
 	// 设置tls，配置文件留空则不使用tls
