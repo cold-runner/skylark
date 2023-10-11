@@ -2,7 +2,7 @@ package sms
 
 import (
 	"context"
-	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/pkg/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -17,7 +17,7 @@ type tencentSms struct {
 	templateId    string
 }
 
-func NewTencentSms(opt *option.TencentSms) Sms {
+func NewTencentSms(opt *config.TencentSms) Sms {
 	credential := common.NewCredential(opt.SecretId, opt.SecretKey)
 	client, err := sms.NewClient(credential, opt.Region, profile.NewClientProfile())
 	if err != nil {

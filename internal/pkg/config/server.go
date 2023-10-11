@@ -1,4 +1,4 @@
-package option
+package config
 
 import (
 	"time"
@@ -10,11 +10,10 @@ type Server struct {
 	Prefix         string        `mapstructure:"prefix"`
 	ExitWaitTime   time.Duration `mapstructure:"exitWaitTime"`
 	TrustedProxies []string      `mapstructure:"trustedProxies"`
-	Salt           string        `mapstructure:"salt"`
 
 	Sms           string `mapstructure:"sms"`
-	SmsNumber     string `mapstructure:"smsNumber"`
-	SmsExpiration string `mapstructure:"smsExpiration"`
+	SmsNumber     int    `mapstructure:"smsNumber"`
+	SmsExpiration int    `mapstructure:"smsExpiration"`
 
 	Db    string `mapstructure:"db"`
 	Cache string `mapstructure:"cache"`

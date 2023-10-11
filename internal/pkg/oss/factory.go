@@ -1,13 +1,13 @@
 package oss
 
-import "github.com/cold-runner/skylark/internal/pkg/option"
+import "github.com/cold-runner/skylark/internal/pkg/config"
 
 // 简单工厂模式
 
-func NewOss(conf *option.Conf) Oss {
-	switch conf.Server.Oss {
+func NewOss(conf config.Config) Oss {
+	switch conf.ServerConfig().Oss {
 	case TENCENT:
-		return NewTencentOss(conf.TencentCos)
+		return NewTencentOss(conf.TencentCosConfig())
 	}
 	panic("无效的对象存储实例")
 }

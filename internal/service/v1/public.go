@@ -28,8 +28,8 @@ func (s *serviceV1) SendRegisterSms(c context.Context, phone string, paramSet []
 	}
 }
 
-func (s *serviceV1) SetExpiration(c context.Context, key, value string, expiration int) error {
-	err := s.cacheIns.SetExpiration(c, key, value, time.Duration(expiration)*time.Minute)
+func (s *serviceV1) SetExpiration(c context.Context, key, value string, expiration time.Duration) error {
+	err := s.cacheIns.SetExpiration(c, key, value, expiration)
 	switch {
 	case err == nil:
 		return nil

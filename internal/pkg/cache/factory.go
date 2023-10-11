@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/config"
 )
 
 const (
@@ -10,10 +10,10 @@ const (
 
 // 简单工厂模式
 
-func NewCache(conf *option.Conf) Cache {
-	switch conf.Server.Cache {
+func NewCache(conf config.Config) Cache {
+	switch conf.ServerConfig().Cache {
 	case REDIS:
-		return NewRedis(conf.Redis)
+		return NewRedis(conf.RedisConfig())
 	}
 	panic("无效的缓存实例")
 }

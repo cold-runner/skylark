@@ -1,82 +1,66 @@
 package core
 
 import (
-	"context"
 	"crypto/tls"
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/app/server"
-	"github.com/cloudwego/hertz/pkg/common/config"
+	hzConfig "github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cold-runner/skylark/internal/controller"
 	controllerV1 "github.com/cold-runner/skylark/internal/controller/v1"
 	"github.com/cold-runner/skylark/internal/pkg/cache"
-	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/cold-runner/skylark/internal/pkg/oss"
 	"github.com/cold-runner/skylark/internal/pkg/sms"
 	"github.com/cold-runner/skylark/internal/pkg/store"
 	service "github.com/cold-runner/skylark/internal/service/v1"
+	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/marmotedu/iam/pkg/log"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 var App = new(Application)
 
 type Application struct {
-	server     *option.Server
 	router     *server.Hertz
 	controller controller.Controller
 }
 
 func DependencyInjection() {
-	appConfig := option.NewConfig()
-	// TODO 校验配置参数
-	smsNumber, err := strconv.Atoi(appConfig.Server.SmsNumber)
-	if err != nil {
-		panic(err)
-	}
-	smsExpiration, err := strconv.Atoi(appConfig.Server.SmsExpiration)
-	if err != nil {
-		panic(err)
-	}
-	paramMap := map[string]interface{}{
-		sms.SMS_NUMBER:     smsNumber,
-		sms.SMS_EXPIRATION: smsExpiration,
-	}
-	ctx := context.WithValue(context.Background(), "paramMap", paramMap)
-
+	c := config.GetConfig()
 	// 根据配置文件注入所有依赖
 	App.controller = controllerV1.NewControllerV1(
-		ctx,
+		nil,
 		service.NewServiceV1(
-			cache.NewCache(appConfig),
-			oss.NewOss(appConfig),
-			sms.NewSmsClient(appConfig),
-			store.NewStoreIns(appConfig),
+			cache.NewCache(c),
+			oss.NewOss(c),
+			sms.NewSmsClient(c),
+			store.NewStoreIns(c),
 		),
 	)
+	log.Init(c.LogConfig())
 
-	log.Init(appConfig.Log)
-	var options []config.Option
-
+	var options []hzConfig.Option
+	serverConf := c.ServerConfig()
 	// 设置tls，配置文件留空则不使用tls
-	if serverTlsConfig, err := newServerTlsConfig(appConfig.CertFile, appConfig.KeyFile); err == nil {
+	if serverTlsConfig, err := newServerTlsConfig(serverConf.CertFile, serverConf.KeyFile); err == nil {
 		options = append(options, serverTlsConfig)
 	} else {
 		fmt.Println("未启用tls")
 	}
 
 	// 设置监听地址、端口
-	options = append(options, server.WithHostPorts(appConfig.Server.Host+":"+appConfig.Server.Port))
+	options = append(options, server.WithHostPorts(serverConf.Host+":"+serverConf.Port))
 	// 设置退出时间
-	options = append(options, server.WithExitWaitTime(appConfig.ExitWaitTime))
+	options = append(options, server.WithExitWaitTime(serverConf.ExitWaitTime))
 
 	App.router = server.New(options...)
 }
 
-func newServerTlsConfig(certFilePath, keyFilePath string) (config.Option, error) {
+func newServerTlsConfig(certFilePath, keyFilePath string) (hzConfig.Option, error) {
 	if certFilePath == "" || keyFilePath == "" {
-		return config.Option{}, errors.New("证书或密钥文件为空，不使用tls配置")
+		return hzConfig.Option{}, errors.New("证书或密钥文件为空，不使用tls配置")
 	}
 	cfg := &tls.Config{
 		MinVersion:       tls.VersionTLS12,
@@ -97,7 +81,7 @@ func newServerTlsConfig(certFilePath, keyFilePath string) (config.Option, error)
 
 func (a *Application) InstallRouter() *Application {
 	// 注册中间件
-	a.router.Use(accesslog.New())
+	a.router.Use(gzip.Gzip(gzip.DefaultCompression), accesslog.New())
 	// 公共路由
 	a.publicRouter()
 	// 文章路由

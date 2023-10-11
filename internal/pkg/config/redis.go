@@ -1,4 +1,4 @@
-package option
+package config
 
 type Redis struct {
 	Host                  string `json:"host"                     mapstructure:"host"                     description:"Cache service host address"`

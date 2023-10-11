@@ -1,4 +1,4 @@
-package option
+package config
 
 type TencentSms struct {
 	SecretId      string `mapstructure:"secretId"`

@@ -44,7 +44,7 @@ Clone本项目
 
 - [x] 手机验证码发送
 - [x] 注册
-- [ ] 实现日志器
+- [x] 实现日志器
 - [ ] 实现工厂模式、单例模式创建依赖；使用代理模式给配置对象增加校验逻辑
 - [ ] 限流、认证中间件
 - [ ] 鉴权
@@ -57,7 +57,7 @@ Clone本项目
 - ……
 
 ## 贡献者
-[@HuaiYu](https://www.github.com/cold-runner) 
+[@huaiyu](https://www.github.com/cold-runner) 
 
 [@0deity0](https://github.com/0deity0)
 

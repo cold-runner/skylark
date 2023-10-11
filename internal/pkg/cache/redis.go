@@ -3,7 +3,7 @@ package cache
 import (
 	"context"
 	"fmt"
-	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/pkg/errors"
 	"github.com/redis/go-redis/v9"
 	"time"
@@ -13,7 +13,7 @@ type redisClient struct {
 	client *redis.Client
 }
 
-func NewRedis(opt *option.Redis) Cache {
+func NewRedis(opt *config.Redis) Cache {
 	var err error
 	client := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", opt.Host, opt.Port),

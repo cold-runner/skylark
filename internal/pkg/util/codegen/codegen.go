@@ -96,7 +96,7 @@ func main() {
 		dir = args[0]
 	} else {
 		if len(tags) != 0 {
-			log.Fatal("-tags option applies only to directories, not when files are specified")
+			log.Fatal("-tags config applies only to directories, not when files are specified")
 		}
 		dir = filepath.Dir(args[0])
 	}

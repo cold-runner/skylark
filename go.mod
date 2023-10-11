@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/cloudwego/hertz v0.6.6
 	github.com/gabriel-vasile/mimetype v1.4.2
+	github.com/hertz-contrib/gzip v0.0.1
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20230619034227-00fc458d8f95
 	github.com/marmotedu/errors v1.0.2
 	github.com/marmotedu/iam v1.7.0

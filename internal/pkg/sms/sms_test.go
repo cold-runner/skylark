@@ -1,7 +1,7 @@
 package sms
 
 import (
-	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/config"
 	"testing"
 )
 
@@ -10,7 +10,7 @@ type testSms struct {
 }
 
 func TestSendSms(t *testing.T) {
-	testClient := &testSms{NewTencentSms(&option.TencentSms{
+	testClient := &testSms{NewTencentSms(&config.tencentSms{
 		SecretId:      "",
 		SecretKey:     "",
 		Region:        "ap-beijing",

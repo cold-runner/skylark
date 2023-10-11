@@ -3,7 +3,7 @@ package oss
 import (
 	"context"
 	"fmt"
-	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/cold-runner/skylark/internal/pkg/util"
 	"github.com/tencentyun/cos-go-sdk-v5"
 	"mime/multipart"
@@ -17,7 +17,7 @@ type tencent struct {
 	dictionary string
 }
 
-func NewTencentOss(opt *option.TencentCos) Oss {
+func NewTencentOss(opt *config.TencentCos) Oss {
 	u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", opt.Bucket, opt.Region))
 	c := cos.NewClient(&cos.BaseURL{BucketURL: u}, &http.Client{
 		Transport: &cos.AuthorizationTransport{

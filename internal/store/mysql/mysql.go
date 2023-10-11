@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"github.com/cold-runner/skylark/internal/model/user"
-	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/cold-runner/skylark/internal/store"
 	"github.com/cold-runner/skylark/pkg/db"
 	"gorm.io/gorm"
@@ -12,7 +12,7 @@ type mysql struct {
 	db *gorm.DB
 }
 
-func NewMysqlIns(o *option.MySQL) store.Store {
+func NewMysqlIns(o *config.MySQL) store.Store {
 	options := &db.Options{
 		Host:                  o.Host,
 		Username:              o.Username,

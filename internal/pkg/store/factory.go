@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/cold-runner/skylark/internal/store"
 	"github.com/cold-runner/skylark/internal/store/mysql"
 )
@@ -12,10 +12,10 @@ const (
 
 // 简单工厂模式
 
-func NewStoreIns(conf *option.Conf) store.Store {
-	switch conf.Server.Db {
+func NewStoreIns(conf config.Config) store.Store {
+	switch conf.ServerConfig().Db {
 	case MYSQL:
-		return mysql.NewMysqlIns(conf.MySQL)
+		return mysql.NewMysqlIns(conf.MySQLConfig())
 	}
 	panic("无效的store依赖")
 }

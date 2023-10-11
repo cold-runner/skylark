@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/cold-runner/skylark/internal/model/user"
+	"time"
 )
 
 // Service defines functions used to return resource interface.
@@ -11,6 +12,7 @@ type Service interface {
 	CommentSrv
 	LarkSrv
 	PublicSrv
+	InternalMethod
 }
 
 type LarkSrv interface {
@@ -25,10 +27,10 @@ type ArticleSrv interface {
 type PublicSrv interface {
 	Register(c context.Context, register *user.Register) error
 	SendRegisterSms(c context.Context, phone string, paramSet []string) error
+}
 
-	/* 服务内部调用 */
-
-	SetExpiration(c context.Context, key, value string, expiration int) error
+type InternalMethod interface {
+	SetExpiration(c context.Context, key, value string, expiration time.Duration) error
 	GetSmsCode(c context.Context, key string) (value string, err error)
 	ValidateSmsCode(c context.Context, phone, inCache, userPass string) error
 }
