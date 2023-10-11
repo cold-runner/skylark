@@ -2,14 +2,15 @@ package v1
 
 import (
 	"context"
+	"strconv"
+	"time"
+	
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cold-runner/skylark/internal/model/user"
 	"github.com/cold-runner/skylark/internal/pkg/code"
 	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/cold-runner/skylark/internal/pkg/util"
 	"github.com/marmotedu/errors"
-	"strconv"
-	"time"
 )
 
 func (c *controllerV1) Register(ctx context.Context, context *app.RequestContext) {

@@ -4,7 +4,7 @@ import "github.com/cold-runner/skylark/internal/pkg/config"
 
 // 简单工厂模式
 
-func NewSmsClient(conf config.Config) Sms {
+func NewInstance(conf config.Config) Sms {
 	switch conf.ServerConfig().Sms {
 	case TENCENT:
 		return NewTencentSms(conf.TencentSmsConfig())

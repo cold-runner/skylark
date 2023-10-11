@@ -3,11 +3,20 @@ package service
 import (
 	"context"
 	"github.com/cold-runner/skylark/internal/model/user"
+	"github.com/cold-runner/skylark/internal/pkg/cache"
+	"github.com/cold-runner/skylark/internal/pkg/oss"
+	"github.com/cold-runner/skylark/internal/pkg/sms"
+	"github.com/cold-runner/skylark/internal/store"
 	"time"
 )
 
-// Service defines functions used to return resource interface.
-type Service interface {
+// Factory 抽象工厂
+type Factory interface {
+	NewInstance(cacheIns cache.Cache, ossIns oss.Oss, smsClient sms.Sms, storeIns store.Store) Interface
+}
+
+// Interface service层接口
+type Interface interface {
 	ArticleSrv
 	CommentSrv
 	LarkSrv

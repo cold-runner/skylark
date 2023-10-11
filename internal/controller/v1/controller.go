@@ -8,12 +8,16 @@ import (
 
 type controllerV1 struct {
 	context    context.Context
-	serviceIns service.Service
+	serviceIns service.Interface
 }
 
-func NewControllerV1(context context.Context, serviceIns service.Service) controller.Controller {
+func (c *controllerV1) NewInstance(context context.Context, serviceIns service.Interface) controller.Interface {
 	return &controllerV1{
 		context:    context,
 		serviceIns: serviceIns,
 	}
+}
+
+func NewFactory() controller.Factory {
+	return new(controllerV1)
 }

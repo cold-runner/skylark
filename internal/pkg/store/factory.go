@@ -12,7 +12,7 @@ const (
 
 // 简单工厂模式
 
-func NewStoreIns(conf config.Config) store.Store {
+func NewInstance(conf config.Config) store.Store {
 	switch conf.ServerConfig().Db {
 	case MYSQL:
 		return mysql.NewMysqlIns(conf.MySQLConfig())

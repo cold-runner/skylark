@@ -15,11 +15,15 @@ type serviceV1 struct {
 	storeIns  store.Store
 }
 
-func NewServiceV1(cacheIns cache.Cache, ossIns oss.Oss, smsClient sms.Sms, storeIns store.Store) service.Service {
+func (s *serviceV1) NewInstance(cacheIns cache.Cache, ossIns oss.Oss, smsClient sms.Sms, storeIns store.Store) service.Interface {
 	return &serviceV1{
 		cacheIns:  cacheIns,
 		ossIns:    ossIns,
 		smsClient: smsClient,
 		storeIns:  storeIns,
 	}
+}
+
+func NewFactory() service.Factory {
+	return new(serviceV1)
 }

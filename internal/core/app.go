@@ -2,8 +2,6 @@ package core
 
 import (
 	"crypto/tls"
-	"fmt"
-
 	"github.com/cloudwego/hertz/pkg/app/server"
 	hzConfig "github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cold-runner/skylark/internal/controller"
@@ -13,7 +11,7 @@ import (
 	"github.com/cold-runner/skylark/internal/pkg/oss"
 	"github.com/cold-runner/skylark/internal/pkg/sms"
 	"github.com/cold-runner/skylark/internal/pkg/store"
-	service "github.com/cold-runner/skylark/internal/service/v1"
+	serviceV1 "github.com/cold-runner/skylark/internal/service/v1"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/marmotedu/iam/pkg/log"
@@ -24,30 +22,29 @@ var App = new(Application)
 
 type Application struct {
 	router     *server.Hertz
-	controller controller.Controller
+	controller controller.Interface
 }
 
 func DependencyInjection() {
-	c := config.GetConfig()
+	globalConfig := config.GetConfig()
+
 	// 根据配置文件注入所有依赖
-	App.controller = controllerV1.NewControllerV1(
-		nil,
-		service.NewServiceV1(
-			cache.NewCache(c),
-			oss.NewOss(c),
-			sms.NewSmsClient(c),
-			store.NewStoreIns(c),
-		),
+	serviceIns := serviceV1.NewFactory().NewInstance(
+		cache.NewInstance(globalConfig),
+		oss.NewInstance(globalConfig),
+		sms.NewInstance(globalConfig),
+		store.NewInstance(globalConfig),
 	)
-	log.Init(c.LogConfig())
+	App.controller = controllerV1.NewFactory().NewInstance(nil, serviceIns)
+	log.Init(globalConfig.LogConfig())
 
 	var options []hzConfig.Option
-	serverConf := c.ServerConfig()
+	serverConf := globalConfig.ServerConfig()
 	// 设置tls，配置文件留空则不使用tls
 	if serverTlsConfig, err := newServerTlsConfig(serverConf.CertFile, serverConf.KeyFile); err == nil {
 		options = append(options, serverTlsConfig)
 	} else {
-		fmt.Println("未启用tls")
+		log.Warnf("未开启TLS")
 	}
 
 	// 设置监听地址、端口

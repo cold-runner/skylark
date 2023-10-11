@@ -10,7 +10,7 @@ const (
 
 // 简单工厂模式
 
-func NewCache(conf config.Config) Cache {
+func NewInstance(conf config.Config) Cache {
 	switch conf.ServerConfig().Cache {
 	case REDIS:
 		return NewRedis(conf.RedisConfig())

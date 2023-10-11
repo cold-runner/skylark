@@ -4,7 +4,7 @@ import "github.com/cold-runner/skylark/internal/pkg/config"
 
 // 简单工厂模式
 
-func NewOss(conf config.Config) Oss {
+func NewInstance(conf config.Config) Oss {
 	switch conf.ServerConfig().Oss {
 	case TENCENT:
 		return NewTencentOss(conf.TencentCosConfig())
