@@ -26,12 +26,6 @@ const (
 	// ErrTokenInvalid - 401: 无效的Token
 	ErrTokenInvalid
 
-	// ErrCasdoorIssue - 401: Casdoor签发token失败
-	ErrCasdoorIssue
-
-	// ErrCasdoorRefresh - 401: Casdoor刷新token失败
-	ErrCasdoorRefresh
-
 	// ErrPageNotFound - 404: 资源未找到
 	ErrPageNotFound
 
@@ -47,14 +41,11 @@ const (
 
 // common: 校验相关错误
 const (
-	// ErrEncrypt - 401: 在加密密码时发生错误
-	ErrEncrypt = iota + 100201
+	// ErrExpired - 401: Token已过期
+	ErrExpired = iota + 100201
 
 	// ErrSignatureInvalid - 401: 无效的签名
 	ErrSignatureInvalid
-
-	// ErrExpired - 401: Token已过期
-	ErrExpired
 
 	// ErrInvalidAuthHeader - 401: 无效的认证头
 	ErrInvalidAuthHeader

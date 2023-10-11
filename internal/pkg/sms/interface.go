@@ -1,6 +1,8 @@
 package sms
 
+import "context"
+
 type Sms interface {
-	SendToSingle(phone string, paramSet []string) error
-	SendToMultiple(phoneSet, paramSet []string) error
+	SendToSingle(c context.Context, phone string, paramSet []string) error
+	SendToMultiple(c context.Context, phoneSet, paramSet []string) error
 }

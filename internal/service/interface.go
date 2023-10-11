@@ -24,10 +24,11 @@ type ArticleSrv interface {
 
 type PublicSrv interface {
 	Register(c context.Context, register *user.Register) error
-	SendRegisterSms(phone string, paramSet []string) error
+	SendRegisterSms(c context.Context, phone string, paramSet []string) error
 
 	/* 服务内部调用 */
 
-	SetExpiration(key, value string, expiration int) error
-	GetDelete(key string) (value string, err error)
+	SetExpiration(c context.Context, key, value string, expiration int) error
+	GetSmsCode(c context.Context, key string) (value string, err error)
+	ValidateSmsCode(c context.Context, phone, inCache, userPass string) error
 }

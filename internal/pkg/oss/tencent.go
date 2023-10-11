@@ -12,7 +12,6 @@ import (
 )
 
 type tencent struct {
-	context    context.Context
 	client     *cos.Client
 	domain     string
 	dictionary string
@@ -26,11 +25,11 @@ func NewTencentOss(opt *option.TencentCos) Oss {
 			SecretKey: opt.SecretKey, // 用户的 SecretKey，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参考 https://cloud.tencent.com/document/product/598/37140
 		},
 	})
-	return &tencent{context.Background(), c, opt.Domain, opt.Dictionary}
+	return &tencent{c, opt.Domain, opt.Dictionary}
 }
 
 // UploadFormFile 上传文件，请保证文件名唯一
-func (t *tencent) UploadFormFile(fileHeader *multipart.FileHeader, fileName string) (string, error) {
+func (t *tencent) UploadFormFile(c context.Context, fileHeader *multipart.FileHeader, fileName string) (string, error) {
 	file, err := fileHeader.Open()
 	if err != nil {
 		return "", err
@@ -41,7 +40,7 @@ func (t *tencent) UploadFormFile(fileHeader *multipart.FileHeader, fileName stri
 	}
 
 	filePath := t.dictionary + "/" + fileName + "." + fileType
-	_, err = t.client.Object.Put(t.context, filePath, file, nil)
+	_, err = t.client.Object.Put(c, filePath, file, nil)
 	if err != nil {
 		return "", err
 	}

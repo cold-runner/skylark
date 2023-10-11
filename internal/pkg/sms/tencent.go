@@ -1,6 +1,7 @@
 package sms
 
 import (
+	"context"
 	"github.com/cold-runner/skylark/internal/pkg/option"
 	"github.com/pkg/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -38,7 +39,7 @@ func (t *tencentSms) buildBasicRequest() *sms.SendSmsRequest {
 	return request
 }
 
-func (t *tencentSms) SendToSingle(phone string, paramSet []string) error {
+func (t *tencentSms) SendToSingle(c context.Context, phone string, paramSet []string) error {
 	request := t.buildBasicRequest()
 	request.TemplateParamSet = common.StringPtrs(paramSet)
 	request.PhoneNumberSet = common.StringPtrs([]string{"+86" + phone})
@@ -50,7 +51,7 @@ func (t *tencentSms) SendToSingle(phone string, paramSet []string) error {
 	return nil
 }
 
-func (t *tencentSms) SendToMultiple(phones []string, paramSet []string) error {
+func (t *tencentSms) SendToMultiple(c context.Context, phones []string, paramSet []string) error {
 	if len(phones) > 200 {
 		return errors.New("手机号数量超过200")
 	}

@@ -33,6 +33,8 @@ func NewMySQL(opts *Options) (*gorm.DB, error) {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: opts.Logger,
+		// 打开翻译方言以进行错误处理
+		TranslateError: true,
 	})
 	if err != nil {
 		return nil, err

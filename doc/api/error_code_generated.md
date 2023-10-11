@@ -28,10 +28,8 @@ skylark 支持的错误码列表如下：
 | ErrSmsCode | 100005 | 400 | 验证码错误 |
 | ErrSmsCodeExpired | 100006 | 400 | 验证码过期 |
 | ErrTokenInvalid | 100007 | 401 | 无效的Token |
-| ErrCasdoorIssue | 100008 | 401 | Casdoor签发token失败 |
-| ErrCasdoorRefresh | 100009 | 401 | Casdoor刷新token失败 |
-| ErrPageNotFound | 100010 | 404 | 资源未找到 |
-| ErrOss | 100011 | 500 | 对象存储错误 |
+| ErrPageNotFound | 100008 | 404 | 资源未找到 |
+| ErrOss | 100009 | 500 | 对象存储错误 |
 | ErrDatabase | 100101 | 500 | 数据库错误 |
 | ErrEncodingFailed | 100301 | 500 | 由于数据有误，编码失败 |
 | ErrDecodingFailed | 100302 | 500 | 由于数据错误，解码失败 |

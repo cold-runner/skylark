@@ -10,47 +10,11 @@ import (
 )
 
 type redisClient struct {
-	context context.Context
-	client  *redis.Client
-}
-
-func (r *redisClient) Set(key, value string) error {
-	if err := r.client.Set(r.context, key, value, redis.KeepTTL).Err(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *redisClient) SetExpiration(key string, value string, expiration time.Duration) error {
-	result, err := r.client.SetNX(r.context, key, value, expiration).Result()
-	if err != nil {
-		return err
-	}
-	if !result {
-		return errors.WithMessagef(err, "设置失败，key: %v, val: %v", key, value)
-	}
-	return nil
-}
-
-func (r *redisClient) Get(key string) (string, error) {
-	result, err := r.client.Get(r.context, key).Result()
-	if err != nil {
-		return "", err
-	}
-	return result, nil
-}
-
-func (r *redisClient) GetDel(key string) (string, error) {
-	result, err := r.client.GetDel(r.context, key).Result()
-	if err != nil {
-		return "", err
-	}
-	return result, nil
+	client *redis.Client
 }
 
 func NewRedis(opt *option.Redis) Cache {
 	var err error
-	c := context.Background()
 	client := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", opt.Host, opt.Port),
 		Username: opt.Username,
@@ -63,8 +27,50 @@ func NewRedis(opt *option.Redis) Cache {
 		panic(fmt.Errorf("redis初始化失败，err: %v", err))
 	}
 
-	return &redisClient{
-		context: c,
-		client:  client,
+	return &redisClient{client: client}
+}
+
+func (r *redisClient) Set(c context.Context, key, value string) error {
+	if err := r.client.Set(c, key, value, redis.KeepTTL).Err(); err != nil {
+		return err
 	}
+	return nil
+}
+
+func (r *redisClient) SetExpiration(c context.Context, key string, value string, expiration time.Duration) error {
+	result, err := r.client.SetNX(c, key, value, expiration).Result()
+	if err != nil {
+		return err
+	}
+	if !result {
+		return errors.WithMessagef(err, "设置失败，key: %v, val: %v", key, value)
+	}
+	return nil
+}
+
+func (r *redisClient) Get(c context.Context, key string) (string, error) {
+	result, err := r.client.Get(c, key).Result()
+	if err != nil {
+		return "", err
+	}
+	return result, nil
+}
+
+func (r *redisClient) GetDel(c context.Context, key string) (string, error) {
+	result, err := r.client.GetDel(c, key).Result()
+	if err != nil {
+		return "", err
+	}
+	return result, nil
+}
+
+func (r *redisClient) Del(c context.Context, key string) error {
+	result, err := r.client.Del(c, key).Result()
+	if err != nil {
+		return err
+	}
+	if result == int64(1) {
+		return nil
+	}
+	return errors.Errorf("redis删除键错误 err: %v", err)
 }

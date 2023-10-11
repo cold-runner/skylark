@@ -1,9 +1,10 @@
 package oss
 
 import (
+	"context"
 	"mime/multipart"
 )
 
 type Oss interface {
-	UploadFormFile(fileHeader *multipart.FileHeader, fileName string) (fileUrl string, err error)
+	UploadFormFile(c context.Context, fileHeader *multipart.FileHeader, fileName string) (fileUrl string, err error)
 }

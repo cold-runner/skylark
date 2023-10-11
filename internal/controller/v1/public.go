@@ -8,8 +8,6 @@ import (
 	"github.com/cold-runner/skylark/internal/pkg/sms"
 	"github.com/cold-runner/skylark/internal/pkg/util"
 	"github.com/marmotedu/errors"
-	"github.com/redis/go-redis/v9"
-	"gorm.io/gorm"
 	"strconv"
 )
 
@@ -22,40 +20,24 @@ func (c *controllerV1) Register(ctx context.Context, context *app.RequestContext
 	}
 
 	// 从缓存中获取验证码
-	storeSmsCode, err := c.serviceIns.GetDelete(newer.Phone)
+	storeSmsCode, err := c.serviceIns.GetSmsCode(c.context, newer.Phone)
 	if err != nil {
-		if errors.Is(err, redis.Nil) {
-			e := errors.WithCode(code.ErrSmsCodeExpired, "验证码过期, err: %v", err)
-			code.WriteResponse(context, e, nil)
-			return
-		}
-		e := errors.WithCode(code.ErrUnknown, "缓存获取验证码失败, err: %v", err)
-		// TODO 记录日志
-		code.WriteResponse(context, e, nil)
+		code.WriteResponse(context, err, nil)
 		return
 	}
 
 	// 验证码校验
-	if storeSmsCode != newer.SmsCode {
-		code.WriteResponse(context, errors.WithCode(code.ErrSmsCode, "验证码错误"), nil)
+	if err := c.serviceIns.ValidateSmsCode(c.context, newer.Phone, storeSmsCode, newer.SmsCode); err != nil {
+		code.WriteResponse(context, err, nil)
 		return
 	}
-
-	// 签发token
 
 	// 移交服务层
-	err = c.serviceIns.Register(ctx, newer)
-	if err != nil {
-		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			e := errors.WithCode(code.ErrUserAlreadyExist, "用户已注册, err: %v", err)
-			code.WriteResponse(context, e, nil)
-			return
-		}
-		e := errors.WithCode(code.ErrRegister, "注册失败, err: %v", err)
-		// TODO 记录日志
-		code.WriteResponse(context, e, nil)
+	if err = c.serviceIns.Register(c.context, newer); err != nil {
+		code.WriteResponse(context, err, nil)
 		return
 	}
+
 	code.WriteResponse(context, errors.WithCode(code.ErrSuccess, "", nil), nil)
 }
 
@@ -74,7 +56,7 @@ func (c *controllerV1) SendSms(ctx context.Context, context *app.RequestContext)
 	randCode := util.RandCode(smsNumber)
 
 	// 缓存验证码
-	if err := c.serviceIns.SetExpiration(tmp.Phone, randCode, expiration); err != nil {
+	if err := c.serviceIns.SetExpiration(c.context, tmp.Phone, randCode, expiration); err != nil {
 		// TODO 日志记录
 		e := errors.WithCode(code.ErrUnknown, "缓存设置失败！")
 		code.WriteResponse(context, e, "缓存设置失败")
@@ -82,7 +64,7 @@ func (c *controllerV1) SendSms(ctx context.Context, context *app.RequestContext)
 	}
 
 	// 发送验证码
-	if err := c.serviceIns.SendRegisterSms(tmp.Phone, []string{randCode, strconv.Itoa(expiration)}); err != nil {
+	if err := c.serviceIns.SendRegisterSms(c.context, tmp.Phone, []string{randCode, strconv.Itoa(expiration)}); err != nil {
 		// TODO 日志记录
 		e := errors.WithCode(code.ErrUnknown, "短信发送失败")
 		code.WriteResponse(context, e, "短信发送失败")
