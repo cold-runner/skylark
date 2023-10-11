@@ -8,8 +8,11 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cold-runner/skylark/internal/controller"
 	controllerV1 "github.com/cold-runner/skylark/internal/controller/v1"
+	"github.com/cold-runner/skylark/internal/pkg/cache"
 	"github.com/cold-runner/skylark/internal/pkg/option"
+	"github.com/cold-runner/skylark/internal/pkg/oss"
 	"github.com/cold-runner/skylark/internal/pkg/sms"
+	"github.com/cold-runner/skylark/internal/pkg/store"
 	service "github.com/cold-runner/skylark/internal/service/v1"
 	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/pkg/errors"
@@ -46,10 +49,10 @@ func DependencyInjection() {
 	App.controller = controllerV1.NewControllerV1(
 		ctx,
 		service.NewServiceV1(
-			newCache(appConfig),
-			newOss(appConfig),
-			newSmsClient(appConfig),
-			newStore(appConfig),
+			cache.NewCache(appConfig),
+			oss.NewOss(appConfig),
+			sms.NewSmsClient(appConfig),
+			store.NewStoreIns(appConfig),
 		),
 	)
 

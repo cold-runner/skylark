@@ -21,7 +21,7 @@ type Options struct {
 	Logger                logger.Interface
 }
 
-// NewMySQL create a new gorm db instance with the given options.
+// NewMySQL create a new gorm store instance with the given options.
 func NewMySQL(opts *Options) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(`%s:%s@tcp(%s)/%s?charset=utf8&parseTime=%t&loc=%s`,
 		opts.Username,

@@ -2,10 +2,6 @@ package cache
 
 import "time"
 
-const (
-	REDIS = "redis"
-)
-
 type Cache interface {
 	Set(key, value string) error
 	SetExpiration(key, value string, expiration time.Duration) error

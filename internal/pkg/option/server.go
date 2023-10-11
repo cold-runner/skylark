@@ -16,7 +16,7 @@ type Server struct {
 	SmsNumber     string `mapstructure:"smsNumber"`
 	SmsExpiration string `mapstructure:"smsExpiration"`
 
-	Db    string `mapstructure:"db"`
+	Db    string `mapstructure:"store"`
 	Cache string `mapstructure:"cache"`
 	Oss   string `mapstructure:"oss"`
 	Mq    string `mapstructure:"mq"`
