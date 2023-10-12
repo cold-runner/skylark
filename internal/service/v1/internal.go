@@ -24,7 +24,7 @@ func (s *serviceV1) getSmsCode(c context.Context, phone string) (string, error) 
 	}
 }
 
-func (s *serviceV1) validateSmsCode(c context.Context, phone, inCache, userPass string) (bool, error) {
+func (s *serviceV1) validateAndDelSmsCode(c context.Context, phone, inCache, userPass string) (bool, error) {
 	if inCache != userPass {
 		return false, nil
 	}

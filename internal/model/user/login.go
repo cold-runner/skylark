@@ -8,7 +8,7 @@ const (
 
 // LoginUser 尝试登陆的用户
 type LoginUser struct {
-	Type string `json:"loginType" vd:"regexp('^(qq|password)$')"`
+	Type string `json:"loginType" vd:"regexp('^(phone|password)$')"`
 
 	StuNum   string `json:"stuNum" vd:"regexp('^\\d{8}$')"`
 	Password string `json:"password" vd:"(len($) > 0 && len($) < 30)"`

@@ -7,6 +7,7 @@ import (
 	"github.com/cold-runner/skylark/internal/pkg/util"
 	"github.com/marmotedu/errors"
 	"github.com/marmotedu/iam/pkg/log"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
@@ -62,15 +63,24 @@ func (p *phoneLogin) login(c context.Context, loginUser *user.LoginUser, s *serv
 	case err == nil:
 		// 从缓存获取验证码
 		inCacheSmsCode, err := s.getSmsCode(c, loginUser.Phone)
-		if err != nil {
-			e := errors.WrapC(err, code.ErrUnknown, "根据手机登陆时获取验证码失败！err: %v", err)
-			log.Errorf("登陆错误！err: %v", e)
+
+		// 缓存中不存在验证码
+		if errors.Is(err, redis.Nil) {
+			return nil, errors.WrapC(err, code.ErrSmsCode, "", err)
+		}
+
+		// 内部错误
+		if err != nil && errors.ParseCoder(err).Code() == code.ErrUnknown {
+			e := errors.WrapC(err, code.ErrUnknown, "查询注册验证码失败！err: %v", err)
+			log.Errorf("%#v", e)
 			return nil, e
 		}
+
 		// 校验验证码
-		correct, err := s.validateSmsCode(c, loginUser.Phone, inCacheSmsCode, loginUser.SmsCode)
+		correct, err := s.validateAndDelSmsCode(c, loginUser.Phone, inCacheSmsCode, loginUser.SmsCode)
 		if err != nil {
-			return nil, err
+			e := errors.Wrap(err, "删除验证码失败！")
+			log.Errorf("%#v", e)
 		}
 		if !correct {
 			return nil, errors.WithCode(code.ErrSmsCode, "", nil)

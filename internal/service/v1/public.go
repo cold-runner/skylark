@@ -58,7 +58,7 @@ func (s *serviceV1) Register(c context.Context, register *user.Register) error {
 	case err == nil:
 		{
 			// 验证码校验
-			correct, err := s.validateSmsCode(c, register.Phone, storeSmsCode, register.SmsCode)
+			correct, err := s.validateAndDelSmsCode(c, register.Phone, storeSmsCode, register.SmsCode)
 			// 用户传入的验证码不正确
 			if !correct {
 				return errors.WithCode(code.ErrSmsCode, "", nil)
