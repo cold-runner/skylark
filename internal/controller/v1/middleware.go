@@ -30,14 +30,14 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 
 			// 服务层处理登陆逻辑
 			loggedUserInfo, err := c.serviceIns.ProcessLogin(ctx, loginUser)
-			if bizErr.ParseCoder(err).Code() != code.ErrSuccess {
+			if err != nil && bizErr.ParseCoder(err).Code() != code.ErrSuccess {
 				return nil, err
 			}
 			return loggedUserInfo, nil
 		},
 		Authorizator: func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
 			// TODO 授权
-			return false
+			return true
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*user.LoggedUser); ok {
@@ -48,7 +48,7 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 			}
 			return jwt.MapClaims{}
 		},
-		Unauthorized: func(_ context.Context, c *app.RequestContext, _ int, _ string) {
+		Unauthorized: func(ctx context.Context, c *app.RequestContext, _ int, _ string) {
 			code.WriteResponse(c, bizErr.WithCode(code.ErrPermissionDenied, "", nil), nil)
 		},
 		LoginResponse: func(ctx context.Context, c *app.RequestContext, _ int, message string, _ time.Time) {
