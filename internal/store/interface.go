@@ -16,6 +16,9 @@ type Store interface {
 type Lark interface {
 	// Create 创建新用户
 	Create(c context.Context, user *user.Lark) error
+	QueryByStuNum(c context.Context, stuNum string) (*user.Lark, error)
+	QueryByPhone(c context.Context, phone string) (*user.Lark, error)
+	QueryByQqUnionId(c context.Context, qq string) (*user.Lark, error)
 }
 
 // Comment 评论模块接口

@@ -4,6 +4,8 @@ package code
 const (
 	// ErrUserAlreadyExist - 400: 用户已存在
 	ErrUserAlreadyExist = iota + 110001
+	// ErrUserNotExist - 400: 不存在的用户
+	ErrUserNotExist
 	// ErrRegister - 400: 用户注册失败
 	ErrRegister
 )

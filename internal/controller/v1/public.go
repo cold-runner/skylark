@@ -2,40 +2,25 @@ package v1
 
 import (
 	"context"
-	"strconv"
-	"time"
-	
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cold-runner/skylark/internal/model/user"
 	"github.com/cold-runner/skylark/internal/pkg/code"
-	"github.com/cold-runner/skylark/internal/pkg/config"
-	"github.com/cold-runner/skylark/internal/pkg/util"
 	"github.com/marmotedu/errors"
+	"github.com/marmotedu/iam/pkg/log"
 )
 
 func (c *controllerV1) Register(ctx context.Context, context *app.RequestContext) {
+	log.V(log.DebugLevel).Info("调用注册方法")
+
 	newer := &user.Register{}
-	// 基础参数校验
+	// 参数校验
 	if err := context.BindAndValidate(newer); err != nil {
 		code.WriteResponse(context, errors.WithCode(code.ErrValidation, "校验失败"), nil)
 		return
 	}
 
-	// 从缓存中获取验证码
-	storeSmsCode, err := c.serviceIns.GetSmsCode(ctx, newer.Phone)
-	if err != nil {
-		code.WriteResponse(context, err, nil)
-		return
-	}
-
-	// 验证码校验
-	if err = c.serviceIns.ValidateSmsCode(ctx, newer.Phone, storeSmsCode, newer.SmsCode); err != nil {
-		code.WriteResponse(context, err, nil)
-		return
-	}
-
 	// 移交服务层
-	if err = c.serviceIns.Register(ctx, newer); err != nil {
+	if err := c.serviceIns.Register(ctx, newer); err != nil {
 		code.WriteResponse(context, err, nil)
 		return
 	}
@@ -44,25 +29,19 @@ func (c *controllerV1) Register(ctx context.Context, context *app.RequestContext
 }
 
 func (c *controllerV1) SendSms(ctx context.Context, context *app.RequestContext) {
+	log.V(log.DebugLevel).Info("调用发送验证码方法")
+
 	var tmp struct {
 		Phone string `vd:"regexp(^(?:(?:\+|00)86)?1\d{10}$)" json:"phone,required"`
 	}
+	// 参数校验
 	if err := context.BindAndValidate(&tmp); err != nil {
 		code.WriteResponse(context, errors.WithCode(code.ErrValidation, "手机号校验失败"), nil)
 		return
 	}
 
-	serverConf := config.GetConfig().ServerConfig()
-	expiration := serverConf.SmsExpiration          // 从全局配置对象获取验证码过期时间
-	randCode := util.RandCode(serverConf.SmsNumber) // 从全局配置对象获取验证码长度，根据验证码长度生成验证码
-	// 缓存验证码
-	if err := c.serviceIns.SetExpiration(ctx, tmp.Phone, randCode, time.Duration(expiration)*time.Minute); err != nil {
-		code.WriteResponse(context, err, nil)
-		return
-	}
-
-	// 发送验证码
-	if err := c.serviceIns.SendRegisterSms(ctx, tmp.Phone, []string{randCode, strconv.Itoa(expiration)}); err != nil {
+	// 移交服务层
+	if err := c.serviceIns.SendSms(ctx, tmp.Phone); err != nil {
 		code.WriteResponse(context, err, nil)
 		return
 	}

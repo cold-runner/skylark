@@ -23,6 +23,9 @@ const (
 	// ErrSmsCodeExpired - 400: 验证码过期
 	ErrSmsCodeExpired
 
+	// ErrAlreadySendSmsCode - 400: 验证码已发送且未过期
+	ErrAlreadySendSmsCode
+
 	// ErrTokenInvalid - 401: 无效的Token
 	ErrTokenInvalid
 
@@ -53,8 +56,14 @@ const (
 	// ErrMissingHeader - 401: 认证头为空
 	ErrMissingHeader
 
+	// ErrLoginType - 401: 不支持的登陆类型
+	ErrLoginType
+
 	// ErrPasswordIncorrect - 401: 密码错误
 	ErrPasswordIncorrect
+
+	// ErrSocialNotExist - 401: 请先注册后再进行第三方登陆
+	ErrSocialNotExist
 
 	// ErrPermissionDenied - 403: 权限不足，拒绝请求
 	ErrPermissionDenied

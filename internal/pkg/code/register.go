@@ -1,9 +1,11 @@
 package code
 
+import "net/http"
+
 // init register error codes defines in this source code to `github.com/marmotedu/errors`
 func init() {
-	register(ErrSuccess, 200, "OK")
-	register(ErrUnknown, 500, "服务器内部错误")
+	register(ErrSuccess, http.StatusOK, "OK")
+	register(ErrUnknown, http.StatusInternalServerError, "服务器内部错误")
 	register(ErrBind, 400, "将请求正文绑定到结构时出错")
 	register(ErrValidation, 400, "校验失败")
 	register(ErrSmsCode, 400, "验证码错误")
@@ -28,4 +30,8 @@ func init() {
 	register(ErrPermissionDenied, 401, "权限不足")
 	register(ErrUserAlreadyExist, 400, "用户已注册")
 	register(ErrRegister, 400, "用户注册失败")
+	register(ErrLoginType, 401, "不支持的登陆类型")
+	register(ErrSocialNotExist, 401, "请先注册后再进行第三方登陆")
+	register(ErrUserNotExist, 400, "不存在的用户")
+	register(ErrAlreadySendSmsCode, 400, "发送验证码频率过高")
 }

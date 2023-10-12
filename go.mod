@@ -6,6 +6,7 @@ require (
 	github.com/cloudwego/hertz v0.6.6
 	github.com/gabriel-vasile/mimetype v1.4.2
 	github.com/hertz-contrib/gzip v0.0.1
+	github.com/hertz-contrib/jwt v1.0.2
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20230619034227-00fc458d8f95
 	github.com/marmotedu/errors v1.0.2
 	github.com/marmotedu/iam v1.7.0
@@ -32,6 +33,7 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

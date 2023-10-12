@@ -6,8 +6,6 @@ import (
 	hzConfig "github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cold-runner/skylark/internal/controller"
 	"github.com/cold-runner/skylark/internal/pkg/config"
-	"github.com/hertz-contrib/gzip"
-	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/marmotedu/iam/pkg/log"
 	"github.com/pkg/errors"
 )
@@ -65,7 +63,7 @@ func newServerTlsConfig(certFilePath, keyFilePath string) (hzConfig.Option, erro
 
 func (a *Application) InstallRouter() *Application {
 	// 注册中间件
-	a.router.Use(gzip.Gzip(gzip.DefaultCompression), accesslog.New())
+	a.RegisterMiddleware()
 	// 公共路由
 	a.publicRouter()
 	// 文章路由

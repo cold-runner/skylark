@@ -4,20 +4,27 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cold-runner/skylark/internal/service"
+	"github.com/hertz-contrib/jwt"
 )
 
 // Factory 抽象工厂
 type Factory interface {
-	NewInstance(context context.Context, serviceIns service.Interface) Interface
+	NewInstance(serviceIns service.Interface) Interface
 }
 
 // Interface controller层接口
 type Interface interface {
 	ArticleController
+	//AuthController
 	CommentController
 	LarkController
 	PublicController
 }
+
+//
+//type AuthController interface {
+//	ProcessLogin(context.Context, *app.RequestContext)
+//}
 
 type ArticleController interface {
 }
@@ -29,6 +36,7 @@ type CommentController interface {
 }
 
 type PublicController interface {
+	Jwt() *jwt.HertzJWTMiddleware
 	Register(context.Context, *app.RequestContext)
 	SendSms(context.Context, *app.RequestContext)
 }

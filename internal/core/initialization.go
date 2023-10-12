@@ -53,5 +53,5 @@ func initController() controller.Interface {
 		smsIns,
 		storeIns,
 	)
-	return controllerV1.NewFactory().NewInstance(nil, serviceIns)
+	return controllerV1.NewFactory().NewInstance(serviceIns)
 }

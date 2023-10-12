@@ -7,7 +7,6 @@ import (
 	"github.com/cold-runner/skylark/internal/pkg/oss"
 	"github.com/cold-runner/skylark/internal/pkg/sms"
 	"github.com/cold-runner/skylark/internal/store"
-	"time"
 )
 
 // Factory 抽象工厂
@@ -18,10 +17,14 @@ type Factory interface {
 // Interface service层接口
 type Interface interface {
 	ArticleSrv
+	AuthSrv
 	CommentSrv
 	LarkSrv
 	PublicSrv
-	InternalMethod
+}
+
+type AuthSrv interface {
+	ProcessLogin(c context.Context, loginUser *user.LoginUser) (loggedUser *user.LoggedUser, err error)
 }
 
 type LarkSrv interface {
@@ -35,11 +38,5 @@ type ArticleSrv interface {
 
 type PublicSrv interface {
 	Register(c context.Context, register *user.Register) error
-	SendRegisterSms(c context.Context, phone string, paramSet []string) error
-}
-
-type InternalMethod interface {
-	SetExpiration(c context.Context, key, value string, expiration time.Duration) error
-	GetSmsCode(c context.Context, key string) (value string, err error)
-	ValidateSmsCode(c context.Context, phone, inCache, userPass string) error
+	SendSms(c context.Context, phone string) error
 }

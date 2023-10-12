@@ -74,3 +74,14 @@ func (r *redisClient) Del(c context.Context, key string) error {
 	}
 	return errors.Errorf("redis删除键错误 err: %v", err)
 }
+
+func (r *redisClient) IsExpired(c context.Context, key string) (bool, error) {
+	result, err := r.client.TTL(c, key).Result()
+	if err != nil {
+		return false, err
+	}
+	if result <= 0 {
+		return true, nil
+	}
+	return false, nil
+}

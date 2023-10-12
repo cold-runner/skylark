@@ -6,8 +6,14 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/cold-runner/skylark/internal/model/user"
+	"github.com/hertz-contrib/gzip"
+	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/marmotedu/iam/pkg/log"
 )
+
+func (a *Application) RegisterMiddleware() {
+	a.router.Use(gzip.Gzip(gzip.DefaultCompression), accesslog.New())
+}
 
 func (a *Application) larkRouter() {
 	// 注册自定义校验规则
@@ -30,6 +36,7 @@ func (a *Application) publicRouter() {
 		log.L(c).Info("健康测试通过！")
 		ctx.JSON(consts.StatusOK, utils.H{"msg": "pong!"})
 	})
+	publicRouter.POST("/login", a.controllerIns.Jwt().LoginHandler)
 	publicRouter.GET("/sendSms", a.controllerIns.SendSms)
 	publicRouter.POST("/register", a.controllerIns.Register)
 }

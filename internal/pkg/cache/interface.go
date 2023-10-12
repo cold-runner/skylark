@@ -11,4 +11,5 @@ type Cache interface {
 	Get(c context.Context, key string) (value string, err error)
 	GetDel(c context.Context, key string) (value string, err error)
 	Del(c context.Context, key string) error
+	IsExpired(c context.Context, key string) (isExpired bool, err error)
 }
