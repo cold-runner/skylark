@@ -1,7 +1,5 @@
 package code
 
-//go:generate ./codegen -type=int -doc -output ../../../doc/api/error_code_generated.md
-
 // Common: 基本错误
 // Code must start with 1xxxxx.
 const (
@@ -11,7 +9,7 @@ const (
 	// ErrUnknown - 500: 服务器内部错误
 	ErrUnknown
 
-	// ErrBind - 400: 将请求正文绑定到结构时出错
+	// ErrBind - 500: 将请求正文绑定到结构时出错
 	ErrBind
 
 	// ErrValidation - 400: 校验失败
@@ -26,7 +24,7 @@ const (
 	// ErrAlreadySendSmsCode - 400: 验证码已发送且未过期
 	ErrAlreadySendSmsCode
 
-	// ErrTokenInvalid - 401: 无效的Token
+	// ErrTokenInvalid - 400: 无效的Token
 	ErrTokenInvalid
 
 	// ErrPageNotFound - 404: 资源未找到
@@ -44,25 +42,25 @@ const (
 
 // common: 校验相关错误
 const (
-	// ErrExpired - 401: Token已过期
+	// ErrExpired - 400: Token已过期
 	ErrExpired = iota + 100201
 
-	// ErrSignatureInvalid - 401: 无效的签名
+	// ErrSignatureInvalid - 400: 无效的签名
 	ErrSignatureInvalid
 
-	// ErrInvalidAuthHeader - 401: 无效的认证头
+	// ErrInvalidAuthHeader - 400: 无效的认证头
 	ErrInvalidAuthHeader
 
-	// ErrMissingHeader - 401: 认证头为空
+	// ErrMissingHeader - 400: 认证头为空
 	ErrMissingHeader
 
-	// ErrLoginType - 401: 不支持的登陆类型
+	// ErrLoginType - 400: 不支持的登陆类型
 	ErrLoginType
 
-	// ErrPasswordIncorrect - 401: 密码错误
+	// ErrPasswordIncorrect - 400: 密码错误
 	ErrPasswordIncorrect
 
-	// ErrSocialNotExist - 401: 请先注册后再进行第三方登陆
+	// ErrSocialNotExist - 400: 请先注册后再进行第三方登陆
 	ErrSocialNotExist
 
 	// ErrPermissionDenied - 403: 权限不足，拒绝请求
