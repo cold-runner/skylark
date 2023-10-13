@@ -7,7 +7,7 @@ server:
 
   sms: tencent
   smsNumber: 6 # 短信验证码位数
-  smsExpiration: 10 # 短信验证码过期时间，单位：分钟
+  smsExpiration: 1 # 短信验证码过期时间，单位：分钟
 
   # ----------------------------只有当模式为production时，这部分配置才生效-------------------------------
   db: mysql   # 数据库

@@ -32,11 +32,11 @@ func (c *controllerV1) SendSms(ctx context.Context, context *app.RequestContext)
 	log.V(log.DebugLevel).Info("调用发送验证码方法")
 
 	var tmp struct {
-		Phone string `vd:"regexp(^(?:(?:\+|00)86)?1\d{10}$)" json:"phone,required"`
+		Phone string `vd:"phone($)" json:"phone,required"`
 	}
 	// 参数校验
 	if err := context.BindAndValidate(&tmp); err != nil {
-		code.WriteResponse(context, errors.WithCode(code.ErrValidation, "手机号校验失败"), nil)
+		code.WriteResponse(context, errors.WithCode(code.ErrValidation, ""), nil)
 		return
 	}
 

@@ -115,9 +115,6 @@ func (s *serviceV1) Register(c context.Context, register *user.Register) error {
 				return e
 			}
 		}
-	// 验证码过期
-	case errors.ParseCoder(err).Code() == code.ErrSmsCodeExpired:
-		return err
 
 	// 内部错误
 	default:

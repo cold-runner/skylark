@@ -1,5 +1,9 @@
 package consts
 
+import (
+	"github.com/pkg/errors"
+)
+
 // Gender 性别
 type Gender int
 
@@ -9,14 +13,17 @@ const (
 	UNKNOWN
 )
 
-var GenderList = map[string]Gender{
-	"男":  MALE,
-	"女":  FEMALE,
-	"其他": UNKNOWN,
-}
-
-func (g Gender) CheckFuncName() string {
-	return "gender"
+func ParseGender(gender string) (Gender, error) {
+	switch {
+	case gender == "男":
+		return MALE, nil
+	case gender == "女":
+		return FEMALE, nil
+	case gender == "其他":
+		return UNKNOWN, nil
+	}
+	var g Gender
+	return g, errors.Errorf("not a valid gender: %q", g)
 }
 
 func (g Gender) String() string {
@@ -25,7 +32,13 @@ func (g Gender) String() string {
 		return "男"
 	case FEMALE:
 		return "女"
-	default:
+	case UNKNOWN:
 		return "其他"
+	default:
+		return "不支持的性别类型"
 	}
+}
+
+func CheckGenderFuncName() string {
+	return "gender"
 }

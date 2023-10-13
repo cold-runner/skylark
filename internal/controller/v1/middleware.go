@@ -2,6 +2,8 @@ package v1
 
 import (
 	"context"
+	"time"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cold-runner/skylark/internal/model/user"
@@ -9,7 +11,6 @@ import (
 	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/hertz-contrib/jwt"
 	bizErr "github.com/marmotedu/errors"
-	"time"
 )
 
 func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
@@ -41,6 +42,7 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*user.LoggedUser); ok {
+				// TODO 返回更多业务信息
 				return jwt.MapClaims{
 					"userInfo": v,
 					"role":     nil,

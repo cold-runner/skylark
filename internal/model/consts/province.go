@@ -1,5 +1,7 @@
 package consts
 
+import "github.com/pkg/errors"
+
 // Province 省份
 type Province int
 
@@ -40,41 +42,80 @@ const (
 	AO_MEN
 )
 
-var ProvinceList = map[string]Province{
-	"浙江":  ZHE_JIANG,
-	"上海":  SHANG_HAI,
-	"北京":  BEI_JING,
-	"天津":  TIAN_JIN,
-	"重庆":  CHONG_QING,
-	"黑龙江": HEI_LONG_JIANG,
-	"吉林":  JI_LIN,
-	"辽宁":  LIAO_NING,
-	"内蒙古": NEI_MENG_GU,
-	"河北":  HE_BEI,
-	"新疆":  XIN_JIANG,
-	"甘肃":  GAN_SU,
-	"青海":  QING_HAI,
-	"陕西":  SH_AN_XI,
-	"宁夏":  NING_XIA,
-	"河南":  HE_NAN,
-	"山东":  SHAN_DONG,
-	"山西":  SHAN_XI,
-	"安徽":  AN_HUI,
-	"湖北":  HU_BEI,
-	"湖南":  HU_NAN,
-	"江苏":  JIANG_SU,
-	"四川":  SI_CHUAN,
-	"贵州":  GUI_ZHOU,
-	"云南":  YUN_NAN,
-	"广西":  GUANG_XI,
-	"西藏":  XI_ZANG,
-	"江西":  JIANG_XI,
-	"广东":  GUANG_DONG,
-	"福建":  FU_JIAN,
-	"台湾":  TAI_WAN,
-	"海南":  HAI_NAN,
-	"香港":  XIANG_GANG,
-	"澳门":  AO_MEN,
+func ParseProvince(province string) (Province, error) {
+	switch {
+	case province == "浙江":
+		return ZHE_JIANG, nil
+	case province == "上海":
+		return SHANG_HAI, nil
+	case province == "北京":
+		return BEI_JING, nil
+	case province == "天津":
+		return TIAN_JIN, nil
+	case province == "重庆":
+		return CHONG_QING, nil
+	case province == "黑龙江":
+		return HEI_LONG_JIANG, nil
+	case province == "吉林":
+		return JI_LIN, nil
+	case province == "辽宁":
+		return LIAO_NING, nil
+	case province == "内蒙古":
+		return NEI_MENG_GU, nil
+	case province == "河北":
+		return HE_BEI, nil
+	case province == "新疆":
+		return XIN_JIANG, nil
+	case province == "甘肃":
+		return GAN_SU, nil
+	case province == "青海":
+		return QING_HAI, nil
+	case province == "陕西":
+		return SH_AN_XI, nil
+	case province == "宁夏":
+		return NING_XIA, nil
+	case province == "河南":
+		return HE_NAN, nil
+	case province == "山东":
+		return SHAN_DONG, nil
+	case province == "山西":
+		return SHAN_XI, nil
+	case province == "安徽":
+		return AN_HUI, nil
+	case province == "湖北":
+		return HU_BEI, nil
+	case province == "湖南":
+		return HU_NAN, nil
+	case province == "江苏":
+		return JIANG_SU, nil
+	case province == "四川":
+		return SI_CHUAN, nil
+	case province == "贵州":
+		return GUI_ZHOU, nil
+	case province == "云南":
+		return YUN_NAN, nil
+	case province == "广西":
+		return GUANG_XI, nil
+	case province == "西藏":
+		return XI_ZANG, nil
+	case province == "江西":
+		return JIANG_XI, nil
+	case province == "广东":
+		return GUANG_DONG, nil
+	case province == "福建":
+		return FU_JIAN, nil
+	case province == "台湾":
+		return TAI_WAN, nil
+	case province == "海南":
+		return HAI_NAN, nil
+	case province == "香港":
+		return XIANG_GANG, nil
+	case province == "澳门":
+		return AO_MEN, nil
+	}
+
+	var p Province
+	return p, errors.Errorf("not a valid provice, %q", p)
 }
 
 func (p Province) String() string {
@@ -148,10 +189,10 @@ func (p Province) String() string {
 	case AO_MEN:
 		return "澳门"
 	default:
-		return ""
+		return "未知的省份"
 	}
 }
 
-func (p Province) CheckFuncName() string {
+func CheckProvinceFuncName() string {
 	return "province"
 }

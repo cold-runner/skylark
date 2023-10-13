@@ -2,44 +2,58 @@ package core
 
 import (
 	"context"
+	"github.com/cold-runner/skylark/internal/pkg/code"
+	bizErr "github.com/marmotedu/errors"
+
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/common/utils"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/cold-runner/skylark/internal/model/user"
+	"github.com/cold-runner/skylark/internal/controller"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/marmotedu/iam/pkg/log"
 )
 
-func (a *Application) RegisterMiddleware() {
-	a.router.Use(gzip.Gzip(gzip.DefaultCompression), accesslog.New())
-}
-
-func (a *Application) larkRouter() {
+func (a *Application) InstallRouter() *Application {
 	// 注册自定义校验规则
-	user.CheckRegister()
+	controller.Validator()
 
-}
-
-func (a *Application) articleRouter() {
-
-}
-
-func (a *Application) commentRouter() {
-
-}
-
-func (a *Application) publicRouter() {
-	publicRouter := a.router.Group("/noAuth")
-
-	publicRouter.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
-		log.L(c).Info("健康测试通过！")
-		ctx.JSON(consts.StatusOK, utils.H{"msg": "pong!"})
-	})
-	// TODO 单例模式
+	// 注册中间件
+	a.router.Use(gzip.Gzip(gzip.DefaultCompression), accesslog.New())
 	jwt := a.controllerIns.Jwt()
-	publicRouter.POST("/login", jwt.LoginHandler)
-	publicRouter.GET("/refresh_token", jwt.RefreshHandler)
-	publicRouter.GET("/sendSms", a.controllerIns.SendSms)
-	publicRouter.POST("/register", a.controllerIns.Register)
+
+	// 非鉴权路由
+	{
+		publicRouter := a.router.Group("/noAuth")
+		publicRouter.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
+			log.L(c).Info("健康测试通过！")
+			code.WriteResponse(ctx, bizErr.WithCode(code.ErrUnknown, "", nil), nil)
+		})
+		publicRouter.POST("/login", jwt.LoginHandler)
+		publicRouter.GET("/sendSms", a.controllerIns.SendSms)
+		publicRouter.POST("/register", a.controllerIns.Register)
+	}
+
+	// 鉴权路由
+	{
+		authRouter := a.router.Group("/auth")
+		authRouter.GET("/refresh_token", jwt.RefreshHandler)
+		// 用户功能路由
+		{
+			larkRouter := a.router.Group("/lark")
+			larkRouter.GET("")
+		}
+
+		// 文章功能路由
+		{
+			postRouter := a.router.Group("/post")
+			postRouter.GET("")
+		}
+
+		// 评论功能路由
+		{
+			commentRouter := a.router.Group("/comment")
+			commentRouter.GET("")
+		}
+	}
+
+	return a
 }

@@ -8,29 +8,28 @@ const (
 
 // LoginUser 尝试登陆的用户
 type LoginUser struct {
-	Type string `json:"loginType" vd:"regexp('^(phone|password)$')"`
+	Type string `vd:"loginType($)" json:"loginType"`
 
-	StuNum   string `json:"stuNum" vd:"regexp('^\\d{8}$')"`
-	Password string `json:"password" vd:"(len($) > 0 && len($) < 30)"`
+	StuNum   string `vd:"regexp('^\\d{8}$')" json:"stuNum"`
+	Password string `vd:"password($)" json:"password"`
 
-	Phone   string `json:"phone"`
-	SmsCode string `json:"smsCode"`
+	Phone   string `vd:"phone($)" json:"phone"`
+	SmsCode string `vd:"smsCode($)" json:"smsCode"`
 
-	Qq string `json:"qq"`
-
-	Wechat string `json:"wechat"`
+	Qq     string `vd:"qq($)" json:"qq"`
+	Wechat string `vd:"wechat($)" json:"wechat"`
 }
 
 // LoggedUser 返回给已登陆的用户信息
 type LoggedUser struct {
 	// TODO 角色信息
 
-	Avatar  string `gorm:"type:varchar(191);default:null"` // 头像
-	StuNum  string `gorm:"type:char(8);unique"`            // 学号
-	Name    string `gorm:"type:varchar(191)"`              // 姓名
-	College string `gorm:"type:char(16)"`                  // 学院
-	Major   string `gorm:"type:char(30)"`                  // 专业
-	Grade   string `gorm:"type:varchar(3)"`                // 年级
+	Avatar  string // 头像
+	StuNum  string // 学号
+	Name    string // 姓名
+	College string // 学院
+	Major   string // 专业
+	Grade   string // 年级
 
 	// TODO 其他业务信息
 
@@ -47,5 +46,5 @@ type LoggedUser struct {
 
 type PasswordLogin struct {
 	StuNum   string `form:"stuNum" json:"stuNum"  vd:"regexp('^\\d{8}$'); msg:'Illegal format'"`
-	Password string `form:"password" json:"password" vd:"(len($) > 0 && len($) < 30); msg:'Illegal password'"`
+	Password string `vd:"password($)" form:"password" json:"password"`
 }

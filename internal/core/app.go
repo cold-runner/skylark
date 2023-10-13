@@ -61,21 +61,6 @@ func newServerTlsConfig(certFilePath, keyFilePath string) (hzConfig.Option, erro
 	return server.WithTLS(cfg), nil
 }
 
-func (a *Application) InstallRouter() *Application {
-	// 注册中间件
-	a.RegisterMiddleware()
-	// 公共路由
-	a.publicRouter()
-	// 文章路由
-	a.articleRouter()
-	// 用户路由
-	a.larkRouter()
-	// 评论路由
-	a.commentRouter()
-
-	return a
-}
-
 func (a *Application) Run() {
 	a.router.Spin()
 }
