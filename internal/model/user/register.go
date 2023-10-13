@@ -6,7 +6,7 @@ import (
 
 // Register 注册
 type Register struct {
-	StuNum       string                `vd:"regexp('^\\d{8}$')" form:"stuNum,required"`
+	StuNum       string                `vd:"stuNum($)" form:"stuNum,required"`
 	Name         string                `vd:"name($)" form:"name,required"`
 	Password     string                `vd:"password($)" form:"password,required"`
 	College      string                `vd:"college($)" form:"college,required"`

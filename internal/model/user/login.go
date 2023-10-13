@@ -16,8 +16,8 @@ type LoginUser struct {
 	Phone   string `vd:"phone($)" json:"phone"`
 	SmsCode string `vd:"smsCode($)" json:"smsCode"`
 
-	Qq     string `vd:"qq($)" json:"qq"`
-	Wechat string `vd:"wechat($)" json:"wechat"`
+	QqUnionId string `vd:"qqUnionId($)" json:"qqUnionId"`
+	Wechat    string `vd:"wechat($)" json:"wechat"`
 }
 
 // LoggedUser 返回给已登陆的用户信息

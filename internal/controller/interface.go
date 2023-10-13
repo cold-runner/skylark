@@ -23,13 +23,14 @@ type Interface interface {
 
 //
 //type AuthController interface {
-//	ProcessLogin(context.Context, *app.RequestContext)
+//	Authenticator(context.Context, *app.RequestContext)
 //}
 
 type ArticleController interface {
 }
 
 type LarkController interface {
+	BindQq(context.Context, *app.RequestContext)
 }
 
 type CommentController interface {

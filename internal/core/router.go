@@ -22,12 +22,12 @@ func (a *Application) InstallRouter() *Application {
 
 	// 非鉴权路由
 	{
-		publicRouter := a.router.Group("/noAuth")
+		publicRouter := a.router.Group("")
 		publicRouter.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 			log.L(c).Info("健康测试通过！")
 			code.WriteResponse(ctx, bizErr.WithCode(code.ErrUnknown, "", nil), nil)
 		})
-		publicRouter.POST("/login", jwt.LoginHandler)
+		publicRouter.POST("/share", jwt.LoginHandler)
 		publicRouter.GET("/sendSms", a.controllerIns.SendSms)
 		publicRouter.POST("/register", a.controllerIns.Register)
 	}
@@ -38,20 +38,20 @@ func (a *Application) InstallRouter() *Application {
 		authRouter.GET("/refresh_token", jwt.RefreshHandler)
 		// 用户功能路由
 		{
-			larkRouter := a.router.Group("/lark")
-			larkRouter.GET("")
+			larkRouter := authRouter.Group("/lark")
+			larkRouter.GET("/bindQq", a.controllerIns.BindQq)
 		}
 
 		// 文章功能路由
 		{
-			postRouter := a.router.Group("/post")
-			postRouter.GET("")
+			//postRouter := authRouter.Group("/post")
+			//postRouter.GET("")
 		}
 
 		// 评论功能路由
 		{
-			commentRouter := a.router.Group("/comment")
-			commentRouter.GET("")
+			//commentRouter := authRouter.Group("/comment")
+			//commentRouter.GET("")
 		}
 	}
 

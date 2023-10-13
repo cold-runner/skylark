@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"github.com/cold-runner/skylark/internal/model/user"
+	"gorm.io/gorm"
 )
 
 // Store 存储层接口
@@ -14,11 +15,9 @@ type Store interface {
 
 // Lark 用户模块接口
 type Lark interface {
-	// Create 创建新用户
-	Create(c context.Context, user *user.Lark) error
-	QueryByStuNum(c context.Context, stuNum string) (*user.Lark, error)
-	QueryByPhone(c context.Context, phone string) (*user.Lark, error)
-	QueryByQqUnionId(c context.Context, qq string) (*user.Lark, error)
+	CreateLark(c context.Context, user *user.Lark) error
+	GetLarkInfo(c context.Context, scopes ...func(db *gorm.DB) *gorm.DB) (*user.Lark, error)
+	UpdateLark(c context.Context, values interface{}, scopes ...func(db *gorm.DB) *gorm.DB) error
 }
 
 // Comment 评论模块接口

@@ -33,4 +33,5 @@ func init() {
 	register(ErrSocialNotExist, http.StatusBadRequest, "请先注册后再进行第三方登陆")
 	register(ErrUserNotExist, http.StatusBadRequest, "不存在的用户")
 	register(ErrAlreadySendSmsCode, http.StatusBadRequest, "发送验证码频率过高")
+	register(ErrRepeatBindQq, http.StatusBadRequest, "不允许重复绑定qq")
 }

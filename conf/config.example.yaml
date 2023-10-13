@@ -96,3 +96,9 @@ tencentSms:
   applicationId:
   signName:
   templateId:
+
+# qq互联
+qqSocial:
+  appId:
+  redirectUrl:
+  clientSecret:

@@ -3,35 +3,29 @@ package mysql
 import (
 	"context"
 	"github.com/cold-runner/skylark/internal/model/user"
+	"gorm.io/gorm"
 )
 
-func (m *mysql) Create(c context.Context, lark *user.Lark) error {
+func (m *mysql) CreateLark(c context.Context, lark *user.Lark) error {
 	if err := m.db.WithContext(c).Create(lark).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *mysql) QueryByStuNum(c context.Context, stuNum string) (*user.Lark, error) {
-	storedUser := &user.Lark{}
-	if err := m.db.WithContext(c).Where("stu_num = ?", stuNum).First(storedUser).Error; err != nil {
+// GetLarkInfo 利用高阶函数
+func (m *mysql) GetLarkInfo(c context.Context, scopes ...func(db *gorm.DB) *gorm.DB) (*user.Lark, error) {
+	storedLark := &user.Lark{}
+	if err := m.db.WithContext(c).Scopes(scopes...).Find(storedLark).Error; err != nil {
 		return nil, err
 	}
-	return storedUser, nil
+	return storedLark, nil
 }
 
-func (m *mysql) QueryByPhone(c context.Context, phone string) (*user.Lark, error) {
-	storedUser := &user.Lark{}
-	if err := m.db.WithContext(c).Where("phone = ?", phone).First(storedUser).Error; err != nil {
-		return nil, err
+// UpdateLark 利用高阶函数
+func (m *mysql) UpdateLark(c context.Context, values interface{}, scopes ...func(db *gorm.DB) *gorm.DB) error {
+	if err := m.db.WithContext(c).Model(&user.Lark{}).Scopes(scopes...).Updates(values).Error; err != nil {
+		return err
 	}
-	return storedUser, nil
-}
-
-func (m *mysql) QueryByQqUnionId(c context.Context, qq string) (*user.Lark, error) {
-	storedUser := &user.Lark{}
-	if err := m.db.WithContext(c).Where("qq_union_id = ?", qq).First(storedUser).Error; err != nil {
-		return nil, err
-	}
-	return storedUser, nil
+	return nil
 }

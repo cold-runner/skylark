@@ -14,20 +14,21 @@ type Factory interface {
 	NewInstance(cacheIns cache.Cache, ossIns oss.Oss, smsClient sms.Sms, storeIns store.Store) Interface
 }
 
-// Interface service层接口
+// Interface service层接口，向controller层暴露
 type Interface interface {
 	ArticleSrv
-	AuthSrv
+	Middleware
 	CommentSrv
 	LarkSrv
 	PublicSrv
 }
 
-type AuthSrv interface {
-	ProcessLogin(c context.Context, loginUser *user.LoginUser) (loggedUser *user.LoggedUser, err error)
+type Middleware interface {
+	Authenticator(c context.Context, loginUser *user.LoginUser) (loggedUser *user.LoggedUser, err error)
 }
 
 type LarkSrv interface {
+	BindQq(c context.Context, stuNum, qqUnionId string) error
 }
 
 type CommentSrv interface {
@@ -38,5 +39,5 @@ type ArticleSrv interface {
 
 type PublicSrv interface {
 	Register(c context.Context, register *user.Register) error
-	SendSms(c context.Context, phone string) error
+	SendSmsCode(c context.Context, phone string) error
 }

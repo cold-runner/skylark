@@ -41,7 +41,7 @@ func (c *controllerV1) SendSms(ctx context.Context, context *app.RequestContext)
 	}
 
 	// 移交服务层
-	if err := c.serviceIns.SendSms(ctx, tmp.Phone); err != nil {
+	if err := c.serviceIns.SendSmsCode(ctx, tmp.Phone); err != nil {
 		code.WriteResponse(context, err, nil)
 		return
 	}

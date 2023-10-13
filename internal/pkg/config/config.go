@@ -39,6 +39,8 @@ type conf struct {
 	*QiniuCloud `mapstructure:"qiNiuCloud"`
 
 	*TencentSms `mapstructure:"tencentSms"`
+
+	*QqSocial `mapstructure:"qqSocial"`
 }
 
 // GetConfig 饿汉单例模式获取全局配置对象
@@ -76,4 +78,8 @@ func (c *conf) QiniuCloudConfig() *QiniuCloud {
 
 func (c *conf) TencentCosConfig() *TencentCos {
 	return c.TencentCos
+}
+
+func (c *conf) QqSocialConfig() *QqSocial {
+	return c.QqSocial
 }

@@ -30,11 +30,11 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 			}
 
 			// 服务层处理登陆逻辑
-			loggedUserInfo, err := c.serviceIns.ProcessLogin(ctx, loginUser)
-			if err != nil && bizErr.ParseCoder(err).Code() != code.ErrSuccess {
+			if loggedUserInfo, err := c.serviceIns.Authenticator(ctx, loginUser); err != nil {
 				return nil, err
+			} else {
+				return loggedUserInfo, nil
 			}
-			return loggedUserInfo, nil
 		},
 		Authorizator: func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
 			// TODO 授权

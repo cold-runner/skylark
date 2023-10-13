@@ -12,7 +12,29 @@ import (
 
 func Validator() {
 	// TODO 学号校验
-
+	binding.MustRegValidateFunc("stuNum", func(args ...interface{}) error {
+		c, ok := args[0].(string)
+		if !ok {
+			return errors.New("学号校验失败，类型不为string")
+		}
+		match, _ := regexp.MatchString("^\\d{8}$", c)
+		if !match {
+			return errors.New("学号校验失败")
+		}
+		return nil
+	})
+	// qqUnionId校验
+	binding.MustRegValidateFunc("qqUnionId", func(args ...interface{}) error {
+		c, ok := args[0].(string)
+		if !ok {
+			return errors.New("qqUnionId校验失败，类型不为string")
+		}
+		match, _ := regexp.MatchString("^\\d{1,200}$", c)
+		if !match {
+			return errors.New("qqUnionId校验失败")
+		}
+		return nil
+	})
 	// 微信号校验
 	binding.MustRegValidateFunc("wechat", func(args ...interface{}) error {
 		c, ok := args[0].(string)
