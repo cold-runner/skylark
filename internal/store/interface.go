@@ -13,6 +13,8 @@ type Store interface {
 	Comment
 }
 
+// 数据库依赖大概率不会发生改变，所以这里定义依赖为针对于mysql的可变参数
+
 // Lark 用户模块接口
 type Lark interface {
 	CreateLark(c context.Context, user *user.Lark) error

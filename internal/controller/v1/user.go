@@ -26,3 +26,7 @@ func (c *controllerV1) BindQq(ctx context.Context, context *app.RequestContext) 
 
 	code.WriteResponse(context, errors.WithCode(code.ErrSuccess, "", nil), nil)
 }
+
+func (c *controllerV1) ChangePassword(ctx context.Context, context *app.RequestContext) {
+
+}

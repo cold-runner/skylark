@@ -44,8 +44,8 @@ func (a *Application) InstallRouter() *Application {
 
 		// 文章功能路由
 		{
-			//postRouter := authRouter.Group("/post")
-			//postRouter.GET("")
+			postRouter := authRouter.Group("/post")
+			postRouter.POST("/publish", a.controllerIns.Publish)
 		}
 
 		// 评论功能路由

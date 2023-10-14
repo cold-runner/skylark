@@ -28,10 +28,10 @@ func NewMysqlIns(o *config.MySQL) store.Store {
 	if err != nil {
 		panic(err)
 	}
-	err = dbIns.AutoMigrate(&user.Lark{})
-	if err != nil {
-		panic(err)
-	}
+	err = dbIns.AutoMigrate(
+		&user.Lark{}, // 用户表
+		//&post.StoredLearningPost{}, // 文章表
+	)
 	if err != nil {
 		panic(err)
 	}

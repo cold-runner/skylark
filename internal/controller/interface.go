@@ -14,23 +14,19 @@ type Factory interface {
 
 // Interface controller层接口
 type Interface interface {
-	ArticleController
-	//AuthController
+	PostController
 	CommentController
 	LarkController
 	PublicController
 }
 
-//
-//type AuthController interface {
-//	Authenticator(context.Context, *app.RequestContext)
-//}
-
-type ArticleController interface {
+type PostController interface {
+	Publish(context.Context, *app.RequestContext)
 }
 
 type LarkController interface {
 	BindQq(context.Context, *app.RequestContext)
+	ChangePassword(context.Context, *app.RequestContext)
 }
 
 type CommentController interface {

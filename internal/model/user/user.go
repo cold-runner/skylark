@@ -7,7 +7,7 @@ import (
 
 // Lark 用户 对应数据库表
 type Lark struct {
-	*gorm.Model
+	gorm.Model
 	StuNum     string    `gorm:"type:char(8);unique"`                   // 学号
 	Name       string    `gorm:"type:varchar(191)"`                     // 姓名
 	Password   string    `gorm:"type:varchar(191)"`                     // 登陆密码

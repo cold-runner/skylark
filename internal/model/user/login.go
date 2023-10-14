@@ -10,7 +10,7 @@ const (
 type LoginUser struct {
 	Type string `vd:"loginType($)" json:"loginType"`
 
-	StuNum   string `vd:"regexp('^\\d{8}$')" json:"stuNum"`
+	StuNum   string `vd:"stuNum($)" json:"stuNum"`
 	Password string `vd:"password($)" json:"password"`
 
 	Phone   string `vd:"phone($)" json:"phone"`

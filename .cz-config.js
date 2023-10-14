@@ -17,6 +17,8 @@ module.exports = {
     scopes: [
         {name: 'core'},
         {name: 'user'},
+        {name: 'post'},
+        {name: 'comment'},
         {name: 'doc'}
     ],
 
