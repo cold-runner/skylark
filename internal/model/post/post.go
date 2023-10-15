@@ -1,6 +1,22 @@
 package post
 
-import "gorm.io/gorm"
+import (
+	"github.com/cloudwego/hertz/pkg/common/json"
+	"gorm.io/gorm"
+)
+
+type Draft struct {
+	Title   string `json:"title"`
+	Content string `json:"content"`
+}
+
+func (d *Draft) MarshalBinary() ([]byte, error) {
+	return json.Marshal(d)
+}
+
+func (d *Draft) UnmarshalBinary(data []byte) error {
+	return json.Unmarshal(data, d)
+}
 
 type LearningPost struct {
 	Title      string   `vd:"" json:"title"`                        // 标题

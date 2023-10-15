@@ -30,14 +30,14 @@ func newRedis(opt *config.Redis) Cache {
 	return &redisClient{client: client}
 }
 
-func (r *redisClient) Set(c context.Context, key, value string) error {
+func (r *redisClient) Set(c context.Context, key string, value interface{}) error {
 	if err := r.client.Set(c, key, value, redis.KeepTTL).Err(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *redisClient) SetExpiration(c context.Context, key string, value string, expiration time.Duration) error {
+func (r *redisClient) SetExpiration(c context.Context, key string, value interface{}, expiration time.Duration) error {
 	result, err := r.client.SetNX(c, key, value, expiration).Result()
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func (r *redisClient) SetExpiration(c context.Context, key string, value string,
 	return nil
 }
 
-func (r *redisClient) Get(c context.Context, key string) (string, error) {
+func (r *redisClient) Get(c context.Context, key string) (interface{}, error) {
 	result, err := r.client.Get(c, key).Result()
 	if err != nil {
 		return "", err
@@ -56,7 +56,7 @@ func (r *redisClient) Get(c context.Context, key string) (string, error) {
 	return result, nil
 }
 
-func (r *redisClient) GetDel(c context.Context, key string) (string, error) {
+func (r *redisClient) GetDel(c context.Context, key string) (interface{}, error) {
 	result, err := r.client.GetDel(c, key).Result()
 	if err != nil {
 		return "", err

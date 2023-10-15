@@ -10,20 +10,20 @@ const (
 type LoginUser struct {
 	Type string `vd:"loginType($)" json:"loginType"`
 
-	StuNum   string `vd:"stuNum($)" json:"stuNum"`
-	Password string `vd:"password($)" json:"password"`
+	StuNum   string `vd:"" json:"stuNum"`
+	Password string `vd:"" json:"password"`
 
-	Phone   string `vd:"phone($)" json:"phone"`
-	SmsCode string `vd:"smsCode($)" json:"smsCode"`
+	Phone   string `vd:"" json:"phone"`
+	SmsCode string `vd:"" json:"smsCode"`
 
-	QqUnionId string `vd:"qqUnionId($)" json:"qqUnionId"`
-	Wechat    string `vd:"wechat($)" json:"wechat"`
+	QqUnionId string `vd:"" json:"qqUnionId"`
+	Wechat    string `vd:"" json:"wechat"`
 }
 
 // LoggedUser 返回给已登陆的用户信息
 type LoggedUser struct {
 	// TODO 角色信息
-
+	UserId  string // 用户唯一标识
 	Avatar  string // 头像
 	StuNum  string // 学号
 	Name    string // 姓名

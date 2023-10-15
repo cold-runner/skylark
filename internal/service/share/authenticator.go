@@ -11,6 +11,7 @@ import (
 	"github.com/marmotedu/errors"
 	"github.com/marmotedu/iam/pkg/log"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 func PasswordLogin(c context.Context, loginUser *user.LoginUser, store store.Store) (*user.LoggedUser, error) {
@@ -103,6 +104,7 @@ func PhoneLogin(c context.Context, loginUser *user.LoginUser, store store.Store,
 
 func buildLoggedUser(storedUser *user.Lark) *user.LoggedUser {
 	return &user.LoggedUser{
+		UserId:  strconv.Itoa(int(storedUser.ID)),
 		Avatar:  storedUser.Avatar,
 		StuNum:  storedUser.StuNum,
 		Name:    storedUser.Name,

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/cold-runner/skylark/internal/model/post"
 	"github.com/cold-runner/skylark/internal/model/user"
 	"github.com/cold-runner/skylark/internal/pkg/cache"
 	"github.com/cold-runner/skylark/internal/pkg/oss"
@@ -16,7 +17,7 @@ type Factory interface {
 
 // Interface service层接口，向controller层暴露
 type Interface interface {
-	ArticleSrv
+	PostSrv
 	Middleware
 	CommentSrv
 	LarkSrv
@@ -34,7 +35,8 @@ type LarkSrv interface {
 type CommentSrv interface {
 }
 
-type ArticleSrv interface {
+type PostSrv interface {
+	SaveDraft(c context.Context, userId string, draft *post.Draft) error
 }
 
 type PublicSrv interface {

@@ -21,7 +21,7 @@ type Interface interface {
 }
 
 type PostController interface {
-	Publish(context.Context, *app.RequestContext)
+	Save(context.Context, *app.RequestContext)
 }
 
 type LarkController interface {

@@ -25,9 +25,9 @@ func (a *Application) InstallRouter() *Application {
 		publicRouter := a.router.Group("")
 		publicRouter.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 			log.L(c).Info("健康测试通过！")
-			code.WriteResponse(ctx, bizErr.WithCode(code.ErrUnknown, "", nil), nil)
+			code.WriteResponse(ctx, bizErr.WithCode(code.ErrSuccess, "", nil), nil)
 		})
-		publicRouter.POST("/share", jwt.LoginHandler)
+		publicRouter.POST("/login", jwt.LoginHandler)
 		publicRouter.GET("/sendSms", a.controllerIns.SendSms)
 		publicRouter.POST("/register", a.controllerIns.Register)
 	}
@@ -36,6 +36,7 @@ func (a *Application) InstallRouter() *Application {
 	{
 		authRouter := a.router.Group("/auth")
 		authRouter.GET("/refresh_token", jwt.RefreshHandler)
+		authRouter.Use(jwt.MiddlewareFunc())
 		// 用户功能路由
 		{
 			larkRouter := authRouter.Group("/lark")
@@ -45,7 +46,7 @@ func (a *Application) InstallRouter() *Application {
 		// 文章功能路由
 		{
 			postRouter := authRouter.Group("/post")
-			postRouter.POST("/publish", a.controllerIns.Publish)
+			postRouter.POST("/save", a.controllerIns.Save)
 		}
 
 		// 评论功能路由

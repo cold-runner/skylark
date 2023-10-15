@@ -42,10 +42,8 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*user.LoggedUser); ok {
-				// TODO 返回更多业务信息
 				return jwt.MapClaims{
-					"userInfo": v,
-					"role":     nil,
+					jwt.IdentityKey: v,
 				}
 			}
 			return jwt.MapClaims{}
@@ -58,9 +56,12 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 				"token": message,
 			})
 		},
-		LogoutResponse:              nil,
-		RefreshResponse:             nil,
-		IdentityHandler:             nil,
+		LogoutResponse:  nil,
+		RefreshResponse: nil,
+		IdentityHandler: func(ctx context.Context, c *app.RequestContext) interface{} {
+			claims := jwt.ExtractClaims(ctx, c)
+			return claims[jwtConfig.IdentityKey]
+		},
 		IdentityKey:                 jwtConfig.IdentityKey,
 		TokenLookup:                 "",
 		TokenHeadName:               jwtConfig.TokenHeadName,

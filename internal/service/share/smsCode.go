@@ -12,7 +12,7 @@ func GetSmsCode(c context.Context, phone string, cache cache.Cache) (smsCode str
 	value, err := cache.Get(c, phone)
 	switch {
 	case err == nil:
-		return value, nil
+		return value.(string), nil
 
 	// 处理业务错误
 	case errors.Is(err, redis.Nil):
