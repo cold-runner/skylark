@@ -53,7 +53,6 @@ jwt:
   tokenHeadName:
   signingAlgorithm:    # 签名算法
   key:      # 服务端密钥
-  identityKey:  # 校验的键
   timeout: 24h        # token 过期时间(小时)
   max-refresh: 24h    # token 更新时间(小时)
 

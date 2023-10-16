@@ -60,9 +60,9 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 		RefreshResponse: nil,
 		IdentityHandler: func(ctx context.Context, c *app.RequestContext) interface{} {
 			claims := jwt.ExtractClaims(ctx, c)
-			return claims[jwtConfig.IdentityKey]
+			return claims["identity"]
 		},
-		IdentityKey:                 jwtConfig.IdentityKey,
+		IdentityKey:                 jwt.IdentityKey,
 		TokenLookup:                 "",
 		TokenHeadName:               jwtConfig.TokenHeadName,
 		WithoutDefaultTokenHeadName: false,

@@ -5,7 +5,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cold-runner/skylark/internal/model/post"
 	"github.com/cold-runner/skylark/internal/pkg/code"
-	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/marmotedu/errors"
 )
 
@@ -15,8 +14,7 @@ func (c *controllerV1) Save(ctx context.Context, context *app.RequestContext) {
 		code.WriteResponse(context, errors.WithCode(code.ErrValidation, "", nil), nil)
 		return
 	}
-	jwtConfig := config.GetConfig().JwtConfig()
-	userInfo := context.Value(jwtConfig.IdentityKey).(map[string]interface{})
+	userInfo := context.Value("identity").(map[string]interface{})
 	userId := userInfo["UserId"].(string)
 
 	if err := c.serviceIns.SaveDraft(ctx, userId, draft); err != nil {
