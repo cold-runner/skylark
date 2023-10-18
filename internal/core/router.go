@@ -9,7 +9,7 @@ import (
 	"github.com/cold-runner/skylark/internal/controller"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
-	"github.com/marmotedu/iam/pkg/log"
+	"github.com/marmotedu/log"
 )
 
 func (a *Application) InstallRouter() *Application {
@@ -24,7 +24,7 @@ func (a *Application) InstallRouter() *Application {
 	{
 		publicRouter := a.router.Group("")
 		publicRouter.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
-			log.L(c).Info("健康测试通过！")
+			log.Info("健康测试通过！")
 			code.WriteResponse(ctx, bizErr.WithCode(code.ErrSuccess, "", nil), nil)
 		})
 		publicRouter.POST("/login", jwt.LoginHandler)

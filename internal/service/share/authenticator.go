@@ -9,7 +9,7 @@ import (
 	"github.com/cold-runner/skylark/internal/store"
 	"github.com/cold-runner/skylark/internal/store/mysql"
 	"github.com/marmotedu/errors"
-	"github.com/marmotedu/iam/pkg/log"
+	"github.com/marmotedu/log"
 	"gorm.io/gorm"
 	"strconv"
 )

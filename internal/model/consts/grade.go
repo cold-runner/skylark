@@ -2,16 +2,18 @@ package consts
 
 import "github.com/pkg/errors"
 
+//go:generate stringer -type Grade -linecomment
+
 // Grade 年级
 type Grade int
 
 // TODO 研究生
 const (
-	FRESHMAN Grade = iota
-	SOPHOMORE
-	JUNIOR
-	SENIOR
-	GRADUATES
+	FRESHMAN  Grade = iota // 大一
+	SOPHOMORE              // 大二
+	JUNIOR                 // 大三
+	SENIOR                 // 大四
+	GRADUATES              // 毕业生
 )
 
 func ParseGrade(grade string) (Grade, error) {
@@ -30,23 +32,6 @@ func ParseGrade(grade string) (Grade, error) {
 
 	var g Grade
 	return g, errors.Errorf("not a valid grade: %q", g)
-}
-
-func (g Grade) String() string {
-	switch g {
-	case FRESHMAN:
-		return "大一"
-	case SOPHOMORE:
-		return "大二"
-	case JUNIOR:
-		return "大三"
-	case SENIOR:
-		return "大四"
-	case GRADUATES:
-		return "毕业生"
-	default:
-		return "不支持的级别"
-	}
 }
 
 func CheckGradeFuncName() string {

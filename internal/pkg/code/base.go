@@ -24,9 +24,6 @@ const (
 	// ErrAlreadySendSmsCode - 400: 验证码已发送且未过期
 	ErrAlreadySendSmsCode
 
-	// ErrTokenInvalid - 400: 无效的Token
-	ErrTokenInvalid
-
 	// ErrPageNotFound - 404: 资源未找到
 	ErrPageNotFound
 
@@ -44,6 +41,9 @@ const (
 const (
 	// ErrExpired - 400: Token已过期
 	ErrExpired = iota + 100201
+
+	// ErrTokenInvalid - 400: 无效的Token
+	ErrTokenInvalid
 
 	// ErrSignatureInvalid - 400: 无效的签名
 	ErrSignatureInvalid

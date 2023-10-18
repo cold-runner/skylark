@@ -8,7 +8,7 @@ import (
 	"github.com/cold-runner/skylark/internal/pkg/util"
 	"github.com/cold-runner/skylark/internal/service/share"
 	"github.com/marmotedu/errors"
-	"github.com/marmotedu/iam/pkg/log"
+	"github.com/marmotedu/log"
 	"gorm.io/gorm"
 	"strconv"
 	"time"
@@ -48,7 +48,7 @@ func (s *serviceV1) SendSmsCode(c context.Context, phone string) error {
 		return e
 	}
 
-	log.L(c).V(log.InfoLevel).Infof("向%s发送验证码：%s 过期时间：%d 分钟", phone, randCode, expirationConfig)
+	log.V(int(log.InfoLevel)).Infof("向%s发送验证码：%s 过期时间：%d 分钟", phone, randCode, expirationConfig)
 	return nil
 }
 

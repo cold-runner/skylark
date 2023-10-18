@@ -36,7 +36,7 @@ type CommentSrv interface {
 }
 
 type PostSrv interface {
-	SaveDraft(c context.Context, userId string, draft *post.Draft) error
+	SaveDraft(c context.Context, userId, draftId string, draft *post.Draft) error
 }
 
 type PublicSrv interface {

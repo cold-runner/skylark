@@ -14,10 +14,11 @@ func (c *controllerV1) Save(ctx context.Context, context *app.RequestContext) {
 		code.WriteResponse(context, errors.WithCode(code.ErrValidation, "", nil), nil)
 		return
 	}
+	draftId := context.Param("draftId")
 	userInfo := context.Value("identity").(map[string]interface{})
 	userId := userInfo["UserId"].(string)
 
-	if err := c.serviceIns.SaveDraft(ctx, userId, draft); err != nil {
+	if err := c.serviceIns.SaveDraft(ctx, userId, draftId, draft); err != nil {
 		code.WriteResponse(context, err, nil)
 		return
 	}

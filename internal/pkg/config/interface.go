@@ -1,6 +1,6 @@
 package config
 
-import "github.com/marmotedu/iam/pkg/log"
+import "github.com/marmotedu/log"
 
 type Config interface {
 	MySQLConfig() *MySQL

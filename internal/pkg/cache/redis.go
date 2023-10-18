@@ -48,6 +48,28 @@ func (r *redisClient) SetExpiration(c context.Context, key string, value interfa
 	return nil
 }
 
+func (r *redisClient) SetHash(c context.Context, hashName string, key string, value interface{}) error {
+	result, err := r.client.HSet(c, hashName, key, value).Result()
+	if err != nil {
+		return err
+	}
+	if result != 1 {
+		return errors.WithMessagef(err, "设置HSET失败，haseName: %v, key: %v, val: %v", hashName, key, value)
+	}
+	return nil
+}
+
+func (r *redisClient) SetHashMulti(c context.Context, hashName string, kvPair map[string]interface{}) error {
+	result, err := r.client.HSet(c, hashName, kvPair).Result()
+	if err != nil {
+		return err
+	}
+	if result != int64(len(kvPair)) {
+		return errors.WithMessagef(err, "批量设置HSET失败，haseName: %v, kvPair: %v", hashName, kvPair)
+	}
+	return nil
+}
+
 func (r *redisClient) Get(c context.Context, key string) (interface{}, error) {
 	result, err := r.client.Get(c, key).Result()
 	if err != nil {

@@ -6,7 +6,7 @@ import (
 	hzConfig "github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cold-runner/skylark/internal/controller"
 	"github.com/cold-runner/skylark/internal/pkg/config"
-	"github.com/marmotedu/iam/pkg/log"
+	"github.com/marmotedu/log"
 	"github.com/pkg/errors"
 )
 

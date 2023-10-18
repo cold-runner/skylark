@@ -4,13 +4,15 @@ import (
 	"github.com/pkg/errors"
 )
 
+//go:generate stringer -type Gender -linecomment
+
 // Gender 性别
 type Gender int
 
 const (
-	MALE Gender = iota
-	FEMALE
-	UNKNOWN
+	MALE    Gender = iota // 男
+	FEMALE                // 女
+	UNKNOWN               // 其他
 )
 
 func ParseGender(gender string) (Gender, error) {
@@ -24,19 +26,6 @@ func ParseGender(gender string) (Gender, error) {
 	}
 	var g Gender
 	return g, errors.Errorf("not a valid gender: %q", g)
-}
-
-func (g Gender) String() string {
-	switch g {
-	case MALE:
-		return "男"
-	case FEMALE:
-		return "女"
-	case UNKNOWN:
-		return "其他"
-	default:
-		return "不支持的性别类型"
-	}
 }
 
 func CheckGenderFuncName() string {

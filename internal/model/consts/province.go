@@ -2,44 +2,46 @@ package consts
 
 import "github.com/pkg/errors"
 
+//go:generate stringer -type Province -linecomment
+
 // Province 省份
 type Province int
 
 const (
-	ZHE_JIANG Province = iota
-	SHANG_HAI
-	BEI_JING
-	TIAN_JIN
-	CHONG_QING
-	HEI_LONG_JIANG
-	JI_LIN
-	LIAO_NING
-	NEI_MENG_GU
-	HE_BEI
-	XIN_JIANG
-	GAN_SU
-	QING_HAI
-	SH_AN_XI
-	NING_XIA
-	HE_NAN
-	SHAN_DONG
-	SHAN_XI
-	AN_HUI
-	HU_BEI
-	HU_NAN
-	JIANG_SU
-	SI_CHUAN
-	GUI_ZHOU
-	YUN_NAN
-	GUANG_XI
-	XI_ZANG
-	JIANG_XI
-	GUANG_DONG
-	FU_JIAN
-	TAI_WAN
-	HAI_NAN
-	XIANG_GANG
-	AO_MEN
+	ZHE_JIANG      Province = iota // 浙江
+	SHANG_HAI                      // 上海
+	BEI_JING                       // 北京
+	TIAN_JIN                       // 天津
+	CHONG_QING                     // 重庆
+	HEI_LONG_JIANG                 // 黑龙江
+	JI_LIN                         // 吉林
+	LIAO_NING                      // 辽宁
+	NEI_MENG_GU                    // 内蒙古
+	HE_BEI                         // 河北
+	XIN_JIANG                      // 新疆
+	GAN_SU                         // 甘肃
+	QING_HAI                       // 青海
+	SH_AN_XI                       // 陕西
+	NING_XIA                       // 宁夏
+	HE_NAN                         // 河南
+	SHAN_DONG                      // 山东
+	SHAN_XI                        // 山西
+	AN_HUI                         // 安徽
+	HU_BEI                         // 湖北
+	HU_NAN                         // 湖南
+	JIANG_SU                       // 江苏
+	SI_CHUAN                       // 四川
+	GUI_ZHOU                       // 贵州
+	YUN_NAN                        // 云南
+	GUANG_XI                       // 广西
+	XI_ZANG                        // 西藏
+	JIANG_XI                       // 江西
+	GUANG_DONG                     // 广东
+	FU_JIAN                        // 福建
+	TAI_WAN                        // 台湾
+	HAI_NAN                        // 海南
+	XIANG_GANG                     // 香港
+	AO_MEN                         // 澳门
 )
 
 func ParseProvince(province string) (Province, error) {
@@ -115,82 +117,7 @@ func ParseProvince(province string) (Province, error) {
 	}
 
 	var p Province
-	return p, errors.Errorf("not a valid provice, %q", p)
-}
-
-func (p Province) String() string {
-	switch p {
-	case ZHE_JIANG:
-		return "浙江"
-	case SHANG_HAI:
-		return "上海"
-	case BEI_JING:
-		return "北京"
-	case TIAN_JIN:
-		return "天津"
-	case CHONG_QING:
-		return "重庆"
-	case HEI_LONG_JIANG:
-		return "黑龙江"
-	case JI_LIN:
-		return "吉林"
-	case LIAO_NING:
-		return "辽宁"
-	case NEI_MENG_GU:
-		return "内蒙古"
-	case HE_BEI:
-		return "河北"
-	case XIN_JIANG:
-		return "新疆"
-	case GAN_SU:
-		return "甘肃"
-	case QING_HAI:
-		return "青海"
-	case SH_AN_XI:
-		return "陕西"
-	case NING_XIA:
-		return "宁夏"
-	case HE_NAN:
-		return "河南"
-	case SHAN_DONG:
-		return "山东"
-	case SHAN_XI:
-		return "山西"
-	case AN_HUI:
-		return "安徽"
-	case HU_BEI:
-		return "湖北"
-	case HU_NAN:
-		return "湖南"
-	case JIANG_SU:
-		return "江苏"
-	case SI_CHUAN:
-		return "四川"
-	case GUI_ZHOU:
-		return "贵州"
-	case YUN_NAN:
-		return "云南"
-	case GUANG_XI:
-		return "广西"
-	case XI_ZANG:
-		return "西藏"
-	case JIANG_XI:
-		return "江西"
-	case GUANG_DONG:
-		return "广东"
-	case FU_JIAN:
-		return "福建"
-	case TAI_WAN:
-		return "台湾"
-	case HAI_NAN:
-		return "海南"
-	case XIANG_GANG:
-		return "香港"
-	case AO_MEN:
-		return "澳门"
-	default:
-		return "未知的省份"
-	}
+	return p, errors.Errorf("not a valid province, %q", p)
 }
 
 func CheckProvinceFuncName() string {

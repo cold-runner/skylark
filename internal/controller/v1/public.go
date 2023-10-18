@@ -6,11 +6,11 @@ import (
 	"github.com/cold-runner/skylark/internal/model/user"
 	"github.com/cold-runner/skylark/internal/pkg/code"
 	"github.com/marmotedu/errors"
-	"github.com/marmotedu/iam/pkg/log"
+	"github.com/marmotedu/log"
 )
 
 func (c *controllerV1) Register(ctx context.Context, context *app.RequestContext) {
-	log.V(log.DebugLevel).Info("调用注册方法")
+	log.V(int(log.DebugLevel)).Info("调用注册方法")
 
 	newer := &user.Register{}
 	// 参数校验
@@ -29,7 +29,7 @@ func (c *controllerV1) Register(ctx context.Context, context *app.RequestContext
 }
 
 func (c *controllerV1) SendSms(ctx context.Context, context *app.RequestContext) {
-	log.V(log.DebugLevel).Info("调用发送验证码方法")
+	log.V(int(log.DebugLevel)).Info("调用发送验证码方法")
 
 	var tmp struct {
 		Phone string `vd:"phone($)" json:"phone,required"`

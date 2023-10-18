@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/marmotedu/iam/pkg/log"
+	"github.com/marmotedu/log"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )

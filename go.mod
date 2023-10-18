@@ -9,7 +9,7 @@ require (
 	github.com/hertz-contrib/jwt v1.0.2
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20230619034227-00fc458d8f95
 	github.com/marmotedu/errors v1.0.2
-	github.com/marmotedu/iam v1.7.0
+	github.com/marmotedu/log v0.0.1
 	github.com/novalagung/gubrak v1.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.0.5
@@ -17,7 +17,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.762
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.44
-	golang.org/x/crypto v0.12.0
+	golang.org/x/crypto v0.14.0
+	golang.org/x/oauth2 v0.7.0
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.2
 )
@@ -42,13 +43,9 @@ require (
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.1.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
-	github.com/marmotedu/component-base v1.6.2 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mozillazg/go-httpheader v0.4.0 // indirect
 	github.com/nyaruka/phonenumbers v1.1.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
@@ -66,12 +63,16 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/arch v0.1.0 // indirect
-	golang.org/x/net v0.14.0 // indirect
-	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/mod v0.13.0 // indirect
+	golang.org/x/net v0.16.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/tools v0.14.0 // indirect
+	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/klog v1.0.0 // indirect
 )
