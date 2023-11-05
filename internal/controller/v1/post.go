@@ -4,23 +4,34 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cold-runner/skylark/internal/model/post"
-	"github.com/cold-runner/skylark/internal/pkg/code"
-	"github.com/marmotedu/errors"
+	"github.com/cold-runner/skylark/internal/pkg/errCode"
 )
 
-func (c *controllerV1) Save(ctx context.Context, context *app.RequestContext) {
-	draft := &post.Draft{}
-	if err := context.BindAndValidate(draft); err != nil {
-		code.WriteResponse(context, errors.WithCode(code.ErrValidation, "", nil), nil)
+func (c *controllerV1) CreateDraft(ctx context.Context, context *app.RequestContext) {
+	err := c.serviceIns.CreateDraft(ctx, context)
+	if err != nil {
+		errCode.ResponseError(context, nil)
 		return
 	}
-	draftId := context.Param("draftId")
+
+	errCode.ResponseOk(context, nil)
+}
+
+func (c *controllerV1) Save(ctx context.Context, context *app.RequestContext) {
+	// TODO 参数校验
+	draftInfo := &post.DraftInfo{}
+	if err := context.BindAndValidate(draftInfo); err != nil {
+		errCode.ResponseWithError(context, errCode.ErrValidation, nil)
+		return
+	}
 	userInfo := context.Value("identity").(map[string]interface{})
 	userId := userInfo["UserId"].(string)
 
-	if err := c.serviceIns.SaveDraft(ctx, userId, draftId, draft); err != nil {
-		code.WriteResponse(context, err, nil)
+	// 移交服务层
+	if err := c.serviceIns.SaveDraft(ctx, context, userId, draftInfo); err != nil {
+		errCode.ResponseError(context, nil)
 		return
 	}
-	code.WriteResponse(context, errors.WithCode(code.ErrSuccess, "", nil), nil)
+
+	errCode.ResponseOk(context, nil)
 }

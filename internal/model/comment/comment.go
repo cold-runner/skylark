@@ -8,5 +8,6 @@ type Comment struct {
 	Content     string
 	UserId      uint
 	ReplyUserId uint
-	PostId      uint
+
+	PostId uint
 }

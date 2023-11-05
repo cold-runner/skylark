@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/marmotedu/log"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -32,7 +31,7 @@ type conf struct {
 	*MySQL  `mapstructure:"mysql"`
 	*Redis  `mapstructure:"redis"`
 	*Jwt    `mapstructure:"jwt"`
-	Log     *log.Options `mapstructure:"log"`
+	*Log    `mapstructure:"log"`
 	*Server `mapstructure:"server"`
 
 	*TencentCos `mapstructure:"tencentCos"`
@@ -60,7 +59,7 @@ func (c *conf) JwtConfig() *Jwt {
 	return c.Jwt
 }
 
-func (c *conf) LogConfig() *log.Options {
+func (c *conf) LogConfig() *Log {
 	return c.Log
 }
 

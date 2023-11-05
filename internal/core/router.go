@@ -2,30 +2,25 @@ package core
 
 import (
 	"context"
-	"github.com/cold-runner/skylark/internal/pkg/code"
-	bizErr "github.com/marmotedu/errors"
-
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cold-runner/skylark/internal/controller"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cold-runner/skylark/internal/pkg/errCode"
 	"github.com/hertz-contrib/gzip"
-	"github.com/hertz-contrib/logger/accesslog"
-	"github.com/marmotedu/log"
+	"github.com/hertz-contrib/limiter"
 )
 
 func (a *Application) InstallRouter() *Application {
-	// 注册自定义校验规则
-	controller.Validator()
-
 	// 注册中间件
-	a.router.Use(gzip.Gzip(gzip.DefaultCompression), accesslog.New())
+	a.router.Use(gzip.Gzip(gzip.DefaultCompression), limiter.AdaptiveLimit())
 	jwt := a.controllerIns.Jwt()
-
+	// pprof
+	//pprof.Register(a.router)
 	// 非鉴权路由
 	{
 		publicRouter := a.router.Group("")
 		publicRouter.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
-			log.Info("健康测试通过！")
-			code.WriteResponse(ctx, bizErr.WithCode(code.ErrSuccess, "", nil), nil)
+			hlog.Debug("调用/ping路由")
+			errCode.ResponseOk(ctx, nil)
 		})
 		publicRouter.POST("/login", jwt.LoginHandler)
 		publicRouter.GET("/sendSms", a.controllerIns.SendSms)
@@ -46,6 +41,7 @@ func (a *Application) InstallRouter() *Application {
 		// 文章功能路由
 		{
 			postRouter := authRouter.Group("/post")
+			postRouter.POST("/createDraft", a.controllerIns.CreateDraft)
 			postRouter.POST("/save", a.controllerIns.Save)
 		}
 

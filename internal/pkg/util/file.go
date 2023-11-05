@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/gabriel-vasile/mimetype"
 	"mime/multipart"
 	"os"
@@ -50,7 +51,7 @@ func IsFormFileImage(fileHeader *multipart.FileHeader) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if !mime.Is("image/jpeg") && !mime.Is("image/png") {
+	if !mime.Is(consts.MIMEImageJPEG) && !mime.Is(consts.MIMEImagePNG) {
 		return false, nil
 	}
 	return true, nil

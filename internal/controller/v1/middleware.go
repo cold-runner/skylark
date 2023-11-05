@@ -5,12 +5,12 @@ import (
 	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cold-runner/skylark/internal/model/user"
-	"github.com/cold-runner/skylark/internal/pkg/code"
 	"github.com/cold-runner/skylark/internal/pkg/config"
+	"github.com/cold-runner/skylark/internal/pkg/errCode"
 	"github.com/hertz-contrib/jwt"
-	bizErr "github.com/marmotedu/errors"
 )
 
 func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
@@ -23,6 +23,7 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 		Timeout:          jwtConfig.Timeout * time.Hour,
 		MaxRefresh:       jwtConfig.MaxRefresh * time.Hour,
 		Authenticator: func(ctx context.Context, requestContext *app.RequestContext) (interface{}, error) {
+			hlog.Debug("登陆方法被调用")
 			loginUser := &user.LoginUser{}
 			// 参数校验
 			if err := requestContext.BindAndValidate(loginUser); err != nil {
@@ -30,13 +31,14 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 			}
 
 			// 服务层处理登陆逻辑
-			if loggedUserInfo, err := c.serviceIns.Authenticator(ctx, loginUser); err != nil {
+			if loggedUserInfo, err := c.serviceIns.Authenticator(ctx, requestContext, loginUser); err != nil {
 				return nil, err
 			} else {
 				return loggedUserInfo, nil
 			}
 		},
 		Authorizator: func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
+			hlog.Debug("授权方法被调用")
 			// TODO 授权
 			return true
 		},
@@ -49,10 +51,10 @@ func (c *controllerV1) Jwt() *jwt.HertzJWTMiddleware {
 			return jwt.MapClaims{}
 		},
 		Unauthorized: func(ctx context.Context, c *app.RequestContext, _ int, _ string) {
-			code.WriteResponse(c, bizErr.WithCode(code.ErrPermissionDenied, "", nil), nil)
+			errCode.ResponseWithError(c, errCode.ErrPermissionDenied, nil)
 		},
 		LoginResponse: func(ctx context.Context, c *app.RequestContext, _ int, message string, _ time.Time) {
-			code.WriteResponse(c, bizErr.WithCode(code.ErrSuccess, "", nil), utils.H{
+			errCode.ResponseOk(c, utils.H{
 				"token": message,
 			})
 		},

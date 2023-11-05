@@ -50,7 +50,7 @@ func (idp *QqIdProvider) GetToken(code string) (*oauth2.Token, error) {
 	params.Add("grant_type", "authorization_code")
 	params.Add("client_id", idp.Config.ClientID)
 	params.Add("client_secret", idp.Config.ClientSecret)
-	params.Add("code", code)
+	params.Add("errCode", code)
 	params.Add("redirect_uri", idp.Config.RedirectURL)
 
 	accessTokenUrl := fmt.Sprintf("https://graph.qq.com/oauth2.0/token?%s", params.Encode())

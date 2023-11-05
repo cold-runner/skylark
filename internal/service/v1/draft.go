@@ -2,24 +2,23 @@ package v1
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/errors"
+	"github.com/cold-runner/skylark/internal/model"
 	"github.com/cold-runner/skylark/internal/model/post"
-	"github.com/cold-runner/skylark/internal/pkg/code"
-	"github.com/marmotedu/errors"
+	"github.com/cold-runner/skylark/internal/pkg/errCode"
 )
 
-func (s *serviceV1) SaveDraft(c context.Context, userId, draftId string, draft *post.Draft) error {
-	// 查缓存
-
-	// 没缓存从数据库同步到缓存
-
-	// 更新缓存
-
-	// 返回前端
-
-	// 保存到数据库
-	err := s.cacheIns.SetHash(c, userId, draftId, draft)
+func (s *serviceV1) CreateDraft(c context.Context, ctx *app.RequestContext) *errors.Error {
+	storedDraft := &model.Draft{}
+	err := s.storeIns.CreateDraft(c, storedDraft)
 	if err != nil {
-		return errors.WithCode(code.ErrSavePost, "", nil)
+		ctx.Error(err)
+		return ctx.Error(errCode.ErrCreateDraft)
 	}
 	return nil
+}
+
+func (s *serviceV1) SaveDraft(c context.Context, ctx *app.RequestContext, userId string, draftInfo *post.DraftInfo) *errors.Error {
+	panic("尚未实现")
 }

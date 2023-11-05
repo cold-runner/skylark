@@ -2,30 +2,61 @@ package mysql
 
 import (
 	"context"
-	"github.com/cold-runner/skylark/internal/model/user"
-	"gorm.io/gorm"
+	"gorm.io/gen/field"
+
+	"github.com/cold-runner/skylark/internal/model"
+	"gorm.io/gen"
 )
 
-func (m *mysql) CreateLark(c context.Context, lark *user.Lark) error {
-	if err := m.db.WithContext(c).Create(lark).Error; err != nil {
+func (m *mysql) CreateLark(c context.Context, lark *model.Lark) error {
+	if err := m.Lark.WithContext(c).Create(lark); err != nil {
 		return err
 	}
 	return nil
 }
 
-// GetLarkInfo 利用高阶函数
-func (m *mysql) GetLarkInfo(c context.Context, scopes ...func(db *gorm.DB) *gorm.DB) (*user.Lark, error) {
-	storedLark := &user.Lark{}
-	if err := m.db.WithContext(c).Scopes(scopes...).Find(storedLark).Error; err != nil {
+// GetLark 利用高阶函数
+func (m *mysql) GetLark(c context.Context, conds ...gen.Condition) (*model.Lark, error) {
+	lark, err := m.Lark.WithContext(c).Where(conds...).First()
+	if err != nil {
 		return nil, err
 	}
-	return storedLark, nil
+	return lark, nil
 }
 
-// UpdateLark 利用高阶函数
-func (m *mysql) UpdateLark(c context.Context, values interface{}, scopes ...func(db *gorm.DB) *gorm.DB) error {
-	if err := m.db.WithContext(c).Model(&user.Lark{}).Scopes(scopes...).Updates(values).Error; err != nil {
+// GetLarkList 利用高阶函数
+func (m *mysql) GetLarkList(c context.Context, conds ...gen.Condition) ([]*model.Lark, error) {
+	larks, err := m.Lark.WithContext(c).Where(conds...).Find()
+	if err != nil {
+		return nil, err
+	}
+	return larks, nil
+}
+
+// UpdateLarkSelect 利用高阶函数
+func (m *mysql) UpdateLarkSelect(c context.Context, selectScopes []field.Expr, whereScopes []gen.Condition, lark *model.Lark) error {
+	if _, err := m.Query.Lark.WithContext(c).Select(selectScopes...).Where(whereScopes...).Updates(lark); err != nil {
 		return err
 	}
 	return nil
+}
+
+// UpdateLarkOmit 利用高阶函数
+func (m *mysql) UpdateLarkOmit(c context.Context, omitScopes []field.Expr, whereScopes []gen.Condition, lark *model.Lark) error {
+	if _, err := m.Query.Lark.WithContext(c).Omit(omitScopes...).Where(whereScopes...).Updates(lark); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Exist 查询是否存在目标用户
+func (m *mysql) Exist(c context.Context, conds ...gen.Condition) (bool, error) {
+	count, err := m.Query.Lark.WithContext(c).Where(conds...).Count()
+	if err != nil {
+		return false, err
+	}
+	if count != 0 {
+		return true, nil
+	}
+	return false, nil
 }

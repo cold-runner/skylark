@@ -1,12 +1,10 @@
 package config
 
-import "github.com/marmotedu/log"
-
 type Config interface {
 	MySQLConfig() *MySQL
 	RedisConfig() *Redis
 	JwtConfig() *Jwt
-	LogConfig() *log.Options
+	LogConfig() *Log
 	ServerConfig() *Server
 
 	TencentSmsConfig() *TencentSms

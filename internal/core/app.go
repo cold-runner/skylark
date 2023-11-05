@@ -2,11 +2,13 @@ package core
 
 import (
 	"crypto/tls"
+	"fmt"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	hzConfig "github.com/cloudwego/hertz/pkg/common/config"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cold-runner/skylark/internal/controller"
 	"github.com/cold-runner/skylark/internal/pkg/config"
-	"github.com/marmotedu/log"
+	"github.com/cold-runner/skylark/internal/pkg/log"
 	"github.com/pkg/errors"
 )
 
@@ -21,17 +23,18 @@ func InitApp() {
 	App.controllerIns = initController()
 
 	globalConfig := config.GetConfig()
-	log.Init(globalConfig.LogConfig())
-
+	log.Init()
 	var options []hzConfig.Option
 	serverConf := globalConfig.ServerConfig()
 	// 设置tls，配置文件留空则不使用tls
 	if serverTlsConfig, err := newServerTlsConfig(serverConf.CertFile, serverConf.KeyFile); err == nil {
 		options = append(options, serverTlsConfig)
 	} else {
-		log.Warnf("未开启TLS")
+		hlog.Debug("未开启TLS配置")
 	}
 
+	// 注册自定义校验规则
+	options = append(options, server.WithValidateConfig(controller.Validator()))
 	// 设置监听地址、端口
 	options = append(options, server.WithHostPorts(serverConf.Host+":"+serverConf.Port))
 	// 设置退出时间
@@ -55,7 +58,7 @@ func newServerTlsConfig(certFilePath, keyFilePath string) (hzConfig.Option, erro
 	}
 	cert, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
 	if err != nil {
-		log.Panicf("配置tls证书失败， err: %v", err)
+		fmt.Printf("配置tls证书失败， err: %v", err)
 	}
 	cfg.Certificates = append(cfg.Certificates, cert)
 	return server.WithTLS(cfg), nil

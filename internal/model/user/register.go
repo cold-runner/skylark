@@ -8,7 +8,6 @@ import (
 type Register struct {
 	StuNum       string                `vd:"stuNum($)" form:"stuNum,required"`
 	Name         string                `vd:"name($)" form:"name,required"`
-	Password     string                `vd:"password($)" form:"password,required"`
 	College      string                `vd:"college($)" form:"college,required"`
 	Major        string                `vd:"major($)" form:"major,required"`
 	Grade        string                `vd:"grade($)" form:"grade,required"`
@@ -16,4 +15,5 @@ type Register struct {
 	StuCardPhoto *multipart.FileHeader `vd:"isImage($)" form:"stuCardPhoto,required"`
 	Phone        string                `vd:"phone($)" form:"phone,required"`
 	SmsCode      string                `vd:"smsCode($)" form:"smsCode,required"`
+	Password     string                `vd:"password($)" form:"password,required"`
 }

@@ -1,25 +1,36 @@
 package mysql
 
-import "gorm.io/gorm"
+import (
+	"github.com/cold-runner/skylark/internal/store/mysql/query"
+	"gorm.io/gen"
+	"gorm.io/gorm"
+)
 
-func LarkByStuNum(stuNum string) func(*gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("stu_num = ?", stuNum)
-	}
+// lark部分
+func LarkByStuNum(stuNum string) gen.Condition {
+	return query.Lark.StuNum.Eq(stuNum)
 }
 
-func LarkByPhone(phone string) func(*gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("phone = ?", phone)
-	}
+func LarkByPhone(phone string) gen.Condition {
+	return query.Lark.Phone.Eq(phone)
 }
 
-func LarkByQqUnionId(qqUnionId string) func(*gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("qq_union_id = ?", qqUnionId)
-	}
+func LarkByQqUnionId(qqUnionId string) gen.Condition {
+	return query.Lark.QqUnionID.Eq(qqUnionId)
 }
 
-func LarkQqUnionIdIsNull(db *gorm.DB) *gorm.DB {
-	return db.Where("qq_union_id is NULL")
+func LarkQqUnionIdIsNull() gen.Condition {
+	return query.Lark.QqUnionID.IsNotNull()
+}
+
+// post部分
+func DraftByUserId(userId int64) gen.Condition {
+	return query.Draft.UserID.Eq(userId)
+}
+
+// 公共部分
+func Paginate(offset, pageSize int) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Offset(offset).Limit(pageSize)
+	}
 }

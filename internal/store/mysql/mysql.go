@@ -1,39 +1,31 @@
 package mysql
 
 import (
-	"github.com/cold-runner/skylark/internal/model/user"
 	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/cold-runner/skylark/internal/store"
+	"github.com/cold-runner/skylark/internal/store/mysql/query"
 	"github.com/cold-runner/skylark/pkg/db"
-	"gorm.io/gorm"
 )
 
 type mysql struct {
-	db *gorm.DB
+	*query.Query
 }
 
-func NewMysqlIns(o *config.MySQL) store.Store {
-	options := &db.Options{
-		Host:                  o.Host,
-		Username:              o.Username,
-		Password:              o.Password,
-		Database:              o.Database,
-		MaxIdleConnections:    o.MaxIdleConnections,
-		MaxOpenConnections:    o.MaxOpenConnections,
-		MaxConnectionLifeTime: o.MaxConnectionLifeTime,
-		LogLevel:              o.LogLevel,
+func NewMySQLIns(conf *config.MySQL) store.Store {
+	opt := &db.Options{
+		Host:                  conf.Host,
+		Username:              conf.Username,
+		Password:              conf.Password,
+		Database:              conf.Database,
+		MaxIdleConnections:    conf.MaxIdleConnections,
+		MaxOpenConnections:    conf.MaxOpenConnections,
+		MaxConnectionLifeTime: conf.MaxConnectionLifeTime,
+		LogLevel:              conf.LogLevel,
 		Logger:                nil,
 	}
-	dbIns, err := db.NewMySQL(options)
+	dbIns, err := db.NewMySQL(opt)
 	if err != nil {
 		panic(err)
 	}
-	err = dbIns.AutoMigrate(
-		&user.Lark{}, // 用户表
-		//&post.StoredLearningPost{}, // 文章表
-	)
-	if err != nil {
-		panic(err)
-	}
-	return &mysql{db: dbIns}
+	return &mysql{Query: query.Use(dbIns)}
 }

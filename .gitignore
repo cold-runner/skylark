@@ -3,4 +3,5 @@ node_modules
 skylark.exe
 skylark
 conf/config.yaml
+tmp
 *.log

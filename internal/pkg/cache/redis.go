@@ -59,6 +59,14 @@ func (r *redisClient) SetHash(c context.Context, hashName string, key string, va
 	return nil
 }
 
+func (r *redisClient) SetHashExpiration(c context.Context, hashName string, key string, value interface{}, expiration time.Duration) error {
+	_, err := r.client.HSet(c, hashName, key, value).Result()
+	if err != nil {
+		return err
+	}
+	return r.Expire(c, hashName, expiration)
+}
+
 func (r *redisClient) SetHashMulti(c context.Context, hashName string, kvPair map[string]interface{}) error {
 	result, err := r.client.HSet(c, hashName, kvPair).Result()
 	if err != nil {
@@ -106,4 +114,15 @@ func (r *redisClient) IsExpired(c context.Context, key string) (bool, error) {
 		return true, nil
 	}
 	return false, nil
+}
+
+func (r *redisClient) Expire(c context.Context, key string, expiration time.Duration) error {
+	success, err := r.client.Expire(c, key, expiration).Result()
+	if err != nil {
+		return err
+	}
+	if !success {
+		return errors.New("设置超时时间失败")
+	}
+	return nil
 }

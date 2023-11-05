@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/errors"
 	"github.com/cold-runner/skylark/internal/model/post"
 	"github.com/cold-runner/skylark/internal/model/user"
 	"github.com/cold-runner/skylark/internal/pkg/cache"
@@ -25,21 +27,22 @@ type Interface interface {
 }
 
 type Middleware interface {
-	Authenticator(c context.Context, loginUser *user.LoginUser) (loggedUser *user.LoggedUser, err error)
+	Authenticator(c context.Context, ctx *app.RequestContext, loginUser *user.LoginUser) (loggedUser *user.LoggedUser, err *errors.Error)
 }
 
 type LarkSrv interface {
-	BindQq(c context.Context, stuNum, qqUnionId string) error
+	BindQq(c context.Context, ctx *app.RequestContext, stuNum, qqUnionId string) *errors.Error
 }
 
 type CommentSrv interface {
 }
 
 type PostSrv interface {
-	SaveDraft(c context.Context, userId, draftId string, draft *post.Draft) error
+	CreateDraft(c context.Context, ctx *app.RequestContext) *errors.Error
+	SaveDraft(c context.Context, ctx *app.RequestContext, userId string, draft *post.DraftInfo) *errors.Error
 }
 
 type PublicSrv interface {
-	Register(c context.Context, register *user.Register) error
-	SendSmsCode(c context.Context, phone string) error
+	Register(c context.Context, ctx *app.RequestContext, register *user.Register) *errors.Error
+	SendSmsCode(c context.Context, ctx *app.RequestContext, phone string) *errors.Error
 }

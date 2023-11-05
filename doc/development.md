@@ -38,9 +38,9 @@
 │  │          user.go
 │  │
 │  ├─pkg        # 项目内共享包
-│  │  ├─code    # 错误码
+│  │  ├─errCode    # 错误码
 │  │  │      base.go
-│  │  │      code.go
+│  │  │      errCode.go
 │  │  │      register.go
 │  │  │      resp.go
 │  │  │      user.go

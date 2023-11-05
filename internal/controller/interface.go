@@ -21,6 +21,7 @@ type Interface interface {
 }
 
 type PostController interface {
+	CreateDraft(context.Context, *app.RequestContext)
 	Save(context.Context, *app.RequestContext)
 }
 

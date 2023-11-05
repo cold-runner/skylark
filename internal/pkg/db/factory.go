@@ -15,7 +15,7 @@ const (
 func NewInstance(conf config.Config) store.Store {
 	switch conf.ServerConfig().Db {
 	case MYSQL:
-		return mysql.NewMysqlIns(conf.MySQLConfig())
+		return mysql.NewMySQLIns(conf.MySQLConfig())
 	}
 	panic("无效的store依赖")
 }
