@@ -14,14 +14,14 @@ const TableNameCategorie = "categorie"
 
 // Categorie mapped from table <categorie>
 type Categorie struct {
-	ID            int64          `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
-	CreatedAt     time.Time      `gorm:"column:created_at;type:datetime(3)" json:"created_at"`
-	UpdatedAt     time.Time      `gorm:"column:updated_at;type:datetime(3)" json:"updated_at"`
-	DeletedAt     gorm.DeletedAt `gorm:"column:deleted_at;type:datetime(3);index:idx_categories_deleted_at,priority:1" json:"deleted_at"`
-	BackGroundURL string         `gorm:"column:back_ground_url;type:longtext" json:"back_ground_url"`
-	Name          string         `gorm:"column:name;type:longtext" json:"name"`
-	Rank          int64          `gorm:"column:rank;type:bigint" json:"rank"`
-	PlateID       int64          `gorm:"column:plate_id;type:bigint unsigned" json:"plate_id"`
+	ID            int64          `gorm:"column:id;type:bigint;primaryKey;comment:自然主键" json:"id"`                                             // 自然主键
+	CreatedAt     time.Time      `gorm:"column:created_at;type:datetime;not null;comment:创建时间" json:"created_at"`                             // 创建时间
+	DeletedAt     gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除时间（软删除）" json:"deleted_at"`                                 // 删除时间（软删除）
+	UpdatedAt     time.Time      `gorm:"column:updated_at;type:datetime;comment:更新时间" json:"updated_at"`                                      // 更新时间
+	Name          string         `gorm:"column:name;type:varchar(50);not null;uniqueIndex:categorie_pk2,priority:1;comment:归档名称" json:"name"` // 归档名称
+	BackgroundURL string         `gorm:"column:background_url;type:varchar(255);not null;comment:背景图片url" json:"background_url"`              // 背景图片url
+	Rank          int64          `gorm:"column:rank;type:tinyint;not null;comment:板块排序权重" json:"rank"`                                        // 板块排序权重
+	PlateID       int64          `gorm:"column:plate_id;type:bigint;index:categorie_plate_id_fk,priority:1;comment:板块id" json:"plate_id"`     // 板块id
 }
 
 // TableName Categorie's table name

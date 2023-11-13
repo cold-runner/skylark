@@ -28,8 +28,7 @@ func main() {
 	}
 	// 构造生成器实例
 	g := gen.NewGenerator(gen.Config{
-		OutPath:           "internal/store/mysql/query",
-		ModelPkgPath:      "internal/model",
+		OutPath:           "internal/gorm_gen",
 		Mode:              gen.WithDefaultQuery | gen.WithQueryInterface | gen.WithoutContext,
 		FieldNullable:     false,
 		FieldCoverable:    true,

@@ -14,15 +14,15 @@ const TableNameComment = "comment"
 
 // Comment mapped from table <comment>
 type Comment struct {
-	ID          int64          `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
-	CreatedAt   time.Time      `gorm:"column:created_at;type:datetime(3)" json:"created_at"`
-	UpdatedAt   time.Time      `gorm:"column:updated_at;type:datetime(3)" json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;type:datetime(3);index:idx_comments_deleted_at,priority:1" json:"deleted_at"`
-	ParentID    int64          `gorm:"column:parent_id;type:bigint unsigned" json:"parent_id"`
-	Content     string         `gorm:"column:content;type:longtext" json:"content"`
-	UserID      int64          `gorm:"column:user_id;type:bigint unsigned" json:"user_id"`
-	ReplyUserID int64          `gorm:"column:reply_user_id;type:bigint unsigned" json:"reply_user_id"`
-	PostID      int64          `gorm:"column:post_id;type:bigint unsigned" json:"post_id"`
+	ID          int64          `gorm:"column:id;type:bigint;primaryKey;comment:自然主键" json:"id"`                                                    // 自然主键
+	CreatedAt   time.Time      `gorm:"column:created_at;type:datetime;not null;comment:创建时间" json:"created_at"`                                    // 创建时间
+	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除时间（软删除）" json:"deleted_at"`                                        // 删除时间（软删除）
+	UpdatedAt   time.Time      `gorm:"column:updated_at;type:datetime;comment:更新时间" json:"updated_at"`                                             // 更新时间
+	PostID      int64          `gorm:"column:post_id;type:bigint;not null;comment:评论所属文章(考虑性能，不加约束)" json:"post_id"`                               // 评论所属文章(考虑性能，不加约束)
+	UserID      int64          `gorm:"column:user_id;type:bigint;not null;comment:评论者id(考虑性能，不加约束)" json:"user_id"`                                // 评论者id(考虑性能，不加约束)
+	ReplyUserID int64          `gorm:"column:reply_user_id;type:bigint;not null;comment:回复评论(考虑性能，不加约束)" json:"reply_user_id"`                     // 回复评论(考虑性能，不加约束)
+	ParentID    int64          `gorm:"column:parent_id;type:bigint;not null;uniqueIndex:comment_pk2,priority:1;comment:回复的父评论id" json:"parent_id"` // 回复的父评论id
+	Content     string         `gorm:"column:content;type:text;not null;comment:评论内容" json:"content"`                                              // 评论内容
 }
 
 // TableName Comment's table name

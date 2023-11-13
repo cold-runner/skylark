@@ -120,6 +120,6 @@ func buildLoggedUser(storedUser *model.Lark) *user.LoggedUser {
 		Name:    storedUser.Name,
 		College: storedUser.College,
 		Major:   storedUser.Major,
-		Grade:   storedUser.Grade,
+		Grade:   strconv.FormatInt(storedUser.Grade, 10),
 	}
 }

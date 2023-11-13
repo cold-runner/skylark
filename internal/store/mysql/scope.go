@@ -1,31 +1,31 @@
 package mysql
 
 import (
-	"github.com/cold-runner/skylark/internal/store/mysql/query"
+	"github.com/cold-runner/skylark/internal/gorm_gen"
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )
 
 // lark部分
 func LarkByStuNum(stuNum string) gen.Condition {
-	return query.Lark.StuNum.Eq(stuNum)
+	return gorm_gen.Lark.StuNum.Eq(stuNum)
 }
 
 func LarkByPhone(phone string) gen.Condition {
-	return query.Lark.Phone.Eq(phone)
+	return gorm_gen.Lark.Phone.Eq(phone)
 }
 
 func LarkByQqUnionId(qqUnionId string) gen.Condition {
-	return query.Lark.QqUnionID.Eq(qqUnionId)
+	return gorm_gen.Lark.QqUnionID.Eq(qqUnionId)
 }
 
 func LarkQqUnionIdIsNull() gen.Condition {
-	return query.Lark.QqUnionID.IsNotNull()
+	return gorm_gen.Lark.QqUnionID.IsNotNull()
 }
 
 // post部分
 func DraftByUserId(userId int64) gen.Condition {
-	return query.Draft.UserID.Eq(userId)
+	return gorm_gen.Draft.UserID.Eq(userId)
 }
 
 // 公共部分

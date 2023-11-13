@@ -106,10 +106,10 @@ func (s *serviceV1) Register(c context.Context, ctx *app.RequestContext, registe
 		Gender:   int64(util.GenderTransform(register.Gender)),
 		College:  register.College,
 		Major:    register.Major,
-		Grade:    register.Grade,
+		Grade:    int64(register.Grade),
 		Phone:    register.Phone,
 		PhotoURL: fileUrl,
-		Legal:    int64(0),
+		State:    int64(0),
 	})
 	switch {
 	// 用户已注册

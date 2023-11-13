@@ -1,14 +1,14 @@
 package mysql
 
 import (
+	"github.com/cold-runner/skylark/internal/gorm_gen"
 	"github.com/cold-runner/skylark/internal/pkg/config"
 	"github.com/cold-runner/skylark/internal/store"
-	"github.com/cold-runner/skylark/internal/store/mysql/query"
 	"github.com/cold-runner/skylark/pkg/db"
 )
 
 type mysql struct {
-	*query.Query
+	*gorm_gen.Query
 }
 
 func NewMySQLIns(conf *config.MySQL) store.Store {
@@ -27,5 +27,5 @@ func NewMySQLIns(conf *config.MySQL) store.Store {
 	if err != nil {
 		panic(err)
 	}
-	return &mysql{Query: query.Use(dbIns)}
+	return &mysql{Query: gorm_gen.Use(dbIns)}
 }
