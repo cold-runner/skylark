@@ -1,18 +1,18 @@
 package core
 
 import (
-	"github.com/cold-runner/skylark/internal/controller"
-	controllerV1 "github.com/cold-runner/skylark/internal/controller/v1"
-	"github.com/cold-runner/skylark/internal/pkg/cache"
-	"github.com/cold-runner/skylark/internal/pkg/config"
-	"github.com/cold-runner/skylark/internal/pkg/db"
-	"github.com/cold-runner/skylark/internal/pkg/oss"
-	"github.com/cold-runner/skylark/internal/pkg/sms"
-	serviceV1 "github.com/cold-runner/skylark/internal/service/v1"
-	"github.com/cold-runner/skylark/internal/store"
+	serviceV1 "github.com/cold-runner/skylark/internal/application/v1"
+	"github.com/cold-runner/skylark/internal/iface"
+	controllerV1 "github.com/cold-runner/skylark/internal/iface/v1"
+	"github.com/cold-runner/skylark/internal/infrastructure/cache"
+	"github.com/cold-runner/skylark/internal/infrastructure/config"
+	"github.com/cold-runner/skylark/internal/infrastructure/db"
+	"github.com/cold-runner/skylark/internal/infrastructure/oss"
+	"github.com/cold-runner/skylark/internal/infrastructure/sms"
+	"github.com/cold-runner/skylark/internal/infrastructure/store"
 )
 
-func initController() controller.Interface {
+func initController() iface.UserInterface {
 	var (
 		cacheIns cache.Cache
 		ossIns   oss.Oss
@@ -27,6 +27,7 @@ func initController() controller.Interface {
 		switch {
 		// TODO 设置debug模式下的组件
 		case serverConf.Mode == config.DEBUG:
+			panic("还尚不支持调试模式")
 			config.DConfig = &config.DebugConfig{
 				Phone:   "11122233344",
 				SmsCode: "123456",
@@ -34,13 +35,16 @@ func initController() controller.Interface {
 
 		// TODO 设置test模式下的组件
 		case serverConf.Mode == config.TEST:
+			panic("还尚不支持测试模式")
 			fallthrough
 
+		// 生产模式配置
 		case serverConf.Mode == config.PRODUCTION:
 			cacheIns = cache.NewInstance(globalConf)
 			ossIns = oss.NewInstance(globalConf)
 			smsIns = sms.NewInstance(globalConf)
 			storeIns = db.NewInstance(globalConf)
+
 		default:
 			panic("无效的模式，可选项为debug,test,production")
 		}

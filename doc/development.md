@@ -15,7 +15,7 @@
 │          user_api.md  # 后端用户模块api接口
 │
 ├─internal
-│  ├─controller # controlle层
+│  ├─iface # controlle层
 │  │  ├─mw      # 中间件
 │  │  └─v1      # api
 │  │          post.go
@@ -26,18 +26,18 @@
 │  │      router.go
 │  │      server.go
 │  │
-│  ├─model      # model 层
+│  ├─domain      # domain 层
 │  │  ├─post
 │  │  │      post.go
 │  │  │
 │  │  ├─consts   # 常量
 │  │  │      consts.go
 │  │  │
-│  │  └─user    # 用户 model
+│  │  └─user    # 用户 domain
 │  │          tourists.go
 │  │          user.go
 │  │
-│  ├─pkg        # 项目内共享包
+│  ├─infrastructure        # 项目内共享包
 │  │  ├─errCode    # 错误码
 │  │  │      base.go
 │  │  │      errCode.go
@@ -49,7 +49,7 @@
 │  │  │ …………
 │  │  │
     …………
-│  ├─service    # 服务层
+│  ├─application    # 服务层
     …………
 │  │
 │  └─db      # 持久层
@@ -61,7 +61,7 @@
 │      └─mysql  # 接口实现层
 │              mysql.go
 │              user.go
-└─pkg         # 项目内外共享包
+└─infrastructure         # 项目内外共享包
    ………………
 ```
 项目维护者代码必须按照功能放在相应的目录

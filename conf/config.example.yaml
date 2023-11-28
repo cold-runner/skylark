@@ -1,5 +1,5 @@
 server:
-  mode: debug # core mode: release, debug, test，默认 debug
+  mode: debug # core mode: production, debug, test，默认 debug
   middlewares:  # 加载的中间件列表，多个中间件,recovery,logger,secure,auth，逗号(,)隔开
   prefix: # /路由前缀
   exitWaitTime: 0 # 对服务器发送终止信号后阻塞一段时间后退出，单位s

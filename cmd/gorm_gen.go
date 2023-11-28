@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/cold-runner/skylark/internal/pkg/config"
+	"github.com/cold-runner/skylark/internal/infrastructure/config"
 	"github.com/cold-runner/skylark/pkg/db"
 	"gorm.io/gen"
+	"gorm.io/gen/field"
 	"gorm.io/gorm"
 )
 
 func main() {
+	config.Init()
 	mysqlConfig := config.GetConfig().MySQLConfig()
 	options := &db.Options{
 		Host:                  mysqlConfig.Host,
@@ -28,8 +30,9 @@ func main() {
 	}
 	// 构造生成器实例
 	g := gen.NewGenerator(gen.Config{
-		OutPath:           "internal/gorm_gen",
+		OutPath:           "internal/store/mysql/query_gen",
 		Mode:              gen.WithDefaultQuery | gen.WithQueryInterface | gen.WithoutContext,
+		ModelPkgPath:      "internal/domain/model_gen",
 		FieldNullable:     false,
 		FieldCoverable:    true,
 		FieldSignable:     false,
@@ -49,7 +52,14 @@ func main() {
 	})
 
 	// generate all table from database
-	g.ApplyBasic(g.GenerateAllTable()...)
+	g.ApplyBasic(g.GenerateAllTable(
+		gen.FieldGORMTagReg("^id$", func(tag field.GormTag) field.GormTag {
+			return tag.
+				Append("default", "uuid_generate_v4()").
+				Set("type", "uuid")
+		}),
+		gen.FieldType("id", "uuid.UUID"),
+	)...)
 
 	g.Execute()
 }

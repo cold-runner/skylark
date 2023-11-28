@@ -1,0 +1,21 @@
+package db
+
+import (
+	"github.com/cold-runner/skylark/internal/infrastructure/config"
+	"github.com/cold-runner/skylark/internal/infrastructure/store"
+	"github.com/cold-runner/skylark/internal/infrastructure/store/mysql"
+)
+
+const (
+	MYSQL = "mysql"
+)
+
+// 简单工厂模式
+
+func NewInstance(conf config.Config) store.Store {
+	switch conf.ServerConfig().Db {
+	case MYSQL:
+		return mysql.NewMySQLIns(conf.MySQLConfig())
+	}
+	panic("无效的store依赖")
+}

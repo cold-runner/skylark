@@ -6,9 +6,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	hzConfig "github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/cold-runner/skylark/internal/controller"
-	"github.com/cold-runner/skylark/internal/pkg/config"
-	"github.com/cold-runner/skylark/internal/pkg/log"
+	"github.com/cold-runner/skylark/internal/iface"
+	"github.com/cold-runner/skylark/internal/infrastructure/config"
+	"github.com/cold-runner/skylark/internal/infrastructure/log"
 	"github.com/pkg/errors"
 )
 
@@ -16,11 +16,12 @@ var App = new(Application)
 
 type Application struct {
 	router        *server.Hertz
-	controllerIns controller.Interface
+	userInterface iface.UserInterface
 }
 
 func InitApp() {
-	App.controllerIns = initController()
+	config.Init()
+	App.userInterface = initController()
 
 	globalConfig := config.GetConfig()
 	log.Init()
@@ -34,7 +35,7 @@ func InitApp() {
 	}
 
 	// 注册自定义校验规则
-	options = append(options, server.WithValidateConfig(controller.Validator()))
+	options = append(options, server.WithValidateConfig(iface.Validator()))
 	// 设置监听地址、端口
 	options = append(options, server.WithHostPorts(serverConf.Host+":"+serverConf.Port))
 	// 设置退出时间
