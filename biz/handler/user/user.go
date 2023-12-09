@@ -32,7 +32,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 	resp, err := service.Register(c, &req)
 	if err != nil {
 		errCode.ResponseFailed(c)
-		hlog.Errorf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
 		return
 	}
 
@@ -57,7 +57,7 @@ func PasswordLogin(ctx context.Context, c *app.RequestContext) {
 
 	if err = service.PasswordLogin(ctx, c, &req); err != nil {
 		errCode.ResponseFailed(c)
-		hlog.Errorf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
 		return
 	}
 
@@ -82,7 +82,7 @@ func PhoneLogin(ctx context.Context, c *app.RequestContext) {
 
 	if err = service.PhoneLogin(ctx, c, &req); err != nil {
 		errCode.ResponseFailed(c)
-		hlog.Errorf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
 		return
 	}
 
