@@ -58,7 +58,7 @@ func PhoneLogin(c context.Context, ctx *app.RequestContext, req *user.PhoneLogin
 	cacheIns := cache.GetCache()
 
 	loginEntity := &userEntity.LoginUser{}
-	if err := loginEntity.PhoneLogin(c, storeIns, cacheIns, req); err != nil {
+	if err := loginEntity.PhoneLogin(c, ctx, storeIns, cacheIns, req); err != nil {
 		return err
 	}
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/errors"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cold-runner/skylark/biz/infrastructure/cache"
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
@@ -35,9 +36,32 @@ func (l *LoginUser) PasswordLogin(c context.Context, ctx *app.RequestContext, st
 	default:
 		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 	}
-
 }
 
-func (l *LoginUser) PhoneLogin(c context.Context, storeIns store.Store, cacheIns cache.Cache, req *user.PhoneLoginReq) *errors.Error {
+func (l *LoginUser) PhoneLogin(c context.Context, ctx *app.RequestContext, storeIns store.Store, cacheIns cache.Cache, req *user.PhoneLoginReq) *errors.Error {
+	lark, err := storeIns.GetLark(c, mysql.LarkByPhone(storeIns.(*mysql.MysqlIns), req.Phone))
+
+	switch {
+	case stdErr.Is(err, gorm.ErrRecordNotFound):
+		errMsg := "user not exist!" + "recv phone: " + req.Phone
+		return errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrUserNotFound)
+	case err != nil:
+		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+	}
+
+	storedSmsCode, err := cacheIns.Get(c, req.Phone)
+	if err != nil {
+		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+	}
+	sCode := storedSmsCode.(string)
+	if sCode != req.SmsCode {
+		errMsg := "invalid smsCode! recv: " + req.SmsCode + " stored: " + sCode
+		return errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrSmsCode)
+	}
+	err = cacheIns.Del(c, req.Phone)
+	if err != nil {
+		hlog.Warnf("delete smsCode failed! err: %v", err)
+	}
+	ctx.Set("uuid", lark.ID.String())
 	return nil
 }
