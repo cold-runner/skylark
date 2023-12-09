@@ -61,7 +61,7 @@ func PasswordLogin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	jwtMiddleware.LoginHandler(ctx, c)
+	JwtMiddleware.LoginHandler(ctx, c)
 	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 }
 
@@ -86,7 +86,7 @@ func PhoneLogin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	jwtMiddleware.LoginHandler(ctx, c)
+	JwtMiddleware.LoginHandler(ctx, c)
 	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 }
 
@@ -131,7 +131,12 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(user.GetUserInfoByIdRes)
+	resp, err := service.GetUserInfo(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
 
 	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 	c.JSON(consts.StatusOK, resp)

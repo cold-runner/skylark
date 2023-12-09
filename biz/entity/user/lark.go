@@ -9,6 +9,7 @@ import (
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
 	"github.com/cold-runner/skylark/biz/infrastructure/store/mysql"
+	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"github.com/cold-runner/skylark/biz/model/user"
 	"github.com/cold-runner/skylark/biz/util"
 	"github.com/google/uuid"
@@ -28,7 +29,7 @@ func (l *LoginUser) PasswordLogin(c context.Context, ctx *app.RequestContext, st
 		if util.VerifyPassword(req.Password, lark.Password) != nil {
 			return errCode.WrapBizErr(ctx, stdErr.New("password is incorrect!"), errCode.ErrPasswordIncorrect)
 		}
-		ctx.Set("uuid", lark.ID.String())
+		ctx.Set("uuid", lark.ID)
 		return nil
 	case stdErr.Is(err, gorm.ErrRecordNotFound):
 		errMsg := "user not exist!" + "recv stuNum: " + req.GetStuNum()
@@ -62,6 +63,41 @@ func (l *LoginUser) PhoneLogin(c context.Context, ctx *app.RequestContext, store
 	if err != nil {
 		hlog.Warnf("delete smsCode failed! err: %v", err)
 	}
-	ctx.Set("uuid", lark.ID.String())
+	ctx.Set("uuid", lark.ID)
 	return nil
+}
+
+type Lark struct {
+}
+
+func (l *Lark) GetById(c context.Context, ctx *app.RequestContext, storeIns store.Store, uuid string) (*orm_gen.Lark, *errors.Error) {
+	lark, err := storeIns.GetLark(c, mysql.LarkById(storeIns.(*mysql.MysqlIns), uuid))
+	switch {
+	case stdErr.Is(err, gorm.ErrRecordNotFound):
+		errMsg := "user not exist!" + "recv uuid: " + uuid
+		return nil, errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrUserNotFound)
+	case err != nil:
+		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+	}
+	return lark, nil
+}
+
+func (l *Lark) Format(stored *orm_gen.Lark) *user.Basic {
+	return &user.Basic{
+		UserId:            stored.ID.String(),
+		StuNum:            stored.StuNum,
+		AvatarUrl:         stored.Avatar,
+		StuName:           stored.Name,
+		BriefIntroduction: stored.Introduce,
+		College:           stored.College,
+		Major:             stored.Major,
+		Grade:             stored.Grade,
+		// TODO 交互信息
+		FolloweeCount:     1,
+		FollowerCount:     1,
+		PostArticleCount:  1,
+		EssayArticleCount: 1,
+		Power:             1,
+	}
+
 }

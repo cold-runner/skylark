@@ -12,7 +12,7 @@ import (
 	"github.com/hertz-contrib/jwt"
 )
 
-var jwtMiddleware *jwt.HertzJWTMiddleware
+var JwtMiddleware *jwt.HertzJWTMiddleware
 
 func InitAuthenticatorAndAuthorization() {
 	jwtConfig := config.GetConfig().GetJwt()
@@ -59,5 +59,5 @@ func InitAuthenticatorAndAuthorization() {
 	if err != nil {
 		panic(err)
 	}
-	jwtMiddleware = jwtMw
+	JwtMiddleware = jwtMw
 }

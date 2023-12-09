@@ -7,6 +7,12 @@ import (
 )
 
 // lark部分
+func LarkById(db *MysqlIns, uid string) gen.Condition {
+	check(db)
+	u, _ := uuid.Parse(uid)
+	return db.Query.Lark.ID.Eq(u)
+}
+
 func LarkByStuNum(db *MysqlIns, stuNum string) gen.Condition {
 	check(db)
 	return db.Query.Lark.StuNum.Eq(stuNum)

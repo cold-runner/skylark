@@ -4,6 +4,7 @@ package user
 
 import (
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cold-runner/skylark/biz/handler/user"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/limiter"
 )
@@ -46,6 +47,5 @@ func _userMw() []app.HandlerFunc {
 }
 
 func _getuserinfoMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{user.JwtMiddleware.MiddlewareFunc()}
 }
