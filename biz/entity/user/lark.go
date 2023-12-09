@@ -29,7 +29,7 @@ func (l *LoginUser) PasswordLogin(c context.Context, ctx *app.RequestContext, st
 		if util.VerifyPassword(req.Password, lark.Password) != nil {
 			return errCode.WrapBizErr(ctx, stdErr.New("password is incorrect!"), errCode.ErrPasswordIncorrect)
 		}
-		ctx.Set("uuid", lark.ID)
+		ctx.Set("uuid", lark.ID.String())
 		return nil
 	case stdErr.Is(err, gorm.ErrRecordNotFound):
 		errMsg := "user not exist!" + "recv stuNum: " + req.GetStuNum()
@@ -63,7 +63,7 @@ func (l *LoginUser) PhoneLogin(c context.Context, ctx *app.RequestContext, store
 	if err != nil {
 		hlog.Warnf("delete smsCode failed! err: %v", err)
 	}
-	ctx.Set("uuid", lark.ID)
+	ctx.Set("uuid", lark.ID.String())
 	return nil
 }
 
