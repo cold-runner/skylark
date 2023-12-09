@@ -7,40 +7,40 @@ import (
 )
 
 // lark部分
-func LarkByStuNum(db *mysqlIns, stuNum string) gen.Condition {
+func LarkByStuNum(db *MysqlIns, stuNum string) gen.Condition {
 	check(db)
 	return db.Query.Lark.StuNum.Eq(stuNum)
 }
 
-func LarkByPhone(db *mysqlIns, phone string) gen.Condition {
+func LarkByPhone(db *MysqlIns, phone string) gen.Condition {
 	check(db)
 	return db.Query.Lark.Phone.Eq(phone)
 }
 
-func LarkByQqUnionId(db *mysqlIns, qqUnionId string) gen.Condition {
+func LarkByQqUnionId(db *MysqlIns, qqUnionId string) gen.Condition {
 	check(db)
 	return db.Query.Lark.QqUnionID.Eq(qqUnionId)
 }
 
-func LarkQqUnionIdIsNull(db *mysqlIns) gen.Condition {
+func LarkQqUnionIdIsNull(db *MysqlIns) gen.Condition {
 	check(db)
 	return db.Query.Lark.QqUnionID.IsNotNull()
 }
 
 // post部分
-func PostByUserId(db *mysqlIns, userId uuid.UUID) gen.Condition {
+func PostByUserId(db *MysqlIns, userId uuid.UUID) gen.Condition {
 	check(db)
 	return db.Query.Post.UserID.Eq(userId.String())
 }
 
 // Plate部分
-func PlateByName(db *mysqlIns, plateName string) gen.Condition {
+func PlateByName(db *MysqlIns, plateName string) gen.Condition {
 	check(db)
 	return db.Query.Plate.Name.Eq(plateName)
 }
 
 // Category部分
-func CategoryByName(db *mysqlIns, cateName string) gen.Condition {
+func CategoryByName(db *MysqlIns, cateName string) gen.Condition {
 	check(db)
 	return db.Query.Categorie.Name.Eq(cateName)
 }
@@ -52,7 +52,7 @@ func Paginate(offset, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func check(db *mysqlIns) {
+func check(db *MysqlIns) {
 	if db == nil || db.Query == nil {
 		panic("数据库实例为空！")
 	}

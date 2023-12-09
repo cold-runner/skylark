@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"github.com/cold-runner/skylark/biz/config"
+	"github.com/cold-runner/skylark/biz/handler/user"
 	"github.com/cold-runner/skylark/biz/infrastructure/cache"
 	"github.com/cold-runner/skylark/biz/infrastructure/log"
 	"github.com/cold-runner/skylark/biz/infrastructure/oss"
@@ -26,6 +27,8 @@ func Init() {
 				panic(errors.Errorf("无效的仓储实例类型，支持的类型：mysql。当前传入类型为：%s", c.GetServer().Db))
 			}
 		}()
+		// 初始化认证、授权中间件
+		user.InitAuthenticatorAndAuthorization()
 		// 初始化日志
 		log.Init(c)
 		// 初始化缓存

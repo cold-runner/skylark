@@ -12,7 +12,16 @@ var SuccessStatus = &response.Status{
 }
 
 func ResponseFailed(c *app.RequestContext) {
-	bizErrCode := c.Errors.Last().Meta.(BizErrCode)
+	lastErr := c.Errors.Last()
+	if lastErr == nil {
+		c.JSON(ErrMap[ErrUnknown].HttpStatus, utils.H{
+			"code": ErrUnknown,
+			"msg":  ErrMap[ErrUnknown].Msg,
+		})
+		panic("biz err is nil")
+	}
+
+	bizErrCode := lastErr.Meta.(BizErrCode)
 	bizErr := ErrMap[bizErrCode]
 
 	c.JSON(bizErr.HttpStatus, utils.H{
@@ -27,6 +36,15 @@ func ResponseValidationFailed(c *app.RequestContext, err error) {
 	c.JSON(bizErr.HttpStatus, utils.H{
 		"code": ErrValidation,
 		"msg":  bizErr.Msg + ". err: " + err.Error(),
+	})
+}
+
+func ResponsePermissionDenied(c *app.RequestContext) {
+	bizErr := ErrMap[ErrPermissionDenied]
+
+	c.JSON(bizErr.HttpStatus, utils.H{
+		"code": ErrPermissionDenied,
+		"msg":  bizErr.Msg + ". err: ",
 	})
 }
 

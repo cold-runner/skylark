@@ -55,10 +55,14 @@ func PasswordLogin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(user.PasswordLoginResp)
+	if err = service.PasswordLogin(ctx, c, &req); err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Errorf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
 
+	jwtMiddleware.LoginHandler(ctx, c)
 	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
-	c.JSON(consts.StatusOK, resp)
 }
 
 // PhoneLogin .
@@ -76,10 +80,14 @@ func PhoneLogin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(user.PhoneLoginResp)
+	if err = service.PhoneLogin(ctx, c, &req); err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Errorf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
 
+	jwtMiddleware.LoginHandler(ctx, c)
 	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
-	c.JSON(consts.StatusOK, resp)
 }
 
 // SendSmsCode .

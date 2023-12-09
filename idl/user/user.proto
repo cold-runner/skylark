@@ -31,21 +31,14 @@ message PasswordLoginReq {
   string password = 2[(api.body) = "password"];
 }
 
-message PasswordLoginResp {
+message LoginResp {
   response.Status status = 1;
   string token = 2[(api.body)="token"];
-  user.Basic basic_info = 3;
 }
 
 message PhoneLoginReq {
   string phone = 1[(api.body) = "phone"];
   string sms_code = 2[(api.body) = "sms_code"];
-}
-
-message PhoneLoginResp {
-  response.Status status = 1;
-  string token = 2[(api.body)="token"];
-  user.Basic basic_info = 3;
 }
 
 message SendSmsCodeReq {
@@ -72,10 +65,10 @@ service User {
   rpc register(RegisterReq) returns(RegisterResp) {
     option (api.post) = "/register";
   }
-  rpc passwordLogin(PasswordLoginReq) returns(PasswordLoginResp){
+  rpc passwordLogin(PasswordLoginReq) returns(LoginResp){
     option (api.get) = "/login/password";
   }
-  rpc phoneLogin(PhoneLoginReq) returns(PhoneLoginResp){
+  rpc phoneLogin(PhoneLoginReq) returns(LoginResp){
     option (api.get) = "/login/phone";
   }
   rpc SendSmsCode(SendSmsCodeReq) returns (SendSmsCodeRes){

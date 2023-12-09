@@ -120,6 +120,8 @@ github.com/go-sql-driver/mysql v1.7.0 h1:ueSltNNllEqE3qcWBTD0iQd3IpL/6U+mJxLkazJ
 github.com/go-sql-driver/mysql v1.7.0/go.mod h1:OXbVy3sEdcQ2Doequ6Z5BW6fXNQTmx+9S1MCJN5yJMI=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
 github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
+github.com/golang-jwt/jwt/v4 v4.4.1 h1:pC5DB52sCeK48Wlb9oPcdhnjkz1TKt1D/P7WKJ0kUcQ=
+github.com/golang-jwt/jwt/v4 v4.4.1/go.mod h1:m21LjoU+eqJr34lmDMbreY2eSTRJ1cv77w39/MY0Ch0=
 github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 h1:au07oEsX2xN0ktxqI+Sida1w446QrXBRJ0nee3SNZlA=
 github.com/golang-sql/sqlexp v0.1.0 h1:ZCD6MBpcuOVfGVqsEmY5/4FtYiKz6tSyUv9LPEDei6A=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
@@ -197,6 +199,8 @@ github.com/hertz-contrib/binding v0.1.0 h1:qrUTDiAdhJjt+X725b+P3d5VfT5H70crwjtNP
 github.com/hertz-contrib/binding v0.1.0/go.mod h1:Sl/inGw3hm+vLQiz/7/kWo4NNGhviKkqzc+7XFUL9vM=
 github.com/hertz-contrib/gzip v0.0.3 h1:x+XamFkUYhPPqMzGWejPh1wdDiwkIpHkgRVIg74Xvt4=
 github.com/hertz-contrib/gzip v0.0.3/go.mod h1:5rQsvQp1qBmt2TYATbbofNAJBSws2Wwst4EdiHLbx4w=
+github.com/hertz-contrib/jwt v1.0.2 h1:sAW3wqgBDsbPKr5JWJRObY61jg1NqYkUCg+o8UXLsaI=
+github.com/hertz-contrib/jwt v1.0.2/go.mod h1:3zUSK+44dcw/9z/89JZ+mA0FoyhmVN7Hx+f46ucVV4I=
 github.com/hertz-contrib/limiter v0.0.0-20221008063035-ad27db7cc386 h1:2eA9mfuQXp5Q3iw/6eRHSauGXdgwoieo1M+n/Prr3sw=
 github.com/hertz-contrib/limiter v0.0.0-20221008063035-ad27db7cc386/go.mod h1:AbbWS9XwvXFwC7f9O9sH6Z78Pw508D5YPXgII+SCEHc=
 github.com/hertz-contrib/logger/zap v1.1.0 h1:4efINiIDJrXEtAFeEdDJvc3Hye0VFxp+0X4BwaZgxNs=

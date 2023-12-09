@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/errors"
 	"github.com/cold-runner/skylark/biz/entity"
@@ -42,4 +43,27 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 		Status: errCode.SuccessStatus,
 		Token:  "",
 	}, nil
+}
+
+func PasswordLogin(c context.Context, ctx *app.RequestContext, req *user.PasswordLoginReq) error {
+	storeIns := store.GetStoreIns()
+
+	loginEntity := &userEntity.LoginUser{}
+	if err := loginEntity.PasswordLogin(c, ctx, storeIns, req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func PhoneLogin(c context.Context, ctx *app.RequestContext, req *user.PhoneLoginReq) error {
+	storeIns := store.GetStoreIns()
+	cacheIns := cache.GetCache()
+
+	loginEntity := &userEntity.LoginUser{}
+	if err := loginEntity.PhoneLogin(c, storeIns, cacheIns, req); err != nil {
+		return err
+	}
+
+	return nil
 }
