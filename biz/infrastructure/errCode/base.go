@@ -13,6 +13,7 @@ const (
 	ErrValidation
 	ErrNotFound
 	ErrSmsCode
+	ErrAlreadySendSmsCode
 )
 
 const (

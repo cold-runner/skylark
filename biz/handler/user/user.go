@@ -105,7 +105,12 @@ func SendSmsCode(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(user.SendSmsCodeRes)
+	resp, err := service.SendSmsCode(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
 
 	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 	c.JSON(consts.StatusOK, resp)

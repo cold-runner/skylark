@@ -4,12 +4,13 @@ import "github.com/cloudwego/hertz/pkg/protocol/consts"
 
 var ErrMap = map[BizErrCode]*BizError{
 	// 通用错误
-	ErrSuccess:    {consts.StatusOK, "ok"},
-	ErrUnknown:    {consts.StatusInternalServerError, "server internal error"},
-	ErrValidation: {consts.StatusBadRequest, "validation error"},
-	ErrBind:       {consts.StatusInternalServerError, "error occurred while binding the request body"},
-	ErrNotFound:   {consts.StatusNotFound, "resource not found"},
-	ErrSmsCode:    {consts.StatusBadRequest, "sms code invalid"},
+	ErrSuccess:            {consts.StatusOK, "ok"},
+	ErrUnknown:            {consts.StatusInternalServerError, "server internal error"},
+	ErrValidation:         {consts.StatusBadRequest, "validation error"},
+	ErrBind:               {consts.StatusInternalServerError, "error occurred while binding the request body"},
+	ErrNotFound:           {consts.StatusNotFound, "resource not found"},
+	ErrSmsCode:            {consts.StatusBadRequest, "sms code invalid"},
+	ErrAlreadySendSmsCode: {consts.StatusBadRequest, "already send smsCode"},
 
 	ErrTokenInvalid:     {consts.StatusUnauthorized, "token invalid"},
 	ErrPermissionDenied: {consts.StatusForbidden, "permission denied"},

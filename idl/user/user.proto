@@ -47,7 +47,6 @@ message SendSmsCodeReq {
 
 message  SendSmsCodeRes {
   response.Status status = 1;
-  string sms_code = 2;
 }
 
 message GetUserInfoByIdReq {

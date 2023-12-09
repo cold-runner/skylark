@@ -2,13 +2,16 @@ package user
 
 import (
 	"context"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/errors"
+	"github.com/cold-runner/skylark/biz/config"
 	"github.com/cold-runner/skylark/biz/entity"
 	userEntity "github.com/cold-runner/skylark/biz/entity/user"
 	"github.com/cold-runner/skylark/biz/infrastructure/cache"
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
+	"github.com/cold-runner/skylark/biz/infrastructure/sms"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
 	"github.com/cold-runner/skylark/biz/model/user"
 )
@@ -63,4 +66,38 @@ func PhoneLogin(c context.Context, ctx *app.RequestContext, req *user.PhoneLogin
 	}
 
 	return nil
+}
+
+func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCodeReq) (*user.SendSmsCodeRes, error) {
+	smsClient := sms.GetClient()
+	cacheIns := cache.GetCache()
+	conf := config.GetConfig().GetServer()
+
+	smsEntity := &entity.SmsCode{}
+
+	// 是否已经发送过还没过期
+	if err := smsEntity.AlreadySend(c, ctx, cacheIns, req.Phone); err != nil {
+		return nil, err
+	}
+
+	// 根据配置生成指定位数的验证码
+	smsCode, err := smsEntity.GenSmsCodeRandom(ctx, conf.SmsNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	// 在缓存中设置验证码和过期时间
+	expireTime := time.Duration(conf.SmsExpiration) * time.Minute
+	if err = smsEntity.SetCache(c, ctx, cacheIns, req.Phone, smsCode, expireTime); err != nil {
+		return nil, err
+	}
+
+	// 发送验证码
+	if err = smsEntity.SendSmsCode(c, ctx, smsClient, req.Phone, smsCode, conf.SmsExpiration); err != nil {
+		return nil, err
+	}
+
+	return &user.SendSmsCodeRes{
+		Status: errCode.SuccessStatus,
+	}, nil
 }
