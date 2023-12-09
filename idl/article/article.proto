@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package article;
+
+option go_package = "article";
+
+import "api.proto";
+import "response.proto";
+import "articleBasic.proto";
+
+message GetArticleFeedReq {
+  string req_id = 1;
+}
+
+message GetArticleFeedRes {
+  response.Status status = 1;
+  repeated ArticlesInfo articles = 2;
+}
+
+message GetArticleReq {
+  string req_id = 1;
+  string article_id = 2;
+}
+
+message GetArticleRes {
+  response.Status status = 1;
+  ArticlesInfo article = 2;
+}
+
+message SearchArticleReq {
+  string keyword = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+
+  string req_id = 4;
+}
+
+message SearchArticleRes {
+  response.Status status = 1;
+  repeated ArticlesInfo articles = 2;
+}
+
+service Article {
+  rpc GetArticleFeed(GetArticleFeedReq) returns (GetArticleFeedRes){
+    option (api.get) = "/feed";
+  };
+  rpc GetArticle(GetArticleReq) returns (GetArticleRes){
+    option (api.get) = "/article";
+  };
+  rpc SearchArticle(SearchArticleReq) returns (SearchArticleRes){
+    option (api.get) = "/search";
+  };
+
+}

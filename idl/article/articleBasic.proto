@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package article;
+
+option go_package = "article";
+
+import "api.proto";
+import "userBasic.proto";
+
+message ArticlesInfo {
+  ArticleBasicInfo basic = 1;
+  user.Basic author_info = 2;
+  UserInteractionInfo interaction = 3;
+}
+
+message ArticleBasicInfo {
+  string article_id = 1;
+  string author_id = 2;
+  string category_id = 3;
+  repeated CategoryInfo category= 4;
+  repeated TagBasicInfo tags = 5;
+  string link_url = 6;
+  string cover_image = 7;
+  string title = 8;
+  string brief_content = 9;
+  string is_english = 10;
+  string is_original = 11;
+  string original_type = 12;
+  string original_author_id = 13;
+  string content = 14;
+  string ctime = 15;
+  string draft_id = 16;
+  bool is_markdown = 17;
+  string view_count = 18;
+  string collect_count = 19;
+  string like_count = 20;
+  string comment_count = 21;
+  string share_count = 22;
+  int32 content_count = 23;
+  string read_time = 24;
+  bool is_hot = 25;
+  int32 hot_index = 26;
+  int32 rank_index = 27;
+  string status = 28;
+  int32 verify_status = 29;
+  int32 audit_status = 30;
+}
+
+message TagBasicInfo {
+  string id = 1;
+  string name = 2;
+}
+
+message UserInteractionInfo {
+  string id = 1;
+  string user_id = 2;
+  bool is_followed = 3;
+}
+
+message CategoryInfo {
+  string id = 1;
+  string name = 2;
+  string url = 3;
+  int32 rank = 4;
+  string icon = 5;
+}

@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "user";
+
+import "api.proto";
+import "response.proto";
+import "userBasic.proto";
+
+message RegisterReq {
+  string stu_num = 1[(api.body)="stu_num", (api.vd)="stuNum"];
+  string stu_name = 2[(api.body)="stu_name", (api.vd)="stuName"];
+  string gender = 3[(api.body)="gender", (api.vd)="gender"];
+  string college = 4[(api.body)="college", (api.vd)="college"];
+  string major = 5[(api.body)="major", (api.vd)="major"];
+  string grade = 6[(api.body)="grade", (api.vd)="grade"];
+  string password = 7[(api.body)="password", (api.vd)="password"];
+  string stu_card_photo_url = 8[(api.body)="stu_card_photo_url", (api.vd)="http_url"];
+  string phone = 9[(api.body)="phone", (api.vd)="phone"];
+  string sms_code = 10[(api.body)="sms_code", (api.vd)="smsCode"];
+}
+
+message RegisterResp {
+  response.Status status = 1;
+  string token = 2[(api.body)="token"];
+}
+
+message PasswordLoginReq {
+  string stu_num = 1[(api.body) = "stu_num"];
+  string password = 2[(api.body) = "password"];
+}
+
+message PasswordLoginResp {
+  response.Status status = 1;
+  string token = 2[(api.body)="token"];
+  user.Basic basic_info = 3;
+}
+
+message PhoneLoginReq {
+  string phone = 1[(api.body) = "phone"];
+  string sms_code = 2[(api.body) = "sms_code"];
+}
+
+message PhoneLoginResp {
+  response.Status status = 1;
+  string token = 2[(api.body)="token"];
+  user.Basic basic_info = 3;
+}
+
+message SendSmsCodeReq {
+  string phone = 1;
+  string req_id = 2;
+}
+
+message  SendSmsCodeRes {
+  response.Status status = 1;
+  string sms_code = 2;
+}
+
+message GetUserInfoByIdReq {
+  string id = 1;
+  string req_id = 2;
+}
+
+message GetUserInfoByIdRes {
+  response.Status status = 1;
+  user.Basic basic_info = 2;
+}
+
+service User {
+  rpc register(RegisterReq) returns(RegisterResp) {
+    option (api.post) = "/register";
+  }
+  rpc passwordLogin(PasswordLoginReq) returns(PasswordLoginResp){
+    option (api.get) = "/login/password";
+  }
+  rpc phoneLogin(PhoneLoginReq) returns(PhoneLoginResp){
+    option (api.get) = "/login/phone";
+  }
+  rpc SendSmsCode(SendSmsCodeReq) returns (SendSmsCodeRes){
+    option (api.get) = "/sendSmsCode";
+  };
+  rpc  getUserInfo(GetUserInfoByIdReq) returns (GetUserInfoByIdRes){
+    option (api.get) = "/user/getInfoById";
+  }
+}

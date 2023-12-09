@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package comment;
+
+option go_package = "comment";
+
+import "api.proto";
+
+message ArticleCommentInfo {
+  string id = 1;
+  string article_id = 2;
+  string user_id = 3;
+  string content = 4;
+  string reply_id = 5;
+  string reply_name = 6;
+  string reply_content = 7;
+}

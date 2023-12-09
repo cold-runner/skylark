@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "user";
+
+import "api.proto";
+
+message Basic {
+  string userId = 1[(api.body) = "user_id"];
+  string stuNum = 2[(api.body) = "stu_num"];
+  string avatarUrl = 3[(api.body) = "avatar_url"];
+  string stuName = 4[(api.body) = "stu_name"];
+  string briefIntroduction = 5[(api.body) = "brief_introduction"];
+  string college = 6[(api.body) = "college"];
+  string major = 7[(api.body) = "major"];
+  string grade = 8[(api.body) = "grade"];
+  uint64 followeeCount = 9[(api.body) = "followee_count"];
+  uint64 followerCount = 10[(api.body) = "follower_count"];
+  uint64 postArticleCount = 11[(api.body) = "post_article_count"];
+  uint64 essayArticleCount = 12[(api.body) = "essay_article_count"];
+  uint64 power = 13[(api.body) = "power"];
+}
