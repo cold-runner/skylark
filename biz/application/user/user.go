@@ -36,12 +36,9 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 		return nil, err
 	}
 
-	// 获取token
-
 	// 返回响应
 	return &user.RegisterResp{
 		Status: errCode.SuccessStatus,
-		Token:  "",
 	}, nil
 }
 

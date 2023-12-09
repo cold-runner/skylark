@@ -23,7 +23,6 @@ message RegisterReq {
 
 message RegisterResp {
   response.Status status = 1;
-  string token = 2[(api.body)="token"];
 }
 
 message PasswordLoginReq {
