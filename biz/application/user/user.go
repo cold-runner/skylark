@@ -32,6 +32,9 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 
 	// 存储到数据库
 	ety := &userEntity.RegisterDto{}
+	if err := ety.IsRegistered(c, ctx, storeIns, req); err != nil {
+		return nil, err
+	}
 	ov, err := ety.Convert(c, ctx, ossIns, req)
 	if err != nil {
 		return nil, err

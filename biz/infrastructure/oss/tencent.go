@@ -47,7 +47,7 @@ func (t *tencent) UploadFormFile(c context.Context, fileHeader *multipart.FileHe
 		return "", err
 	}
 
-	return "https://" + t.domain + filePath, nil
+	return t.domain + filePath, nil
 }
 
 func (t *tencent) UploadFileFromBytes(c context.Context, b []byte, fileName, fileType string) (string, error) {
@@ -57,5 +57,5 @@ func (t *tencent) UploadFileFromBytes(c context.Context, b []byte, fileName, fil
 	if err != nil {
 		return "", err
 	}
-	return "https://" + t.domain + filePath, nil
+	return t.domain + filePath, nil
 }
