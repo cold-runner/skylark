@@ -3,12 +3,12 @@
 package main
 
 import (
-	"github.com/cold-runner/skylark/biz/infrastructure"
-	"github.com/cold-runner/skylark/biz/util"
 	"time"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cold-runner/skylark/biz/config"
+	"github.com/cold-runner/skylark/biz/infrastructure"
+	"github.com/cold-runner/skylark/biz/util"
 	"github.com/hertz-contrib/monitor-prometheus"
 )
 
@@ -23,9 +23,12 @@ func main() {
 	h := server.Default(
 		server.WithExitWaitTime(serverConf.ExitWaitTime*time.Second),
 		server.WithHostPorts(serverConf.Host+":"+serverConf.Port),
+
 		server.WithTracer(prometheus.NewServerTracer(":9091", "/hertz")),
 		server.WithCustomValidator(util.CustomValidator()),
 	)
+	// pprof
+	//pprof.Register(h)
 	// 注册路由
 	register(h)
 	// 启动服务
