@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/common/errors"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cold-runner/skylark/biz/config"
 	"github.com/cold-runner/skylark/biz/entity"
 	userEntity "github.com/cold-runner/skylark/biz/entity/user"
@@ -17,7 +17,7 @@ import (
 	"github.com/cold-runner/skylark/biz/model/user"
 )
 
-func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterResp, *errors.Error) {
+func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterResp, error) {
 	c := context.Background()
 	cacheIns := cache.GetCache()
 	storeIns := store.GetStoreIns()
@@ -28,6 +28,9 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 	err := smsCodeEntity.Validate(c, ctx, cacheIns, req.Phone, req.SmsCode)
 	if err != nil {
 		return nil, err
+	}
+	if err := smsCodeEntity.DeleteSmsCode(c, ctx, cacheIns, req.Phone); err != nil {
+		hlog.Warnf("注册时校验验证码通过，但删除验证码失败！err: %v", err)
 	}
 
 	// 存储到数据库

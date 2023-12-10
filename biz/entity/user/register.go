@@ -26,7 +26,7 @@ type RegisterDto struct {
 func (r *RegisterDto) IsRegistered(c context.Context, ctx *app.RequestContext, storeIns store.Store, req *user.RegisterReq) *errors.Error {
 	_, err := storeIns.GetLark(c, mysql.LarkByStuNum(storeIns.(*mysql.MysqlIns), req.StuNum))
 	if err == nil {
-		return errCode.WrapBizErr(ctx, stdErr.New("学号为的用户已注册!"), errCode.ErrUserAlreadyExist)
+		return errCode.WrapBizErr(ctx, stdErr.New("学号为"+req.StuNum+"的用户已注册!"), errCode.ErrUserAlreadyExist)
 	}
 	if stdErr.Is(err, gorm.ErrRecordNotFound) {
 		return nil
@@ -71,7 +71,7 @@ func (r *RegisterDto) Convert(c context.Context, ctx *app.RequestContext, ossIns
 func (r *RegisterDto) Store(c context.Context, ctx *app.RequestContext, store store.Store, lark *orm_gen.Lark) *errors.Error {
 	err := store.CreateLark(c, lark)
 	if err == nil {
-		return errCode.WrapBizErr(ctx, nil, errCode.ErrSuccess)
+		return nil
 	}
 
 	switch {

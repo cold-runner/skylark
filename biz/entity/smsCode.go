@@ -32,6 +32,14 @@ func (s *SmsCode) Validate(c context.Context, ctx *app.RequestContext, cacheIns 
 	return nil
 }
 
+func (s *SmsCode) DeleteSmsCode(c context.Context, ctx *app.RequestContext, cacheIns cache.Cache, phone string) *errors.Error {
+	err := cacheIns.Del(c, phone)
+	if err != nil {
+		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+	}
+	return nil
+}
+
 func (s *SmsCode) AlreadySend(c context.Context, ctx *app.RequestContext, cacheIns cache.Cache, phone string) error {
 	isExpired, err := cacheIns.IsExpired(c, phone)
 	if err != nil {
