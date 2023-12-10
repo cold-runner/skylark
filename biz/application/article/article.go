@@ -10,6 +10,12 @@ import (
 	"github.com/cold-runner/skylark/biz/model/article"
 )
 
+func GetArticleFeed(c context.Context, ctx *app.RequestContext, req *article.GetArticleFeedReq) (*article.GetArticleFeedRes, error) {
+	//根据热度排序从全文搜索引擎中检索出文章列表
+	//zinc := searchEngine.GetZincClient()
+	return nil, nil
+}
+
 func GetCategories(c context.Context, ctx *app.RequestContext, req *article.CategoriesReq) (*article.CategoriesResp, error) {
 	storeIns := store.GetStoreIns()
 

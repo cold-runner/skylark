@@ -1,14 +1,16 @@
 package searchEngine
 
 import (
+	"context"
 	"fmt"
-	"github.com/cloudwego/hertz/pkg/common/json"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/cold-runner/skylark/biz/config"
-	"net/http"
+	"strconv"
 	"time"
 
-	"github.com/go-resty/resty/v2"
+	"github.com/cloudwego/hertz/pkg/app/client"
+	"github.com/cloudwego/hertz/pkg/common/json"
+	"github.com/cloudwego/hertz/pkg/protocol"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/cold-runner/skylark/biz/config"
 	"github.com/pkg/errors"
 )
 
@@ -20,6 +22,7 @@ type ZincClient struct {
 	Host     string
 	User     string
 	Password string
+	Client   *client.Client
 }
 
 type ZincIndex struct {
@@ -74,10 +77,12 @@ type HitItem struct {
 // Init 初始化默认实例
 func Init(cfg config.Conf) {
 	opt := cfg.GetZinc()
+	hzClient, _ := client.NewClient()
 	Client = &ZincClient{
 		Host:     opt.Host,
 		User:     opt.User,
 		Password: opt.Password,
+		Client:   hzClient,
 	}
 	if err := Client.Health(); err != nil {
 		panic(err)
@@ -94,7 +99,8 @@ func GetZincClient() *ZincClient {
 
 // Health 健康检查
 func (c *ZincClient) Health() error {
-	resp, err := c.request().SetBody(nil).Get("/healthz")
+	resp, err := c.do(consts.MethodGet, nil, "/healthz")
+
 	if err != nil || resp.StatusCode() != consts.StatusOK {
 		return errors.Errorf("health ping error! err: %v", err)
 	}
@@ -110,9 +116,9 @@ func (c *ZincClient) CreateIndex(name string, p *ZincIndexProperty) bool {
 			Properties: p,
 		},
 	}
-	resp, err := c.request().SetBody(data).Put("/api/index")
+	resp, err := c.do(consts.MethodPut, data, "/api/index")
 
-	if err != nil || resp.StatusCode() != http.StatusOK {
+	if err != nil || resp.StatusCode() != consts.StatusOK {
 		return false
 	}
 
@@ -121,14 +127,14 @@ func (c *ZincClient) CreateIndex(name string, p *ZincIndexProperty) bool {
 
 // ExistIndex 检查索引是否存在
 func (c *ZincClient) ExistIndex(name string) bool {
-	resp, err := c.request().Get("/api/index")
+	resp, err := c.do(consts.MethodGet, nil, "/api/index")
 
-	if err != nil || resp.StatusCode() != http.StatusOK {
+	if err != nil || resp.StatusCode() != consts.StatusOK {
 		return false
 	}
 
 	retData := &map[string]any{}
-	err = json.Unmarshal([]byte(resp.String()), retData)
+	err = json.Unmarshal(resp.Body(), retData)
 	if err != nil {
 		return false
 	}
@@ -142,14 +148,14 @@ func (c *ZincClient) ExistIndex(name string) bool {
 
 // PutDoc 新增/更新文档
 func (c *ZincClient) PutDoc(name string, id int64, doc any) (bool, error) {
-	resp, err := c.request().SetBody(doc).Put(fmt.Sprintf("/api/%s/_doc/%d", name, id))
+	resp, err := c.do(consts.MethodPut, doc, fmt.Sprintf("/api/%s/_doc/%d", name, id))
 
 	if err != nil {
 		return false, err
 	}
 
-	if resp.StatusCode() != http.StatusOK {
-		return false, errors.New(resp.Status())
+	if resp.StatusCode() != consts.StatusOK {
+		return false, errors.New(strconv.Itoa(resp.StatusCode()))
 	}
 
 	return true, nil
@@ -165,26 +171,27 @@ func (c *ZincClient) BulkPushDoc(docs []map[string]any) (bool, error) {
 		}
 	}
 
-	resp, err := c.request().SetBody(dataStr).Post("/api/_bulk")
+	resp, err := c.do(consts.MethodPost, dataStr, "/api/_bulk")
 	if err != nil {
 		return false, err
 	}
 
-	if resp.StatusCode() != http.StatusOK {
-		return false, errors.New(resp.Status())
+	if resp.StatusCode() != consts.StatusOK {
+		return false, errors.New(strconv.Itoa(resp.StatusCode()))
 	}
 
 	return true, nil
 }
 
 func (c *ZincClient) EsQuery(indexName string, q any) (*QueryResultT, error) {
-	resp, err := c.request().SetBody(q).Post(fmt.Sprintf("/es/%s/_search", indexName))
+	resp, err := c.do(consts.MethodPost, q, fmt.Sprintf("/es/%s/_search", indexName))
+
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.StatusCode() != http.StatusOK {
-		return nil, errors.New(resp.Status())
+	if resp.StatusCode() != consts.StatusOK {
+		return nil, errors.New(strconv.Itoa(resp.StatusCode()))
 	}
 
 	result := &QueryResultT{}
@@ -197,13 +204,14 @@ func (c *ZincClient) EsQuery(indexName string, q any) (*QueryResultT, error) {
 }
 
 func (c *ZincClient) ApiQuery(indexName string, q any) (*QueryResultT, error) {
-	resp, err := c.request().SetBody(q).Post(fmt.Sprintf("/api/%s/_search", indexName))
+	resp, err := c.do(consts.MethodPost, q, fmt.Sprintf("/api/%s/_search", indexName))
+
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.StatusCode() != http.StatusOK {
-		return nil, errors.New(resp.Status())
+	if resp.StatusCode() != consts.StatusOK {
+		return nil, errors.New(strconv.Itoa(resp.StatusCode()))
 	}
 
 	result := &QueryResultT{}
@@ -216,23 +224,35 @@ func (c *ZincClient) ApiQuery(indexName string, q any) (*QueryResultT, error) {
 }
 
 func (c *ZincClient) DelDoc(indexName, id string) error {
-	resp, err := c.request().Delete(fmt.Sprintf("/api/%s/_doc/%s", indexName, id))
+	resp, err := c.do(consts.MethodDelete, nil, fmt.Sprintf("/api/%s/_doc/%s", indexName, id))
+
 	if err != nil {
 		return err
 	}
 
-	if resp.StatusCode() != http.StatusOK {
-		return errors.New(resp.Status())
+	if resp.StatusCode() != consts.StatusOK {
+		return errors.New(strconv.Itoa(resp.StatusCode()))
 	}
 
 	return nil
 }
 
-func (c *ZincClient) request() *resty.Request {
-	client := resty.New()
-	client.DisableWarn = true
-	client.SetBaseURL(c.Host)
-	client.SetBasicAuth(c.User, c.Password)
+func (c *ZincClient) do(method string, body any, url string) (*protocol.Response, error) {
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	req, resp := protocol.AcquireRequest(), protocol.AcquireResponse()
+	req.SetRequestURI(c.Host + url)
+	req.SetBasicAuth(c.User, c.Password)
+	req.SetMethod(method)
+	if body != nil {
+		req.SetBody(reqBody)
+	}
 
-	return client.R()
+	if err := c.Client.Do(context.Background(), req, resp); err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

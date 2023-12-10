@@ -11,6 +11,8 @@ import "category.proto";
 
 message GetArticleFeedReq {
   string req_id = 1;
+  string cursor = 2;
+  int32 limit = 3;
 }
 
 message GetArticleFeedRes {
