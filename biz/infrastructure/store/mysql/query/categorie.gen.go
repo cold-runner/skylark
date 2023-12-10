@@ -35,6 +35,8 @@ func newCategorie(db *gorm.DB, opts ...gen.DOOption) categorie {
 	_categorie.BackgroundURL = field.NewString(tableName, "background_url")
 	_categorie.Rank = field.NewInt64(tableName, "rank")
 	_categorie.PlateID = field.NewString(tableName, "plate_id")
+	_categorie.URL = field.NewString(tableName, "url")
+	_categorie.Icon = field.NewString(tableName, "icon")
 
 	_categorie.fillFieldMap()
 
@@ -54,6 +56,8 @@ type categorie struct {
 	BackgroundURL field.String // 背景图片url
 	Rank          field.Int64  // 板块排序权重
 	PlateID       field.String // 板块id
+	URL           field.String // 跳转url地址
+	Icon          field.String // icon图标
 
 	fieldMap map[string]field.Expr
 }
@@ -78,6 +82,8 @@ func (c *categorie) updateTableName(table string) *categorie {
 	c.BackgroundURL = field.NewString(table, "background_url")
 	c.Rank = field.NewInt64(table, "rank")
 	c.PlateID = field.NewString(table, "plate_id")
+	c.URL = field.NewString(table, "url")
+	c.Icon = field.NewString(table, "icon")
 
 	c.fillFieldMap()
 
@@ -94,7 +100,7 @@ func (c *categorie) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *categorie) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 8)
+	c.fieldMap = make(map[string]field.Expr, 10)
 	c.fieldMap["id"] = c.ID
 	c.fieldMap["created_at"] = c.CreatedAt
 	c.fieldMap["deleted_at"] = c.DeletedAt
@@ -103,6 +109,8 @@ func (c *categorie) fillFieldMap() {
 	c.fieldMap["background_url"] = c.BackgroundURL
 	c.fieldMap["rank"] = c.Rank
 	c.fieldMap["plate_id"] = c.PlateID
+	c.fieldMap["url"] = c.URL
+	c.fieldMap["icon"] = c.Icon
 }
 
 func (c categorie) clone(db *gorm.DB) categorie {

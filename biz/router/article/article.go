@@ -18,6 +18,7 @@ func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
 	root.GET("/article", append(_getarticleMw(), article.GetArticle)...)
+	root.GET("/category", append(_categoryMw(), article.Category)...)
 	root.GET("/feed", append(_getarticlefeedMw(), article.GetArticleFeed)...)
 	root.GET("/search", append(_searcharticleMw(), article.SearchArticle)...)
 }

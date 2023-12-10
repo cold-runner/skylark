@@ -6,7 +6,11 @@ import (
 	"context"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	service "github.com/cold-runner/skylark/biz/application/article"
+	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
+	"github.com/cold-runner/skylark/biz/infrastructure/log"
 	article "github.com/cold-runner/skylark/biz/model/article"
 )
 
@@ -55,5 +59,31 @@ func SearchArticle(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(article.SearchArticleRes)
 
+	c.JSON(consts.StatusOK, resp)
+}
+
+// Category .
+// @router category [GET]
+func Category(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().LastPathSegment())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
+
+	var err error
+	var req article.CategoriesReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		errCode.ResponseValidationFailed(c, err)
+		return
+	}
+
+	resp, err := service.GetCategories(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
+
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 	c.JSON(consts.StatusOK, resp)
 }

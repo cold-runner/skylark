@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package article;
+
+option go_package = "article";
+
+import "api.proto";
+import "response.proto";
+
+
+
+
+message Category {
+  string id = 1;
+  string name = 2;
+  string category_url = 3;
+  int32 rank = 4;
+  string back_ground = 5;
+  string icon = 6;
+}

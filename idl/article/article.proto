@@ -7,6 +7,7 @@ option go_package = "article";
 import "api.proto";
 import "response.proto";
 import "articleBasic.proto";
+import "category.proto";
 
 message GetArticleFeedReq {
   string req_id = 1;
@@ -40,6 +41,15 @@ message SearchArticleRes {
   repeated ArticlesInfo articles = 2;
 }
 
+message CategoriesReq {
+  string req_id = 1;
+}
+
+message CategoriesResp {
+  response.Status status = 1;
+  repeated Category categories = 2;
+}
+
 service Article {
   rpc GetArticleFeed(GetArticleFeedReq) returns (GetArticleFeedRes){
     option (api.get) = "/feed";
@@ -50,5 +60,7 @@ service Article {
   rpc SearchArticle(SearchArticleReq) returns (SearchArticleRes){
     option (api.get) = "/search";
   };
-
+  rpc Category(CategoriesReq) returns(CategoriesResp){
+    option(api.get) = "category";
+  };
 }

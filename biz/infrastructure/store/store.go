@@ -71,4 +71,5 @@ type Post interface {
 	GetDraftList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Draft, error)
 	UpdateDraftSelect(c context.Context, selectScopes []field.Expr, whereScope []gen.Condition, draft *orm_gen.Draft) error
 	UpdateDraftOmit(c context.Context, omitScopes []field.Expr, whereScopes []gen.Condition, draft *orm_gen.Draft) error
+	GetCategoryList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Categorie, error)
 }

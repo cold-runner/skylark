@@ -29,3 +29,8 @@ func _searcharticleMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _categoryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

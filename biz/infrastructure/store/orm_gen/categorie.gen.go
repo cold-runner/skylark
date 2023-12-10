@@ -23,6 +23,8 @@ type Categorie struct {
 	BackgroundURL string         `gorm:"column:background_url;type:varchar(255);not null;comment:背景图片url" json:"background_url"`              // 背景图片url
 	Rank          int64          `gorm:"column:rank;type:tinyint;not null;comment:板块排序权重" json:"rank"`                                        // 板块排序权重
 	PlateID       string         `gorm:"column:plate_id;type:char(36);index:categorie_plate_id_fk,priority:1;comment:板块id" json:"plate_id"`   // 板块id
+	URL           string         `gorm:"column:url;type:varchar(255);not null;comment:跳转url地址" json:"url"`                                    // 跳转url地址
+	Icon          string         `gorm:"column:icon;type:varchar(255);comment:icon图标" json:"icon"`                                            // icon图标
 }
 
 // TableName Categorie's table name
