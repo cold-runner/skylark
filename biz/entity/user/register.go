@@ -2,9 +2,14 @@ package user
 
 import (
 	"context"
+	"encoding/base64"
+	"strconv"
+	"time"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/errors"
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
+	"github.com/cold-runner/skylark/biz/infrastructure/oss"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
 	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"github.com/cold-runner/skylark/biz/model/user"
@@ -17,13 +22,25 @@ import (
 type RegisterDto struct {
 }
 
-func (r *RegisterDto) Convert(c context.Context, ctx *app.RequestContext, req *user.RegisterReq) (*orm_gen.Lark, *errors.Error) {
+func (r *RegisterDto) Convert(c context.Context, ctx *app.RequestContext, ossIns oss.Oss, req *user.RegisterReq) (*orm_gen.Lark, *errors.Error) {
 	encrypted, err := util.Crypt(req.Password)
 	if err != nil {
 		errMsg := "encrypt password failed! err: " + err.Error()
 		return nil, errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrUnknown)
 	}
 
+	fileType, err := util.FileTypeFromBs64(req.StuCardPhoto)
+	if err != nil || (fileType != "jpg" && fileType != "png") {
+		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrValidation)
+	}
+
+	// 保存图片到文件
+	data, _ := base64.StdEncoding.DecodeString(req.StuCardPhoto)
+
+	url, err := ossIns.UploadFileFromBytes(c, data, strconv.FormatInt(time.Now().UnixNano(), 10), fileType)
+	if err != nil {
+		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+	}
 	return &orm_gen.Lark{
 		ID:         uuid.New(),
 		StuNum:     req.StuNum,
@@ -33,7 +50,7 @@ func (r *RegisterDto) Convert(c context.Context, ctx *app.RequestContext, req *u
 		College:    req.College,
 		Major:      req.Major,
 		Grade:      req.Grade,
-		StuCardURL: req.StuCardPhotoUrl,
+		StuCardURL: url,
 		Phone:      req.Phone,
 		State:      0,
 	}, nil

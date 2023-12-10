@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/base64"
 	"mime/multipart"
 	"os"
 
@@ -19,9 +20,18 @@ func FileType(file *os.File) (fileType string, err error) {
 	if err != nil {
 		return "", err
 	}
-	return mime.String(), nil
+
+	return FILE_TYPE_MAP[mime.String()], nil
 }
 
+func FileTypeFromBs64(bs64 string) (fileType string, err error) {
+	data, err := base64.StdEncoding.DecodeString(bs64)
+	if err != nil {
+		return "", err
+	}
+	mime := mimetype.Detect(data)
+	return FILE_TYPE_MAP[mime.String()], nil
+}
 func FormFileType(fileHeader *multipart.FileHeader) (fileType string, err error) {
 	file, err := fileHeader.Open()
 	if err != nil {

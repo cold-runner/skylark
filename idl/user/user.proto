@@ -16,7 +16,7 @@ message RegisterReq {
   string major = 5[(api.body)="major", (api.vd)="major"];
   string grade = 6[(api.body)="grade", (api.vd)="grade"];
   string password = 7[(api.body)="password", (api.vd)="password"];
-  string stu_card_photo_url = 8[(api.body)="stu_card_photo_url", (api.vd)="http_url"];
+  string stu_card_photo = 8[(api.body)="stu_card_photo", (api.vd)="base64"];
   string phone = 9[(api.body)="phone", (api.vd)="phone"];
   string sms_code = 10[(api.body)="sms_code", (api.vd)="smsCode"];
 }

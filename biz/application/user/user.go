@@ -11,6 +11,7 @@ import (
 	userEntity "github.com/cold-runner/skylark/biz/entity/user"
 	"github.com/cold-runner/skylark/biz/infrastructure/cache"
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
+	"github.com/cold-runner/skylark/biz/infrastructure/oss"
 	"github.com/cold-runner/skylark/biz/infrastructure/sms"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
 	"github.com/cold-runner/skylark/biz/model/user"
@@ -20,6 +21,7 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 	c := context.Background()
 	cacheIns := cache.GetCache()
 	storeIns := store.GetStoreIns()
+	ossIns := oss.GetOssIns()
 
 	// 校验验证码
 	smsCodeEntity := &entity.SmsCode{}
@@ -30,7 +32,7 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 
 	// 存储到数据库
 	ety := &userEntity.RegisterDto{}
-	ov, err := ety.Convert(c, ctx, req)
+	ov, err := ety.Convert(c, ctx, ossIns, req)
 	if err != nil {
 		return nil, err
 	}

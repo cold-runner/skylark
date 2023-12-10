@@ -1,11 +1,12 @@
 package util
 
 import (
+	"mime/multipart"
+
 	"github.com/cold-runner/skylark/biz/entity/consts"
 	"github.com/dlclark/regexp2"
 	"github.com/go-playground/validator/v10"
 	"github.com/hertz-contrib/binding/go_playground"
-	"mime/multipart"
 )
 
 // 各个校验函数的名称

@@ -1,12 +1,13 @@
 package oss
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	
+
 	"github.com/cold-runner/skylark/biz/config"
 	"github.com/cold-runner/skylark/biz/util"
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -46,5 +47,15 @@ func (t *tencent) UploadFormFile(c context.Context, fileHeader *multipart.FileHe
 		return "", err
 	}
 
+	return "https://" + t.domain + filePath, nil
+}
+
+func (t *tencent) UploadFileFromBytes(c context.Context, b []byte, fileName, fileType string) (string, error) {
+	filePath := t.dictionary + "/" + fileName + "." + fileType
+	file := bytes.NewReader(b)
+	_, err := t.client.Object.Put(c, filePath, file, nil)
+	if err != nil {
+		return "", err
+	}
 	return "https://" + t.domain + filePath, nil
 }

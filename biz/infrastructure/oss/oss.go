@@ -21,6 +21,13 @@ func (o OssType) string() string {
 	return string(o)
 }
 
+func GetOssIns() Oss {
+	if o == nil {
+		panic("oss is not init!")
+	}
+	return o
+}
+
 func Init(c config.Conf) {
 	oss := c.GetServer().Oss
 	switch oss {
@@ -33,4 +40,5 @@ func Init(c config.Conf) {
 
 type Oss interface {
 	UploadFormFile(c context.Context, fileHeader *multipart.FileHeader, fileName string) (fileUrl string, err error)
+	UploadFileFromBytes(c context.Context, b []byte, fileName, fileType string) (string, error)
 }
