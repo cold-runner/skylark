@@ -3,12 +3,13 @@ package oss
 import (
 	"context"
 	"fmt"
-	"github.com/cold-runner/skylark/biz/config"
-	"github.com/cold-runner/skylark/biz/util"
-	"github.com/tencentyun/cos-go-sdk-v5"
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	
+	"github.com/cold-runner/skylark/biz/config"
+	"github.com/cold-runner/skylark/biz/util"
+	"github.com/tencentyun/cos-go-sdk-v5"
 )
 
 type tencent struct {

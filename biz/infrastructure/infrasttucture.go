@@ -6,6 +6,7 @@ import (
 	"github.com/cold-runner/skylark/biz/infrastructure/cache"
 	"github.com/cold-runner/skylark/biz/infrastructure/log"
 	"github.com/cold-runner/skylark/biz/infrastructure/oss"
+	"github.com/cold-runner/skylark/biz/infrastructure/searchEngine"
 	"github.com/cold-runner/skylark/biz/infrastructure/sms"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
 	"github.com/cold-runner/skylark/biz/infrastructure/store/mysql"
@@ -37,6 +38,8 @@ func Init() {
 		oss.Init(c)
 		// 初始化sms客户端
 		sms.Init(c)
+		// 初始化全文搜索引擎
+		searchEngine.Init(c)
 	case config.DEBUG.String():
 
 	case config.TEST.String():

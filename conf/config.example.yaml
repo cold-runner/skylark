@@ -94,3 +94,9 @@ qqSocial:
 appId:
 clientSecret:
 redirectUrl:
+
+# zinc全文搜索引擎
+zinc:
+  host:
+  user:
+  password:

@@ -31,6 +31,7 @@ type Conf interface {
 	GetServer() *Server
 	GetTencentCos() *TencentCos
 	GetTencentSms() *TencentSms
+	GetZinc() *ZincClientConfig
 	//GetQiniu() *Qiniu
 }
 
@@ -52,7 +53,8 @@ type config struct {
 
 	*TencentSms `mapstructure:"tencentSms"`
 
-	*QqSocial `mapstructure:"qqSocial"`
+	*QqSocial         `mapstructure:"qqSocial"`
+	*ZincClientConfig `mapstructure:"zinc"`
 }
 
 func (c *config) GetTencentSms() *TencentSms {
@@ -85,6 +87,10 @@ func (c *config) GetServer() *Server {
 
 func (c *config) GetTencentCos() *TencentCos {
 	return c.TencentCos
+}
+
+func (c *config) GetZinc() *ZincClientConfig {
+	return c.ZincClientConfig
 }
 
 func Init() {
