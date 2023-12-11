@@ -28,7 +28,7 @@ func SetDefault(s Store) {
 	storeIns = s
 }
 
-func GetStoreIns() Store {
+func GetIns() Store {
 	if storeIns == nil {
 		panic("store is nil")
 	}

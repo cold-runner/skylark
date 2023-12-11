@@ -19,9 +19,9 @@ import (
 
 func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterResp, error) {
 	c := context.Background()
-	cacheIns := cache.GetCache()
-	storeIns := store.GetStoreIns()
-	ossIns := oss.GetOssIns()
+	cacheIns := cache.GetIns()
+	storeIns := store.GetIns()
+	ossIns := oss.GetIns()
 
 	// 校验验证码
 	smsCodeEntity := &entity.SmsCode{}
@@ -54,7 +54,7 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 }
 
 func PasswordLogin(c context.Context, ctx *app.RequestContext, req *user.PasswordLoginReq) error {
-	storeIns := store.GetStoreIns()
+	storeIns := store.GetIns()
 
 	loginEntity := &userEntity.LoginUser{}
 	if err := loginEntity.PasswordLogin(c, ctx, storeIns, req); err != nil {
@@ -65,8 +65,8 @@ func PasswordLogin(c context.Context, ctx *app.RequestContext, req *user.Passwor
 }
 
 func PhoneLogin(c context.Context, ctx *app.RequestContext, req *user.PhoneLoginReq) error {
-	storeIns := store.GetStoreIns()
-	cacheIns := cache.GetCache()
+	storeIns := store.GetIns()
+	cacheIns := cache.GetIns()
 
 	loginEntity := &userEntity.LoginUser{}
 	if err := loginEntity.PhoneLogin(c, ctx, storeIns, cacheIns, req); err != nil {
@@ -78,7 +78,7 @@ func PhoneLogin(c context.Context, ctx *app.RequestContext, req *user.PhoneLogin
 
 func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCodeReq) (*user.SendSmsCodeRes, error) {
 	smsClient := sms.GetClient()
-	cacheIns := cache.GetCache()
+	cacheIns := cache.GetIns()
 	conf := config.GetConfig().GetServer()
 
 	smsEntity := &entity.SmsCode{}
@@ -111,7 +111,7 @@ func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCo
 }
 
 func GetUserInfo(c context.Context, ctx *app.RequestContext, req *user.GetUserInfoByIdReq) (*user.GetUserInfoByIdRes, error) {
-	storeIns := store.GetStoreIns()
+	storeIns := store.GetIns()
 
 	userUuid, _ := ctx.Get("identity")
 	lark := &userEntity.Lark{}

@@ -56,7 +56,7 @@ func SetDefault(c Cache) {
 	cacheIns = c
 }
 
-func GetCache() Cache {
+func GetIns() Cache {
 	if cacheIns == nil {
 		panic("cache is nil")
 	}

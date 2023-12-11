@@ -17,7 +17,7 @@ func GetArticleFeed(c context.Context, ctx *app.RequestContext, req *article.Get
 }
 
 func GetCategories(c context.Context, ctx *app.RequestContext, req *article.CategoriesReq) (*article.CategoriesResp, error) {
-	storeIns := store.GetStoreIns()
+	storeIns := store.GetIns()
 
 	categoryEntity := &entity.ArticleEntity{}
 	stored, err := categoryEntity.QueryStore(c, ctx, storeIns)

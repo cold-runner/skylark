@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"time"
 
 	"github.com/cloudwego/hertz/pkg/app/client"
 	"github.com/cloudwego/hertz/pkg/common/json"
@@ -14,92 +13,30 @@ import (
 	"github.com/pkg/errors"
 )
 
-var (
-	Client *ZincClient
-)
-
-type ZincClient struct {
+type zincClient struct {
 	Host     string
 	User     string
 	Password string
 	Client   *client.Client
 }
 
-type ZincIndex struct {
-	Name        string             `json:"name"`
-	StorageType string             `json:"storage_type"`
-	Mappings    *ZincIndexMappings `json:"mappings"`
-}
-
-type ZincIndexMappings struct {
-	Properties *ZincIndexProperty `json:"properties"`
-}
-
-type ZincIndexProperty map[string]*ZincIndexPropertyT
-
-type ZincIndexPropertyT struct {
-	Type           string `json:"type"`
-	Index          bool   `json:"index"`
-	Store          bool   `json:"store"`
-	Sortable       bool   `json:"sortable"`
-	Aggregatable   bool   `json:"aggregatable"`
-	Highlightable  bool   `json:"highlightable"`
-	Analyzer       string `json:"analyzer"`
-	SearchAnalyzer string `json:"search_analyzer"`
-	Format         string `json:"format"`
-}
-
-type QueryResultT struct {
-	Took     int          `json:"took"`
-	TimedOut bool         `json:"timed_out"`
-	Hits     *HitsResultT `json:"hits"`
-}
-
-type HitsResultT struct {
-	Total    *HitsResultTotalT `json:"total"`
-	MaxScore float64           `json:"max_score"`
-	Hits     []*HitItem        `json:"hits"`
-}
-
-type HitsResultTotalT struct {
-	Value int64 `json:"value"`
-}
-
-type HitItem struct {
-	Index     string    `json:"_index"`
-	Type      string    `json:"_type"`
-	ID        string    `json:"_id"`
-	Score     float64   `json:"_score"`
-	Timestamp time.Time `json:"@timestamp"`
-	Source    any       `json:"_source"`
-}
-
-// Init 初始化默认实例
-func Init(cfg config.Conf) {
-	opt := cfg.GetZinc()
+func newZincClient(cfg *config.ZincClientConfig) SearchEngine {
 	hzClient, _ := client.NewClient()
-	Client = &ZincClient{
-		Host:     opt.Host,
-		User:     opt.User,
-		Password: opt.Password,
+	zincClient := &zincClient{
+		Host:     cfg.Host,
+		User:     cfg.User,
+		Password: cfg.Password,
 		Client:   hzClient,
 	}
-	if err := Client.Health(); err != nil {
+	if err := zincClient.Health(); err != nil {
 		panic(err)
 	}
-}
-
-// GetZincClient 获取全局zinc客户端实例
-func GetZincClient() *ZincClient {
-	if Client == nil {
-		panic("zinc还未被初始化")
-	}
-	return Client
+	return zincClient
 }
 
 // Health 健康检查
-func (c *ZincClient) Health() error {
-	resp, err := c.do(consts.MethodGet, nil, "/healthz")
+func (c *zincClient) Health() error {
+	resp, err := c.do(context.Background(), consts.MethodGet, nil, "/healthz")
 
 	if err != nil || resp.StatusCode() != consts.StatusOK {
 		return errors.Errorf("health ping error! err: %v", err)
@@ -108,15 +45,15 @@ func (c *ZincClient) Health() error {
 }
 
 // CreateIndex 创建索引
-func (c *ZincClient) CreateIndex(name string, p *ZincIndexProperty) bool {
-	data := &ZincIndex{
+func (c *zincClient) CreateIndex(ctx context.Context, name string, p *IndexProperty) bool {
+	data := &Index{
 		Name:        name,
 		StorageType: "disk",
-		Mappings: &ZincIndexMappings{
+		Mappings: &IndexMappings{
 			Properties: p,
 		},
 	}
-	resp, err := c.do(consts.MethodPut, data, "/api/index")
+	resp, err := c.do(ctx, consts.MethodPut, data, "/api/index")
 
 	if err != nil || resp.StatusCode() != consts.StatusOK {
 		return false
@@ -126,8 +63,8 @@ func (c *ZincClient) CreateIndex(name string, p *ZincIndexProperty) bool {
 }
 
 // ExistIndex 检查索引是否存在
-func (c *ZincClient) ExistIndex(name string) bool {
-	resp, err := c.do(consts.MethodGet, nil, "/api/index")
+func (c *zincClient) ExistIndex(ctx context.Context, name string) bool {
+	resp, err := c.do(ctx, consts.MethodGet, nil, "/api/index")
 
 	if err != nil || resp.StatusCode() != consts.StatusOK {
 		return false
@@ -147,8 +84,8 @@ func (c *ZincClient) ExistIndex(name string) bool {
 }
 
 // PutDoc 新增/更新文档
-func (c *ZincClient) PutDoc(name string, id int64, doc any) (bool, error) {
-	resp, err := c.do(consts.MethodPut, doc, fmt.Sprintf("/api/%s/_doc/%d", name, id))
+func (c *zincClient) PutDoc(ctx context.Context, name string, id int64, doc any) (bool, error) {
+	resp, err := c.do(ctx, consts.MethodPut, doc, fmt.Sprintf("/api/%s/_doc/%d", name, id))
 
 	if err != nil {
 		return false, err
@@ -162,7 +99,7 @@ func (c *ZincClient) PutDoc(name string, id int64, doc any) (bool, error) {
 }
 
 // BulkPushDoc 批量新增文档
-func (c *ZincClient) BulkPushDoc(docs []map[string]any) (bool, error) {
+func (c *zincClient) BulkPushDoc(ctx context.Context, docs []map[string]any) (bool, error) {
 	dataStr := ""
 	for _, doc := range docs {
 		str, err := json.Marshal(doc)
@@ -171,7 +108,7 @@ func (c *ZincClient) BulkPushDoc(docs []map[string]any) (bool, error) {
 		}
 	}
 
-	resp, err := c.do(consts.MethodPost, dataStr, "/api/_bulk")
+	resp, err := c.do(ctx, consts.MethodPost, dataStr, "/api/_bulk")
 	if err != nil {
 		return false, err
 	}
@@ -183,8 +120,8 @@ func (c *ZincClient) BulkPushDoc(docs []map[string]any) (bool, error) {
 	return true, nil
 }
 
-func (c *ZincClient) EsQuery(indexName string, q any) (*QueryResultT, error) {
-	resp, err := c.do(consts.MethodPost, q, fmt.Sprintf("/es/%s/_search", indexName))
+func (c *zincClient) EsQuery(ctx context.Context, indexName string, q any) (*QueryResultT, error) {
+	resp, err := c.do(ctx, consts.MethodPost, q, fmt.Sprintf("/es/%s/_search", indexName))
 
 	if err != nil {
 		return nil, err
@@ -203,8 +140,8 @@ func (c *ZincClient) EsQuery(indexName string, q any) (*QueryResultT, error) {
 	return result, nil
 }
 
-func (c *ZincClient) ApiQuery(indexName string, q any) (*QueryResultT, error) {
-	resp, err := c.do(consts.MethodPost, q, fmt.Sprintf("/api/%s/_search", indexName))
+func (c *zincClient) ApiQuery(ctx context.Context, indexName string, q any) (*QueryResultT, error) {
+	resp, err := c.do(ctx, consts.MethodPost, q, fmt.Sprintf("/api/%s/_search", indexName))
 
 	if err != nil {
 		return nil, err
@@ -223,8 +160,8 @@ func (c *ZincClient) ApiQuery(indexName string, q any) (*QueryResultT, error) {
 	return result, nil
 }
 
-func (c *ZincClient) DelDoc(indexName, id string) error {
-	resp, err := c.do(consts.MethodDelete, nil, fmt.Sprintf("/api/%s/_doc/%s", indexName, id))
+func (c *zincClient) DelDoc(ctx context.Context, indexName, id string) error {
+	resp, err := c.do(ctx, consts.MethodDelete, nil, fmt.Sprintf("/api/%s/_doc/%s", indexName, id))
 
 	if err != nil {
 		return err
@@ -237,7 +174,7 @@ func (c *ZincClient) DelDoc(indexName, id string) error {
 	return nil
 }
 
-func (c *ZincClient) do(method string, body any, url string) (*protocol.Response, error) {
+func (c *zincClient) do(ctx context.Context, method string, body any, url string) (*protocol.Response, error) {
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
@@ -250,7 +187,7 @@ func (c *ZincClient) do(method string, body any, url string) (*protocol.Response
 		req.SetBody(reqBody)
 	}
 
-	if err := c.Client.Do(context.Background(), req, resp); err != nil {
+	if err := c.Client.Do(ctx, req, resp); err != nil {
 		return nil, err
 	}
 

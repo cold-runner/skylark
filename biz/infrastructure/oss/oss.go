@@ -21,7 +21,7 @@ func (o OssType) string() string {
 	return string(o)
 }
 
-func GetOssIns() Oss {
+func GetIns() Oss {
 	if o == nil {
 		panic("oss is not init!")
 	}

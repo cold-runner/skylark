@@ -16,10 +16,11 @@ type Server struct {
 	SmsNumber     int    `mapstructure:"smsNumber"`
 	SmsExpiration int    `mapstructure:"smsExpiration"`
 
-	Db    string `mapstructure:"db"`
-	Cache string `mapstructure:"cache"`
-	Oss   string `mapstructure:"oss"`
-	Mq    string `mapstructure:"mq"`
+	Db           string `mapstructure:"db"`
+	Cache        string `mapstructure:"cache"`
+	Oss          string `mapstructure:"oss"`
+	Mq           string `mapstructure:"mq"`
+	SearchEngine string `mapstructure:"searchEngine"`
 
 	Host string `mapstructure:"host"`
 	Port string `mapstructure:"port"`
