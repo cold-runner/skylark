@@ -14,8 +14,8 @@ import (
 
 var JwtMiddleware *jwt.HertzJWTMiddleware
 
-func InitAuthenticatorAndAuthorization() {
-	jwtConfig := config.GetConfig().GetJwt()
+func InitAuthenticatorAndAuthorization(cfg config.Conf) {
+	jwtConfig := cfg.GetJwt()
 	jwtMw, err := jwt.New(&jwt.HertzJWTMiddleware{
 		Realm:            jwtConfig.Realm,
 		SigningAlgorithm: jwtConfig.SigningAlgorithm,

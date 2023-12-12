@@ -13,7 +13,7 @@ import (
 type ArticleEntity struct {
 }
 
-func (e *ArticleEntity) QueryStore(c context.Context, ctx *app.RequestContext, storeIns store.Store) ([]*orm_gen.Categorie, *errors.Error) {
+func (e *ArticleEntity) GetCategoryList(c context.Context, ctx *app.RequestContext, storeIns store.Store) ([]*orm_gen.Categorie, *errors.Error) {
 	list, err := storeIns.GetCategoryList(c)
 	if err != nil {
 		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
@@ -21,7 +21,7 @@ func (e *ArticleEntity) QueryStore(c context.Context, ctx *app.RequestContext, s
 	return list, nil
 }
 
-func (e *ArticleEntity) Format(stored []*orm_gen.Categorie) ([]*article.Category, *errors.Error) {
+func (e *ArticleEntity) FormatCategoryList(stored []*orm_gen.Categorie) ([]*article.Category, *errors.Error) {
 	resp := make([]*article.Category, len(stored))
 	for i := range resp {
 		resp[i] = &article.Category{
@@ -34,4 +34,28 @@ func (e *ArticleEntity) Format(stored []*orm_gen.Categorie) ([]*article.Category
 		}
 	}
 	return resp, nil
+}
+
+func (e *ArticleEntity) GetArticle(c context.Context, ctx *app.RequestContext,
+	storeIns store.Store,
+	req *article.GetArticleReq) (*orm_gen.Post, *orm_gen.UserInteraction, *orm_gen.Lark, *errors.Error) {
+
+	//post, err := storeIns.GetPost(c, store.PostById(storeIns, req.ArticleId))
+	//lark, err := storeIns.GetLark(c, store.LarkById(storeIns, post.UserID))
+	//interaction, err := storeIns.GetLarkInteraction(c, mysql.LarkInteraction(storeIns, lark.ID))
+	//if err != nil {
+	//	return nil, nil, nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+	//}
+	return nil, nil, nil, nil
+}
+
+func (e *ArticleEntity) FormatArticle(stored *orm_gen.Post) (*article.ArticlesInfo, *errors.Error) {
+
+	//resp := &article.ArticlesInfo{
+	//	Basic:       errCode.SuccessStatus,
+	//	AuthorInfo:  nil,
+	//	Interaction: nil,
+	//}
+
+	return nil, nil
 }

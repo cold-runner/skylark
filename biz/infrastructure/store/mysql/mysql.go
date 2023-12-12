@@ -9,15 +9,15 @@ import (
 	"github.com/cold-runner/skylark/pkg/db"
 )
 
-type MysqlIns struct {
+type mysqlIns struct {
 	*query.Query
 }
 
 func NewFactory() store.Factory {
-	return new(MysqlIns)
+	return new(mysqlIns)
 }
 
-func (m *MysqlIns) NewInstance() store.Store {
+func (m *mysqlIns) NewInstance() store.Store {
 	conf := config.GetConfig().GetMySQL()
 	cfg := &db.Options{
 		Host:                  conf.Host + ":" + conf.Port,
@@ -35,5 +35,5 @@ func (m *MysqlIns) NewInstance() store.Store {
 		panic(err)
 	}
 
-	return &MysqlIns{query.Use(dbIns)}
+	return &mysqlIns{query.Use(dbIns)}
 }

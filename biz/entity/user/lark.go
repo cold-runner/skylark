@@ -2,13 +2,13 @@ package user
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/errors"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cold-runner/skylark/biz/infrastructure/cache"
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
-	"github.com/cold-runner/skylark/biz/infrastructure/store/mysql"
 	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"github.com/cold-runner/skylark/biz/model/user"
 	"github.com/cold-runner/skylark/biz/util"
@@ -22,7 +22,7 @@ type LoginUser struct {
 }
 
 func (l *LoginUser) PasswordLogin(c context.Context, ctx *app.RequestContext, storeIns store.Store, req *user.PasswordLoginReq) *errors.Error {
-	lark, err := storeIns.GetLark(c, mysql.LarkByStuNum(storeIns.(*mysql.MysqlIns), req.StuNum))
+	lark, err := storeIns.GetLark(c, storeIns.LarkByStuNum(req.StuNum))
 
 	switch {
 	case err == nil:
@@ -40,7 +40,7 @@ func (l *LoginUser) PasswordLogin(c context.Context, ctx *app.RequestContext, st
 }
 
 func (l *LoginUser) PhoneLogin(c context.Context, ctx *app.RequestContext, storeIns store.Store, cacheIns cache.Cache, req *user.PhoneLoginReq) *errors.Error {
-	lark, err := storeIns.GetLark(c, mysql.LarkByPhone(storeIns.(*mysql.MysqlIns), req.Phone))
+	lark, err := storeIns.GetLark(c, storeIns.LarkByPhone(req.Phone))
 
 	switch {
 	case stdErr.Is(err, gorm.ErrRecordNotFound):
@@ -71,7 +71,7 @@ type Lark struct {
 }
 
 func (l *Lark) GetById(c context.Context, ctx *app.RequestContext, storeIns store.Store, uuid string) (*orm_gen.Lark, *errors.Error) {
-	lark, err := storeIns.GetLark(c, mysql.LarkById(storeIns.(*mysql.MysqlIns), uuid))
+	lark, err := storeIns.GetLark(c, storeIns.LarkById(uuid))
 	switch {
 	case stdErr.Is(err, gorm.ErrRecordNotFound):
 		errMsg := "user not exist!" + "recv uuid: " + uuid

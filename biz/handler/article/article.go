@@ -43,6 +43,9 @@ func GetArticleFeed(ctx context.Context, c *app.RequestContext) {
 // GetArticle .
 // @router /article [GET]
 func GetArticle(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().LastPathSegment())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
 	var err error
 	var req article.GetArticleReq
 	err = c.BindAndValidate(&req)
@@ -51,8 +54,14 @@ func GetArticle(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(article.GetArticleRes)
+	resp, err := service.GetArticleById(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
 
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 	c.JSON(consts.StatusOK, resp)
 }
 

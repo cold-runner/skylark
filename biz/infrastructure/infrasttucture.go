@@ -20,16 +20,9 @@ func Init() {
 	switch c.GetServer().Mode {
 	case config.PRODUCTION.String():
 		// 初始化仓储层
-		func() {
-			switch c.GetServer().Db {
-			case store.MYSQL.String():
-				store.SetDefault(mysql.NewFactory().NewInstance())
-			default:
-				panic(errors.Errorf("无效的仓储实例类型，支持的类型：mysql。当前传入类型为：%s", c.GetServer().Db))
-			}
-		}()
+		initStore(c)
 		// 初始化认证、授权中间件
-		user.InitAuthenticatorAndAuthorization()
+		user.InitAuthenticatorAndAuthorization(c)
 		// 初始化日志
 		log.Init(c)
 		// 初始化缓存
@@ -43,5 +36,14 @@ func Init() {
 	case config.DEBUG.String():
 
 	case config.TEST.String():
+	}
+}
+
+func initStore(cfg config.Conf) {
+	switch cfg.GetServer().Db {
+	case store.MYSQL.String():
+		store.SetDefault(mysql.NewFactory().NewInstance())
+	default:
+		panic(errors.Errorf("无效的仓储实例类型，支持的类型：mysql。当前传入类型为：%s", cfg.GetServer().Db))
 	}
 }

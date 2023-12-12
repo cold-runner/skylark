@@ -20,12 +20,12 @@ func GetCategories(c context.Context, ctx *app.RequestContext, req *article.Cate
 	storeIns := store.GetIns()
 
 	categoryEntity := &entity.ArticleEntity{}
-	stored, err := categoryEntity.QueryStore(c, ctx, storeIns)
+	stored, err := categoryEntity.GetCategoryList(c, ctx, storeIns)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := categoryEntity.Format(stored)
+	resp, err := categoryEntity.FormatCategoryList(stored)
 	if err != nil {
 		return nil, err
 	}
@@ -34,4 +34,10 @@ func GetCategories(c context.Context, ctx *app.RequestContext, req *article.Cate
 		Status:     errCode.SuccessStatus,
 		Categories: resp,
 	}, nil
+}
+
+func GetArticleById(c context.Context, ctx *app.RequestContext, req *article.GetArticleReq) (*article.GetArticleRes, error) {
+	// TODO从全文搜索引擎中寻找？还是直接从数据库中查？
+	//storeIns := store.GetIns()
+	return nil, nil
 }

@@ -2,19 +2,20 @@ package store
 
 import (
 	"context"
+
 	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"gorm.io/gen"
 	"gorm.io/gen/field"
 )
 
-type StoreType string
+type Type string
 
-func (s StoreType) String() string {
+func (s Type) String() string {
 	return string(s)
 }
 
 const (
-	MYSQL StoreType = "mysql"
+	MYSQL Type = "mysql"
 )
 
 var (
@@ -42,12 +43,15 @@ type Factory interface {
 
 // Store 存储层接口
 type Store interface {
-	Post
 	Lark
-	Comment
-}
+	LarkScope
 
-// 数据库依赖大概率不会发生改变，所以这里定义依赖为针对于mysql的可变参数
+	Post
+	PostScope
+
+	Comment
+	CommentScope
+}
 
 // Lark 用户模块接口
 type Lark interface {
@@ -57,11 +61,19 @@ type Lark interface {
 	UpdateLarkSelect(c context.Context, selectScopes []field.Expr, whereScope []gen.Condition, lark *orm_gen.Lark) error
 	UpdateLarkOmit(c context.Context, omitScopes []field.Expr, whereScopes []gen.Condition, lark *orm_gen.Lark) error
 }
+type LarkScope interface {
+	LarkById(uid string) gen.Condition
+	LarkByStuNum(stuNum string) gen.Condition
+	LarkByPhone(phone string) gen.Condition
+	LarkByQqUnionId(qqUnionId string) gen.Condition
+}
 
 // Comment 评论模块接口
 type Comment interface {
 	// PostComment 发布评论
 	//PostComment(c context.Context)
+}
+type CommentScope interface {
 }
 
 // Post 文章模块接口
@@ -72,4 +84,9 @@ type Post interface {
 	UpdateDraftSelect(c context.Context, selectScopes []field.Expr, whereScope []gen.Condition, draft *orm_gen.Draft) error
 	UpdateDraftOmit(c context.Context, omitScopes []field.Expr, whereScopes []gen.Condition, draft *orm_gen.Draft) error
 	GetCategoryList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Categorie, error)
+	GetPost(c context.Context, conds ...gen.Condition) (*orm_gen.Post, error)
+}
+type PostScope interface {
+	PostById(uid string) gen.Condition
+	PostByUserId(userId string) gen.Condition
 }

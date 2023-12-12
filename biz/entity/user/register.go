@@ -11,7 +11,6 @@ import (
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
 	"github.com/cold-runner/skylark/biz/infrastructure/oss"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
-	"github.com/cold-runner/skylark/biz/infrastructure/store/mysql"
 	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"github.com/cold-runner/skylark/biz/model/user"
 	"github.com/cold-runner/skylark/biz/util"
@@ -24,7 +23,7 @@ type RegisterDto struct {
 }
 
 func (r *RegisterDto) IsRegistered(c context.Context, ctx *app.RequestContext, storeIns store.Store, req *user.RegisterReq) *errors.Error {
-	_, err := storeIns.GetLark(c, mysql.LarkByStuNum(storeIns.(*mysql.MysqlIns), req.StuNum))
+	_, err := storeIns.GetLark(c, storeIns.LarkByStuNum(req.StuNum))
 	if err == nil {
 		return errCode.WrapBizErr(ctx, stdErr.New("学号为"+req.StuNum+"的用户已注册!"), errCode.ErrUserAlreadyExist)
 	}
