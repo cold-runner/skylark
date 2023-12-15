@@ -17,6 +17,7 @@ import (
 func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
+	root.GET("/getLark", append(_getuserinfobystunumMw(), user.GetUserInfoByStuNum)...)
 	root.POST("/register", append(_registerMw(), user.Register)...)
 	root.GET("/sendSmsCode", append(_sendsmscodeMw(), user.SendSmsCode)...)
 	{
@@ -26,6 +27,6 @@ func Register(r *server.Hertz) {
 	}
 	{
 		_user := root.Group("/user", _userMw()...)
-		_user.GET("/getInfoById", append(_getuserinfoMw(), user.GetUserInfo)...)
+		_user.GET("/getInfoById", append(_getuserinfobyidMw(), user.GetUserInfoById)...)
 	}
 }

@@ -141,3 +141,35 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 	c.JSON(consts.StatusOK, resp)
 }
+
+// GetUserInfoById .
+// @router /user/getInfoById [GET]
+func GetUserInfoById(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.GetUserInfoByIdReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.GetUserInfoRes)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetUserInfoByStuNum .
+// @router /getLark [GET]
+func GetUserInfoByStuNum(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.GetUserInfoByIdReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.GetUserInfoRes)
+
+	c.JSON(consts.StatusOK, resp)
+}

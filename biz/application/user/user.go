@@ -110,7 +110,7 @@ func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCo
 	}, nil
 }
 
-func GetUserInfo(c context.Context, ctx *app.RequestContext, req *user.GetUserInfoByIdReq) (*user.GetUserInfoByIdRes, error) {
+func GetUserInfo(c context.Context, ctx *app.RequestContext, req *user.GetUserInfoByIdReq) (*user.GetUserInfoRes, error) {
 	storeIns := store.GetIns()
 
 	userUuid, _ := ctx.Get("identity")
@@ -122,7 +122,7 @@ func GetUserInfo(c context.Context, ctx *app.RequestContext, req *user.GetUserIn
 
 	basicInfo := lark.Format(storedLark)
 
-	return &user.GetUserInfoByIdRes{
+	return &user.GetUserInfoRes{
 		Status:    errCode.SuccessStatus,
 		BasicInfo: basicInfo,
 	}, nil

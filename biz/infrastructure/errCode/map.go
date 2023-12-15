@@ -19,4 +19,11 @@ var ErrMap = map[BizErrCode]*BizError{
 	ErrPasswordIncorrect: {consts.StatusBadRequest, "password is incorrect"},
 	ErrUserNotFound:      {consts.StatusBadRequest, "user not found"},
 	ErrUserAlreadyExist:  {consts.StatusBadRequest, "user already exist"},
+
+	// 文章相关
+}
+
+var ErrBackendMap = map[BizErrCode]*BizError{
+	// 文章相关
+	ErrSyncPosts: {consts.StatusInternalServerError, "error occurred when sync"},
 }

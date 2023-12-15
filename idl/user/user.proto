@@ -54,7 +54,12 @@ message GetUserInfoByIdReq {
   string req_id = 2;
 }
 
-message GetUserInfoByIdRes {
+message GetUserInfoByStuNumReq {
+  string stu_num = 1[(api.body) = "stu_num"];
+  string req_id = 2;
+}
+
+message GetUserInfoRes {
   response.Status status = 1;
   user.Basic basic_info = 2;
 }
@@ -72,7 +77,10 @@ service User {
   rpc SendSmsCode(SendSmsCodeReq) returns (SendSmsCodeRes){
     option (api.get) = "/sendSmsCode";
   };
-  rpc  getUserInfo(GetUserInfoByIdReq) returns (GetUserInfoByIdRes){
+  rpc getUserInfoById(GetUserInfoByIdReq) returns (GetUserInfoRes){
     option (api.get) = "/user/getInfoById";
+  }
+  rpc getUserInfoByStuNum(GetUserInfoByIdReq) returns (GetUserInfoRes){
+    option (api.get) = "/getLark";
   }
 }

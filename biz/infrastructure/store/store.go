@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"github.com/cold-runner/skylark/biz/infrastructure/store/other"
 
 	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"gorm.io/gen"
@@ -85,6 +86,10 @@ type Post interface {
 	UpdateDraftOmit(c context.Context, omitScopes []field.Expr, whereScopes []gen.Condition, draft *orm_gen.Draft) error
 	GetCategoryList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Categorie, error)
 	GetPost(c context.Context, conds ...gen.Condition) (*orm_gen.Post, error)
+	GetPostList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Post, error)
+	GetTagList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Tag, error)
+	GetPostTagList(c context.Context, conds ...gen.Condition) ([]*orm_gen.PostTag, error)
+	GetPostListAllDetail(c context.Context) ([]other.PostWithAllDetail, error)
 }
 type PostScope interface {
 	PostById(uid string) gen.Condition

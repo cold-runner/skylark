@@ -40,10 +40,11 @@ func GetIns() SearchEngine {
 
 type SearchEngine interface {
 	Health() error
-	CreateIndex(c context.Context, name string, p *IndexProperty) bool
-	ExistIndex(c context.Context, name string) bool
-	PutDoc(c context.Context, name string, id int64, doc any) (bool, error)
-	BulkPushDoc(c context.Context, docs []map[string]any) (bool, error)
+	CreateIndex(c context.Context, name string, p *IndexProperty) error
+	DelIndex(c context.Context, idxName string) error
+	ExistIndex(c context.Context, name string) (bool, error)
+	PutDoc(c context.Context, name string, id int64, doc any) error
+	BulkPushDoc(c context.Context, docs []map[string]any) error
 	EsQuery(c context.Context, indexName string, q any) (*QueryResultT, error)
 	ApiQuery(c context.Context, indexName string, q any) (*QueryResultT, error)
 	DelDoc(c context.Context, indexName, id string) error

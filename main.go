@@ -5,11 +5,13 @@ package main
 import (
 	"time"
 
-	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cold-runner/skylark/biz/application/event"
 	"github.com/cold-runner/skylark/biz/config"
 	"github.com/cold-runner/skylark/biz/infrastructure"
 	"github.com/cold-runner/skylark/biz/util"
-	"github.com/hertz-contrib/monitor-prometheus"
+
+	"github.com/bytedance/gopkg/util/gopool"
+	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
 func main() {
@@ -17,6 +19,8 @@ func main() {
 	config.Init()
 	// 初始化基础设施
 	infrastructure.Init()
+	// 将数据库文章上传至全文搜索引擎中
+	gopool.Go(event.SyncToSearchEngine)
 
 	serverConf := config.GetConfig().GetServer()
 
@@ -24,7 +28,7 @@ func main() {
 		server.WithExitWaitTime(serverConf.ExitWaitTime*time.Second),
 		server.WithHostPorts(serverConf.Host+":"+serverConf.Port),
 
-		server.WithTracer(prometheus.NewServerTracer(":9091", "/hertz")),
+		//server.WithTracer(prometheus.NewServerTracer(":9091", "/hertz")),
 		server.WithCustomValidator(util.CustomValidator()),
 	)
 	// pprof
