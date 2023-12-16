@@ -26,7 +26,7 @@ message RegisterResp {
 }
 
 message PasswordLoginReq {
-  string stu_num = 1[(api.body) = "stu_num"];
+  string stu_num = 1[(api.body) = "stu_num", (api.vd)="stuNum"];
   string password = 2[(api.body) = "password"];
 }
 
@@ -55,7 +55,7 @@ message GetUserInfoByIdReq {
 }
 
 message GetUserInfoByStuNumReq {
-  string stu_num = 1[(api.body) = "stu_num"];
+  string stu_num = 1[(api.body) = "stu_num", (api.vd)="stuNum"];
   string req_id = 2;
 }
 

@@ -83,6 +83,18 @@ func (l *Lark) GetById(c context.Context, ctx *app.RequestContext, storeIns stor
 	return lark, nil
 }
 
+func (l *Lark) GetByStuNum(c context.Context, ctx *app.RequestContext, storeIns store.Store, stuNum string) (*orm_gen.Lark, *errors.Error) {
+	lark, err := storeIns.GetLark(c, storeIns.LarkByStuNum(stuNum))
+	switch {
+	case stdErr.Is(err, gorm.ErrRecordNotFound):
+		errMsg := "user not exist!" + "recv stu_num: " + stuNum
+		return nil, errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrUserNotFound)
+	case err != nil:
+		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+	}
+	return lark, nil
+}
+
 func (l *Lark) Format(stored *orm_gen.Lark) *user.Basic {
 	return &user.Basic{
 		UserId:            stored.ID.String(),

@@ -127,3 +127,20 @@ func GetUserInfo(c context.Context, ctx *app.RequestContext, req *user.GetUserIn
 		BasicInfo: basicInfo,
 	}, nil
 }
+
+func GetUserInfoByStuNum(c context.Context, ctx *app.RequestContext, req *user.GetUserInfoByStuNumReq) (*user.GetUserInfoRes, error) {
+	storeIns := store.GetIns()
+
+	lark := &userEntity.Lark{}
+	storedLark, err := lark.GetByStuNum(c, ctx, storeIns, req.StuNum)
+	if err != nil {
+		return nil, err
+	}
+
+	basicInfo := lark.Format(storedLark)
+
+	return &user.GetUserInfoRes{
+		Status:    errCode.SuccessStatus,
+		BasicInfo: basicInfo,
+	}, nil
+}

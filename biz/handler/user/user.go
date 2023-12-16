@@ -116,9 +116,9 @@ func SendSmsCode(ctx context.Context, c *app.RequestContext) {
 	c.JSON(consts.StatusOK, resp)
 }
 
-// GetUserInfo .
+// GetUserInfoById .
 // @router /user/getInfoById [GET]
-func GetUserInfo(ctx context.Context, c *app.RequestContext) {
+func GetUserInfoById(ctx context.Context, c *app.RequestContext) {
 	routerPath := string(c.URI().LastPathSegment())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
@@ -142,34 +142,28 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 	c.JSON(consts.StatusOK, resp)
 }
 
-// GetUserInfoById .
-// @router /user/getInfoById [GET]
-func GetUserInfoById(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req user.GetUserInfoByIdReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(user.GetUserInfoRes)
-
-	c.JSON(consts.StatusOK, resp)
-}
-
 // GetUserInfoByStuNum .
 // @router /getLark [GET]
 func GetUserInfoByStuNum(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().LastPathSegment())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
+
 	var err error
-	var req user.GetUserInfoByIdReq
+	var req user.GetUserInfoByStuNumReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp := new(user.GetUserInfoRes)
+	resp, err := service.GetUserInfoByStuNum(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
 
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 	c.JSON(consts.StatusOK, resp)
 }
