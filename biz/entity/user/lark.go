@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/common/json"
+	"time"
 
 	"github.com/cold-runner/skylark/biz/infrastructure/cache"
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
@@ -69,48 +71,76 @@ func (l *LoginUser) PhoneLogin(c context.Context, ctx *app.RequestContext, store
 }
 
 type Lark struct {
+	orm_gen.Lark
+	FollowerCount uint64 `json:"follower_count"`
+	FolloweeCount uint64 `json:"followee_count"`
+	PostCount     uint64 `json:"post_count"`
+	EssayCount    uint64 `json:"essay_count"`
 }
 
-func (l *Lark) GetById(c context.Context, ctx *app.RequestContext, storeIns store.Store, uuid string) (*orm_gen.Lark, *errors.Error) {
-	lark, err := storeIns.GetLark(c, storeIns.LarkById(uuid))
+func (l *Lark) GetById(c context.Context, ctx *app.RequestContext, storeIns store.Store, uuid string) *errors.Error {
+	lark, err := storeIns.GetLarkAllDetail("id", uuid)
 	switch {
 	case stdErr.Is(err, gorm.ErrRecordNotFound):
 		errMsg := "user not exist!" + "recv uuid: " + uuid
-		return nil, errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrUserNotFound)
+		return errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrUserNotFound)
 	case err != nil:
-		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 	}
-	return lark, nil
+	data, _ := json.Marshal(lark)
+	_ = json.Unmarshal(data, l)
+	return nil
 }
 
-func (l *Lark) GetByStuNum(c context.Context, ctx *app.RequestContext, storeIns store.Store, stuNum string) (*orm_gen.Lark, *errors.Error) {
-	lark, err := storeIns.GetLark(c, storeIns.LarkByStuNum(stuNum))
+func (l *Lark) GetByStuNum(c context.Context, ctx *app.RequestContext, storeIns store.Store, stuNum string) *errors.Error {
+	lark, err := storeIns.GetLarkAllDetail("stu_num", stuNum)
 	switch {
 	case stdErr.Is(err, gorm.ErrRecordNotFound):
 		errMsg := "user not exist!" + "recv stu_num: " + stuNum
-		return nil, errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrUserNotFound)
+		return errCode.WrapBizErr(ctx, stdErr.New(errMsg), errCode.ErrUserNotFound)
 	case err != nil:
-		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
+		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 	}
-	return lark, nil
+	data, _ := json.Marshal(lark)
+	_ = json.Unmarshal(data, l)
+	return nil
 }
 
-func (l *Lark) Format(stored *orm_gen.Lark) *user.Basic {
+func (l *Lark) Format() *user.Basic {
 	return &user.Basic{
-		UserId:            stored.ID.String(),
-		StuNum:            stored.StuNum,
-		AvatarUrl:         stored.Avatar,
-		StuName:           stored.Name,
-		BriefIntroduction: stored.Introduce,
-		College:           stored.College,
-		Major:             stored.Major,
-		Grade:             stored.Grade,
-		// TODO 交互信息
-		FolloweeCount:     1,
-		FollowerCount:     1,
-		PostArticleCount:  1,
-		EssayArticleCount: 1,
+		UserId:            l.ID.String(),
+		StuNum:            l.StuNum,
+		AvatarUrl:         l.Avatar,
+		StuName:           l.Name,
+		BriefIntroduction: l.Introduce,
+		College:           l.College,
+		Major:             l.Major,
+		Grade:             l.Grade,
+		FolloweeCount:     l.FolloweeCount,
+		FollowerCount:     l.FollowerCount,
+		PostArticleCount:  l.PostCount,
+		EssayArticleCount: l.EssayCount,
 		Power:             1,
 	}
 
+}
+
+type LarkWithAllDetail struct {
+	Id            string    `gorm:"column:id" json:"id"`
+	CreatedAt     time.Time `gorm:"column:created_at" json:"created_at"`
+	StuNum        string    `gorm:"column:stu_num" json:"stu_num"`
+	Name          string    `gorm:"column:name" json:"name"`
+	Gender        string    `gorm:"column:gender" json:"gender"`
+	College       string    `gorm:"column:college" json:"college"`
+	Major         string    `gorm:"column:major" json:"major"`
+	Grade         string    `gorm:"column:grade" json:"grade"`
+	Province      string    `gorm:"column:province" json:"province"`
+	Email         string    `gorm:"column:email" json:"email"`
+	Introduce     string    `gorm:"column:introduce" json:"introduce"`
+	Avatar        string    `gorm:"column:avatar" json:"avatar"`
+	State         int       `gorm:"column:state" json:"state"`
+	FolloweeCount uint64    `gorm:"column:followee_count" json:"followee_count"`
+	FollowerCount uint64    `gorm:"column:follower_count" json:"follower_count"`
+	PostCount     uint64    `gorm:"column:post_count" json:"post_count"`
+	EssayCount    uint64    `gorm:"column:essay_count" json:"essay_count"`
 }

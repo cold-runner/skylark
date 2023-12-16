@@ -40,34 +40,12 @@ func GetArticleFeed(ctx context.Context, c *app.RequestContext) {
 	c.JSON(consts.StatusOK, resp)
 }
 
-// GetArticle .
-// @router /article [GET]
-func GetArticle(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
-
-	hlog.Debugf(log.ROUTE_PATH, routerPath)
-	var err error
-	var req article.GetArticleReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		errCode.ResponseValidationFailed(c, err)
-		return
-	}
-
-	resp, err := service.GetArticleById(ctx, c, &req)
-	if err != nil {
-		errCode.ResponseFailed(c)
-		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
-		return
-	}
-
-	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
-	c.JSON(consts.StatusOK, resp)
-}
-
 // SearchArticle .
 // @router /search [GET]
 func SearchArticle(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().LastPathSegment())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
 	var err error
 	var req article.SearchArticleReq
 	err = c.BindAndValidate(&req)
@@ -76,8 +54,14 @@ func SearchArticle(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(article.SearchArticleRes)
+	resp, err := service.SearchArticle(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
 
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -97,6 +81,31 @@ func Category(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp, err := service.GetCategories(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
+
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetArticle .
+// @router /article/:article_id [GET]
+func GetArticle(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().LastPathSegment())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
+	var err error
+	var req article.GetArticleReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		errCode.ResponseValidationFailed(c, err)
+		return
+	}
+
+	resp, err := service.GetArticleById(ctx, c, &req)
 	if err != nil {
 		errCode.ResponseFailed(c)
 		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())

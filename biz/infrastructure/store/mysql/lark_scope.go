@@ -6,8 +6,7 @@ import (
 )
 
 func (m *mysqlIns) LarkById(id string) gen.Condition {
-	uid, _ := uuid.Parse(id)
-	return m.Query.Lark.ID.Eq(uid)
+	return m.Query.Lark.ID.Eq(id)
 }
 
 func (m *mysqlIns) LarkByStuNum(stuNum string) gen.Condition {

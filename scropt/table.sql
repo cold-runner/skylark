@@ -119,22 +119,25 @@ create index deleted_at
 
 create table if not exists post
 (
-    id           char(36)        not null comment '自然主键'
+    id            char(36)        not null comment '自然主键'
     primary key,
-    created_at   datetime        not null comment '创建时间',
-    deleted_at   datetime        null comment '删除时间（软删除）',
-    updated_at   datetime        null comment '更新时间',
-    title        varchar(200)    null comment '博文标题',
-    picture_url  varchar(255)    not null comment '博文标题配图',
-    user_id      char(36)        not null comment '作者id',
-    summary      text            not null comment '博文概览',
-    content      text            not null comment '博文内容',
-    categorie_id char(36)        not null comment '隶属哪个归档',
-    temperature  bigint unsigned not null comment '博文热度（排序文章时用）',
-    `like`       bigint unsigned not null comment '博文点赞量',
-    watch        bigint unsigned not null comment '观看量',
-    star         bigint unsigned not null comment '收藏数量',
-    state        tinyint         not null comment '文章状态：0审核中、1通过、2被举报',
+    created_at    datetime        not null comment '创建时间',
+    deleted_at    datetime        null comment '删除时间（软删除）',
+    updated_at    datetime        null comment '更新时间',
+    title         varchar(200)    null comment '博文标题',
+    cover_image   varchar(255)    not null comment '博文标题配图',
+    user_id       char(36)        not null comment '作者id',
+    summary       text            not null comment '博文概览',
+    content       text            not null comment '博文内容',
+    categorie_id  char(36)        not null comment '隶属哪个归档',
+    temperature   bigint unsigned not null comment '博文热度（排序文章时用）',
+    like_count    bigint unsigned not null comment '博文点赞量',
+    view_count    bigint unsigned not null comment '观看量',
+    star_count    bigint unsigned not null comment '收藏数量',
+    comment_count int             null,
+    share_count   int             null comment '分享数量',
+    state         tinyint         not null comment '文章状态：0审核中、1通过、2被举报',
+    link_url      varchar(255)    null comment '文章外部链接',
     constraint post_categorie_id_fk
     foreign key (categorie_id) references categorie (id),
     constraint post_lark_id_fk

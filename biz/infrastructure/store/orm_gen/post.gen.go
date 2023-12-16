@@ -15,21 +15,24 @@ const TableNamePost = "post"
 
 // Post 博文
 type Post struct {
-	ID          uuid.UUID      `gorm:"column:id;type:uuid;primaryKey;default:uuid_generate_v4();comment:自然主键" json:"id"`                                    // 自然主键
-	CreatedAt   time.Time      `gorm:"column:created_at;type:datetime;not null;comment:创建时间" json:"created_at"`                                             // 创建时间
-	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;index:deleted_at,priority:1;comment:删除时间（软删除）" json:"deleted_at"`                     // 删除时间（软删除）
-	UpdatedAt   time.Time      `gorm:"column:updated_at;type:datetime;comment:更新时间" json:"updated_at"`                                                      // 更新时间
-	Title       string         `gorm:"column:title;type:varchar(200);comment:博文标题" json:"title"`                                                            // 博文标题
-	PictureURL  string         `gorm:"column:picture_url;type:varchar(255);not null;comment:博文标题配图" json:"picture_url"`                                     // 博文标题配图
-	UserID      string         `gorm:"column:user_id;type:char(36);not null;index:post_lark_id_fk,priority:1;comment:作者id" json:"user_id"`                  // 作者id
-	Summary     string         `gorm:"column:summary;type:text;not null;comment:博文概览" json:"summary"`                                                       // 博文概览
-	Content     string         `gorm:"column:content;type:text;not null;comment:博文内容" json:"content"`                                                       // 博文内容
-	CategorieID string         `gorm:"column:categorie_id;type:char(36);not null;index:post_categorie_id_fk,priority:1;comment:隶属哪个归档" json:"categorie_id"` // 隶属哪个归档
-	Temperature int64          `gorm:"column:temperature;type:bigint unsigned;not null;comment:博文热度（排序文章时用）" json:"temperature"`                            // 博文热度（排序文章时用）
-	Like        int64          `gorm:"column:like;type:bigint unsigned;not null;comment:博文点赞量" json:"like"`                                                 // 博文点赞量
-	Watch       int64          `gorm:"column:watch;type:bigint unsigned;not null;comment:观看量" json:"watch"`                                                 // 观看量
-	Star        int64          `gorm:"column:star;type:bigint unsigned;not null;comment:收藏数量" json:"star"`                                                  // 收藏数量
-	State       int64          `gorm:"column:state;type:tinyint;not null;comment:文章状态：0审核中、1通过、2被举报" json:"state"`                                          // 文章状态：0审核中、1通过、2被举报
+	ID           uuid.UUID      `gorm:"column:id;type:uuid;primaryKey;default:uuid_generate_v4();comment:自然主键" json:"id"`                                    // 自然主键
+	CreatedAt    time.Time      `gorm:"column:created_at;type:datetime;not null;comment:创建时间" json:"created_at"`                                             // 创建时间
+	DeletedAt    gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;index:deleted_at,priority:1;comment:删除时间（软删除）" json:"deleted_at"`                     // 删除时间（软删除）
+	UpdatedAt    time.Time      `gorm:"column:updated_at;type:datetime;comment:更新时间" json:"updated_at"`                                                      // 更新时间
+	Title        string         `gorm:"column:title;type:varchar(200);comment:博文标题" json:"title"`                                                            // 博文标题
+	CoverImage   string         `gorm:"column:cover_image;type:varchar(255);not null;comment:博文标题配图" json:"cover_image"`                                     // 博文标题配图
+	UserID       string         `gorm:"column:user_id;type:char(36);not null;index:post_lark_id_fk,priority:1;comment:作者id" json:"user_id"`                  // 作者id
+	Summary      string         `gorm:"column:summary;type:text;not null;comment:博文概览" json:"summary"`                                                       // 博文概览
+	Content      string         `gorm:"column:content;type:text;not null;comment:博文内容" json:"content"`                                                       // 博文内容
+	CategorieID  string         `gorm:"column:categorie_id;type:char(36);not null;index:post_categorie_id_fk,priority:1;comment:隶属哪个归档" json:"categorie_id"` // 隶属哪个归档
+	Temperature  int64          `gorm:"column:temperature;type:bigint unsigned;not null;comment:博文热度（排序文章时用）" json:"temperature"`                            // 博文热度（排序文章时用）
+	LikeCount    int64          `gorm:"column:like_count;type:bigint unsigned;not null;comment:博文点赞量" json:"like_count"`                                     // 博文点赞量
+	ViewCount    int64          `gorm:"column:view_count;type:bigint unsigned;not null;comment:观看量" json:"view_count"`                                       // 观看量
+	StarCount    int64          `gorm:"column:star_count;type:bigint unsigned;not null;comment:收藏数量" json:"star_count"`                                      // 收藏数量
+	CommentCount int64          `gorm:"column:comment_count;type:int" json:"comment_count"`
+	ShareCount   int64          `gorm:"column:share_count;type:int;comment:分享数量" json:"share_count"`                // 分享数量
+	State        int64          `gorm:"column:state;type:tinyint;not null;comment:文章状态：0审核中、1通过、2被举报" json:"state"` // 文章状态：0审核中、1通过、2被举报
+	LinkURL      string         `gorm:"column:link_url;type:varchar(255);comment:文章外部链接" json:"link_url"`           // 文章外部链接
 }
 
 // TableName Post's table name

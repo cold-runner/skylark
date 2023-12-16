@@ -2,6 +2,7 @@ package article
 
 import (
 	"context"
+	"github.com/cold-runner/skylark/biz/infrastructure/searchEngine"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	entity "github.com/cold-runner/skylark/biz/entity/article"
@@ -37,7 +38,30 @@ func GetCategories(c context.Context, ctx *app.RequestContext, req *article.Cate
 }
 
 func GetArticleById(c context.Context, ctx *app.RequestContext, req *article.GetArticleReq) (*article.GetArticleRes, error) {
-	// TODO从全文搜索引擎中寻找？还是直接从数据库中查？
-	//storeIns := store.GetIns()
-	return nil, nil
+	searchIns := searchEngine.GetIns()
+
+	articleEntity := &entity.ArticleEntity{}
+	res, err := articleEntity.GetSingle(c, ctx, searchIns, req)
+	if err != nil {
+		return nil, err
+	}
+	return &article.GetArticleRes{
+		Status:  errCode.SuccessStatus,
+		Article: res,
+	}, nil
+}
+
+func SearchArticle(c context.Context, ctx *app.RequestContext, req *article.SearchArticleReq) (*article.SearchArticleRes, error) {
+	searchIns := searchEngine.GetIns()
+
+	articleEntity := &entity.ArticleEntity{}
+	articleList, err := articleEntity.Search(c, ctx, searchIns, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &article.SearchArticleRes{
+		Status:   errCode.SuccessStatus,
+		Articles: articleList,
+	}, nil
 }

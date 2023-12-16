@@ -34,3 +34,18 @@ func _categoryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _articleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func __Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getartMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

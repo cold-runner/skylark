@@ -6,6 +6,7 @@ package query
 
 import (
 	"context"
+	"strings"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -27,7 +28,7 @@ func newLark(db *gorm.DB, opts ...gen.DOOption) lark {
 
 	tableName := _lark.larkDo.TableName()
 	_lark.ALL = field.NewAsterisk(tableName)
-	_lark.ID = field.NewField(tableName, "id")
+	_lark.ID = field.NewString(tableName, "id")
 	_lark.CreatedAt = field.NewTime(tableName, "created_at")
 	_lark.DeletedAt = field.NewField(tableName, "deleted_at")
 	_lark.UpdatedAt = field.NewTime(tableName, "updated_at")
@@ -60,7 +61,7 @@ type lark struct {
 	larkDo
 
 	ALL           field.Asterisk
-	ID            field.Field  // 自然主键
+	ID            field.String // 自然主键
 	CreatedAt     field.Time   // 创建时间
 	DeletedAt     field.Field  // 删除时间（软删除）
 	UpdatedAt     field.Time   // 更新时间
@@ -98,7 +99,7 @@ func (l lark) As(alias string) *lark {
 
 func (l *lark) updateTableName(table string) *lark {
 	l.ALL = field.NewAsterisk(table)
-	l.ID = field.NewField(table, "id")
+	l.ID = field.NewString(table, "id")
 	l.CreatedAt = field.NewTime(table, "created_at")
 	l.DeletedAt = field.NewField(table, "deleted_at")
 	l.UpdatedAt = field.NewTime(table, "updated_at")
@@ -232,6 +233,56 @@ type ILarkDo interface {
 	Returning(value interface{}, columns ...string) ILarkDo
 	UnderlyingDB() *gorm.DB
 	schema.Tabler
+
+	GetAllDetail() (result []map[string]interface{}, err error)
+	GetAllDetailByField(column string, value string) (result map[string]interface{}, err error)
+}
+
+// SELECT lark.*, t.followee_count, t.follower_count, count(p.user_id) "post_count",count(e.user_id) "essay_count"
+// from lark left join (select lark.id,count(ui.user_id) "follower_count", count(ui.followed_id) "followee_count" from lark
+//
+//	left join user_interaction ui on lark.id = ui.followed_id
+//	left join user_interaction ui2 on lark.id = ui2.user_id
+//	group by lark.id, ui.user_id, ui.followed_id) t on t.id = lark.id
+//
+// left join skylark.post p on lark.id = p.user_id
+// left join essay e on  lark.id = e.user_id
+// group by lark.id, p.user_id, e.user_id,t.followee_count, t.follower_count
+func (l larkDo) GetAllDetail() (result []map[string]interface{}, err error) {
+	var generateSQL strings.Builder
+	generateSQL.WriteString("SELECT lark.*, t.followee_count, t.follower_count, count(p.user_id) \"post_count\",count(e.user_id) \"essay_count\" from lark left join (select lark.id,count(ui.user_id) \"follower_count\", count(ui.followed_id) \"followee_count\" from lark left join user_interaction ui on lark.id = ui.followed_id left join user_interaction ui2 on lark.id = ui2.user_id group by lark.id, ui.user_id, ui.followed_id) t on t.id = lark.id left join skylark.post p on lark.id = p.user_id left join essay e on lark.id = e.user_id group by lark.id, p.user_id, e.user_id,t.followee_count, t.follower_count ")
+
+	var executeSQL *gorm.DB
+	executeSQL = l.UnderlyingDB().Raw(generateSQL.String()).Find(&result) // ignore_security_alert
+	err = executeSQL.Error
+
+	return
+}
+
+// SELECT lark.*, t.followee_count, t.follower_count, count(p.user_id) "post_count",count(e.user_id) "essay_count"
+// from lark left join (select lark.id,count(ui.user_id) "follower_count", count(ui.followed_id) "followee_count" from lark
+//
+//	left join user_interaction ui on lark.id = ui.followed_id
+//	left join user_interaction ui2 on lark.id = ui2.user_id
+//	group by lark.id, ui.user_id, ui.followed_id) t on t.id = lark.id
+//
+// left join skylark.post p on lark.id = p.user_id
+// left join essay e on  lark.id = e.user_id
+// where lark.@@column=@value
+// group by lark.id, p.user_id, e.user_id,t.followee_count, t.follower_count
+func (l larkDo) GetAllDetailByField(column string, value string) (result map[string]interface{}, err error) {
+	var params []interface{}
+
+	var generateSQL strings.Builder
+	params = append(params, value)
+	generateSQL.WriteString("SELECT lark.*, t.followee_count, t.follower_count, count(p.user_id) \"post_count\",count(e.user_id) \"essay_count\" from lark left join (select lark.id,count(ui.user_id) \"follower_count\", count(ui.followed_id) \"followee_count\" from lark left join user_interaction ui on lark.id = ui.followed_id left join user_interaction ui2 on lark.id = ui2.user_id group by lark.id, ui.user_id, ui.followed_id) t on t.id = lark.id left join skylark.post p on lark.id = p.user_id left join essay e on lark.id = e.user_id where lark." + l.Quote(column) + "=? group by lark.id, p.user_id, e.user_id,t.followee_count, t.follower_count ")
+
+	result = make(map[string]interface{})
+	var executeSQL *gorm.DB
+	executeSQL = l.UnderlyingDB().Raw(generateSQL.String(), params...).Take(result) // ignore_security_alert
+	err = executeSQL.Error
+
+	return
 }
 
 func (l larkDo) Debug() ILarkDo {

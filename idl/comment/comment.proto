@@ -15,3 +15,11 @@ message ArticleCommentInfo {
   string reply_name = 6;
   string reply_content = 7;
 }
+
+
+
+service Comment {
+  rpc CommentPost() returns() {
+    option (api.post) = "/register";
+  }
+}

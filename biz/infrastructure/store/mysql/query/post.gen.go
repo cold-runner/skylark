@@ -32,16 +32,19 @@ func newPost(db *gorm.DB, opts ...gen.DOOption) post {
 	_post.DeletedAt = field.NewField(tableName, "deleted_at")
 	_post.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_post.Title = field.NewString(tableName, "title")
-	_post.PictureURL = field.NewString(tableName, "picture_url")
+	_post.CoverImage = field.NewString(tableName, "cover_image")
 	_post.UserID = field.NewString(tableName, "user_id")
 	_post.Summary = field.NewString(tableName, "summary")
 	_post.Content = field.NewString(tableName, "content")
 	_post.CategorieID = field.NewString(tableName, "categorie_id")
 	_post.Temperature = field.NewInt64(tableName, "temperature")
-	_post.Like = field.NewInt64(tableName, "like")
-	_post.Watch = field.NewInt64(tableName, "watch")
-	_post.Star = field.NewInt64(tableName, "star")
+	_post.LikeCount = field.NewInt64(tableName, "like_count")
+	_post.ViewCount = field.NewInt64(tableName, "view_count")
+	_post.StarCount = field.NewInt64(tableName, "star_count")
+	_post.CommentCount = field.NewInt64(tableName, "comment_count")
+	_post.ShareCount = field.NewInt64(tableName, "share_count")
 	_post.State = field.NewInt64(tableName, "state")
+	_post.LinkURL = field.NewString(tableName, "link_url")
 
 	_post.fillFieldMap()
 
@@ -52,22 +55,25 @@ func newPost(db *gorm.DB, opts ...gen.DOOption) post {
 type post struct {
 	postDo
 
-	ALL         field.Asterisk
-	ID          field.Field  // 自然主键
-	CreatedAt   field.Time   // 创建时间
-	DeletedAt   field.Field  // 删除时间（软删除）
-	UpdatedAt   field.Time   // 更新时间
-	Title       field.String // 博文标题
-	PictureURL  field.String // 博文标题配图
-	UserID      field.String // 作者id
-	Summary     field.String // 博文概览
-	Content     field.String // 博文内容
-	CategorieID field.String // 隶属哪个归档
-	Temperature field.Int64  // 博文热度（排序文章时用）
-	Like        field.Int64  // 博文点赞量
-	Watch       field.Int64  // 观看量
-	Star        field.Int64  // 收藏数量
-	State       field.Int64  // 文章状态：0审核中、1通过、2被举报
+	ALL          field.Asterisk
+	ID           field.Field  // 自然主键
+	CreatedAt    field.Time   // 创建时间
+	DeletedAt    field.Field  // 删除时间（软删除）
+	UpdatedAt    field.Time   // 更新时间
+	Title        field.String // 博文标题
+	CoverImage   field.String // 博文标题配图
+	UserID       field.String // 作者id
+	Summary      field.String // 博文概览
+	Content      field.String // 博文内容
+	CategorieID  field.String // 隶属哪个归档
+	Temperature  field.Int64  // 博文热度（排序文章时用）
+	LikeCount    field.Int64  // 博文点赞量
+	ViewCount    field.Int64  // 观看量
+	StarCount    field.Int64  // 收藏数量
+	CommentCount field.Int64
+	ShareCount   field.Int64  // 分享数量
+	State        field.Int64  // 文章状态：0审核中、1通过、2被举报
+	LinkURL      field.String // 文章外部链接
 
 	fieldMap map[string]field.Expr
 }
@@ -89,16 +95,19 @@ func (p *post) updateTableName(table string) *post {
 	p.DeletedAt = field.NewField(table, "deleted_at")
 	p.UpdatedAt = field.NewTime(table, "updated_at")
 	p.Title = field.NewString(table, "title")
-	p.PictureURL = field.NewString(table, "picture_url")
+	p.CoverImage = field.NewString(table, "cover_image")
 	p.UserID = field.NewString(table, "user_id")
 	p.Summary = field.NewString(table, "summary")
 	p.Content = field.NewString(table, "content")
 	p.CategorieID = field.NewString(table, "categorie_id")
 	p.Temperature = field.NewInt64(table, "temperature")
-	p.Like = field.NewInt64(table, "like")
-	p.Watch = field.NewInt64(table, "watch")
-	p.Star = field.NewInt64(table, "star")
+	p.LikeCount = field.NewInt64(table, "like_count")
+	p.ViewCount = field.NewInt64(table, "view_count")
+	p.StarCount = field.NewInt64(table, "star_count")
+	p.CommentCount = field.NewInt64(table, "comment_count")
+	p.ShareCount = field.NewInt64(table, "share_count")
 	p.State = field.NewInt64(table, "state")
+	p.LinkURL = field.NewString(table, "link_url")
 
 	p.fillFieldMap()
 
@@ -115,22 +124,25 @@ func (p *post) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (p *post) fillFieldMap() {
-	p.fieldMap = make(map[string]field.Expr, 15)
+	p.fieldMap = make(map[string]field.Expr, 18)
 	p.fieldMap["id"] = p.ID
 	p.fieldMap["created_at"] = p.CreatedAt
 	p.fieldMap["deleted_at"] = p.DeletedAt
 	p.fieldMap["updated_at"] = p.UpdatedAt
 	p.fieldMap["title"] = p.Title
-	p.fieldMap["picture_url"] = p.PictureURL
+	p.fieldMap["cover_image"] = p.CoverImage
 	p.fieldMap["user_id"] = p.UserID
 	p.fieldMap["summary"] = p.Summary
 	p.fieldMap["content"] = p.Content
 	p.fieldMap["categorie_id"] = p.CategorieID
 	p.fieldMap["temperature"] = p.Temperature
-	p.fieldMap["like"] = p.Like
-	p.fieldMap["watch"] = p.Watch
-	p.fieldMap["star"] = p.Star
+	p.fieldMap["like_count"] = p.LikeCount
+	p.fieldMap["view_count"] = p.ViewCount
+	p.fieldMap["star_count"] = p.StarCount
+	p.fieldMap["comment_count"] = p.CommentCount
+	p.fieldMap["share_count"] = p.ShareCount
 	p.fieldMap["state"] = p.State
+	p.fieldMap["link_url"] = p.LinkURL
 }
 
 func (p post) clone(db *gorm.DB) post {

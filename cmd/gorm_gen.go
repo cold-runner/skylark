@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gen/field"
@@ -43,6 +44,7 @@ func main() {
 		"bigint":    func(gorm.ColumnType) string { return "int64" },
 		"int":       func(gorm.ColumnType) string { return "int64" },
 	})
+	g.ApplyInterface(func(LarkAllDetails) {}, g.GenerateModel("lark"))
 
 	// generate all table from database
 	g.ApplyBasic(g.GenerateAllTable(
@@ -55,4 +57,26 @@ func main() {
 	)...)
 
 	g.Execute()
+}
+
+type LarkAllDetails interface {
+	// SELECT lark.*, t.followee_count, t.follower_count, count(p.user_id) "post_count",count(e.user_id) "essay_count"
+	// from lark left join (select lark.id,count(ui.user_id) "follower_count", count(ui.followed_id) "followee_count" from lark
+	//    left join user_interaction ui on lark.id = ui.followed_id
+	//    left join user_interaction ui2 on lark.id = ui2.user_id
+	//    group by lark.id, ui.user_id, ui.followed_id) t on t.id = lark.id
+	// left join skylark.post p on lark.id = p.user_id
+	// left join essay e on  lark.id = e.user_id
+	// group by lark.id, p.user_id, e.user_id,t.followee_count, t.follower_count
+	GetAllDetail() ([]gen.M, error)
+	// SELECT lark.*, t.followee_count, t.follower_count, count(p.user_id) "post_count",count(e.user_id) "essay_count"
+	// from lark left join (select lark.id,count(ui.user_id) "follower_count", count(ui.followed_id) "followee_count" from lark
+	//    left join user_interaction ui on lark.id = ui.followed_id
+	//    left join user_interaction ui2 on lark.id = ui2.user_id
+	//    group by lark.id, ui.user_id, ui.followed_id) t on t.id = lark.id
+	// left join skylark.post p on lark.id = p.user_id
+	// left join essay e on  lark.id = e.user_id
+	// where lark.@@column=@value
+	// group by lark.id, p.user_id, e.user_id,t.followee_count, t.follower_count
+	GetAllDetailByField(column string, value string) (gen.M, error)
 }

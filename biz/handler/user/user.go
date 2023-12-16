@@ -131,7 +131,7 @@ func GetUserInfoById(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp, err := service.GetUserInfo(ctx, c, &req)
+	resp, err := service.GetUserInfo(ctx, c)
 	if err != nil {
 		errCode.ResponseFailed(c)
 		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())

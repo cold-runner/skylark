@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/common/json"
 	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"github.com/cold-runner/skylark/biz/infrastructure/store/other"
 	"gorm.io/gen"
@@ -50,24 +51,23 @@ func (m *mysqlIns) GetPostTagList(c context.Context, conds ...gen.Condition) ([]
 	return m.Query.PostTag.WithContext(c).Where(conds...).Find()
 }
 
-func (m *mysqlIns) GetPostListAllDetail(c context.Context) ([]other.PostWithAllDetail, error) {
-	lark, postTag, post, tag := m.Query.Lark, m.Query.PostTag, m.Query.Post, m.Query.Tag
-	count, _ := post.Count()
-	res := make([]other.PostWithAllDetail, count)
+func (m *mysqlIns) GetPostListAllDetail(c context.Context) ([]byte, error) {
+	lark, pt, post, tag := m.Query.Lark, m.Query.PostTag, m.Query.Post, m.Query.Tag
+	var res []other.PostWithAllDetail
 	// TODO 多表
-	err := post.WithContext(c).Select(
-		post.ID, post.CreatedAt, post.Title, post.PictureURL, post.Summary, post.Content, post.Temperature, post.Like, post.Watch, post.Star,
-		post.UserID, lark.StuNum, lark.Name, lark.Gender, lark.College, lark.Major, lark.Grade, lark.Province, lark.Age, lark.PhotoURL, lark.Introduce, lark.Avatar,
-	).
+	err := post.WithContext(c).
+		Select(post.ALL, post.UserID, lark.Name).
 		LeftJoin(lark, lark.ID.EqCol(post.UserID)).
 		Scan(&res)
 	if err != nil {
 		return nil, err
 	}
+
 	var pwt []other.PostWithTag
-	err = postTag.WithContext(c).Select(postTag.PostID, tag.Name).
-		LeftJoin(tag, tag.ID.EqCol(postTag.TagID)).
-		Order(postTag.PostID).
+	err = pt.WithContext(c).
+		Select(pt.PostID, tag.Name).
+		LeftJoin(tag, tag.ID.EqCol(pt.TagID)).
+		Order(pt.PostID).
 		Scan(&pwt)
 	if err != nil {
 		return nil, err
@@ -90,11 +90,12 @@ func (m *mysqlIns) GetPostListAllDetail(c context.Context) ([]other.PostWithAllD
 			left++
 		}
 	}
-
 	for i := range res {
-		res[i].Tag = pwtMap[res[i].ID]
+		res[i].Tags = pwtMap[res[i].ID]
 	}
-	return res, nil
+
+	data, _ := json.Marshal(res)
+	return data, err
 }
 
 // ExistDraft 查询是否存在目标草稿

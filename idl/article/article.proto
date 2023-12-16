@@ -22,7 +22,7 @@ message GetArticleFeedRes {
 
 message GetArticleReq {
   string req_id = 1;
-  string article_id = 2;
+  string article_id = 2[(api.path) = "article_id"];
 }
 
 message GetArticleRes {
@@ -31,11 +31,13 @@ message GetArticleRes {
 }
 
 message SearchArticleReq {
-  string keyword = 1;
-  int32 page = 2;
-  int32 page_size = 3;
+  string keyword = 1[(api.body) = "keyword"];
+  int32 from = 2[(api.body) = "from"];
+  int32 max_results = 3[(api.body) = "max_results"];
+  string start_time = 4[(api.body) = "start_time"];
+  string end_time = 5[(api.body) = "end_time"];
 
-  string req_id = 4;
+  string req_id = 6;
 }
 
 message SearchArticleRes {
@@ -57,12 +59,12 @@ service Article {
     option (api.get) = "/feed";
   };
   rpc GetArticle(GetArticleReq) returns (GetArticleRes){
-    option (api.get) = "/article";
+    option (api.get) = "/article/:article_id";
   };
   rpc SearchArticle(SearchArticleReq) returns (SearchArticleRes){
     option (api.get) = "/search";
   };
   rpc Category(CategoriesReq) returns(CategoriesResp){
-    option(api.get) = "category";
+    option(api.get) = "/category";
   };
 }

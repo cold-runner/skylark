@@ -2,8 +2,6 @@ package store
 
 import (
 	"context"
-	"github.com/cold-runner/skylark/biz/infrastructure/store/other"
-
 	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"gorm.io/gen"
 	"gorm.io/gen/field"
@@ -58,7 +56,9 @@ type Store interface {
 type Lark interface {
 	CreateLark(c context.Context, user *orm_gen.Lark) error
 	GetLark(c context.Context, conds ...gen.Condition) (*orm_gen.Lark, error)
+	GetLarkAllDetail(column, value string) (map[string]interface{}, error)
 	GetLarkList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Lark, error)
+	LarkListAllDetail() ([]map[string]interface{}, error)
 	UpdateLarkSelect(c context.Context, selectScopes []field.Expr, whereScope []gen.Condition, lark *orm_gen.Lark) error
 	UpdateLarkOmit(c context.Context, omitScopes []field.Expr, whereScopes []gen.Condition, lark *orm_gen.Lark) error
 }
@@ -89,7 +89,7 @@ type Post interface {
 	GetPostList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Post, error)
 	GetTagList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Tag, error)
 	GetPostTagList(c context.Context, conds ...gen.Condition) ([]*orm_gen.PostTag, error)
-	GetPostListAllDetail(c context.Context) ([]other.PostWithAllDetail, error)
+	GetPostListAllDetail(c context.Context) ([]byte, error)
 }
 type PostScope interface {
 	PostById(uid string) gen.Condition

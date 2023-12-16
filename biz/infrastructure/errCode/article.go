@@ -1,5 +1,6 @@
 package errCode
 
 const (
-	ErrSyncPosts BizErrCode = iota + 110201
+	ErrSync BizErrCode = iota + 110201
+	ErrSearchPosts
 )

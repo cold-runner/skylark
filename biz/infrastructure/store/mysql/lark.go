@@ -15,8 +15,16 @@ func (m *mysqlIns) GetLark(c context.Context, conds ...gen.Condition) (*orm_gen.
 	return m.Query.Lark.WithContext(c).Where(conds...).First()
 }
 
+func (m *mysqlIns) GetLarkAllDetail(column, value string) (map[string]interface{}, error) {
+	return m.Query.Lark.GetAllDetailByField(column, value)
+}
+
 func (m *mysqlIns) GetLarkList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Lark, error) {
 	return m.Query.Lark.WithContext(c).Where(conds...).Find()
+}
+
+func (m *mysqlIns) LarkListAllDetail() ([]map[string]interface{}, error) {
+	return m.Query.Lark.GetAllDetail()
 }
 
 func (m *mysqlIns) UpdateLarkSelect(c context.Context, selectScopes []field.Expr, whereScopes []gen.Condition, lark *orm_gen.Lark) error {

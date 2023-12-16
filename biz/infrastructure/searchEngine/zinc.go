@@ -160,7 +160,7 @@ func (c *zincClient) EsQuery(ctx context.Context, indexName string, q any) (*Que
 	}
 
 	if resp.StatusCode() != consts.StatusOK {
-		return nil, errors.New(strconv.Itoa(resp.StatusCode()))
+		return nil, errors.Errorf("搜索文档时http状态码不为200！status code: %v, resp data: %v", resp.StatusCode(), string(resp.Body()))
 	}
 
 	result := &QueryResultT{}

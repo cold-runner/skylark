@@ -25,5 +25,6 @@ var ErrMap = map[BizErrCode]*BizError{
 
 var ErrBackendMap = map[BizErrCode]*BizError{
 	// 文章相关
-	ErrSyncPosts: {consts.StatusInternalServerError, "error occurred when sync"},
+	ErrSync:        {consts.StatusInternalServerError, "error occurred when sync"},
+	ErrSearchPosts: {consts.StatusInternalServerError, "error occurred when search posts"},
 }

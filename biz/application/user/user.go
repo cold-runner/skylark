@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cold-runner/skylark/biz/config"
 	"github.com/cold-runner/skylark/biz/entity"
 	userEntity "github.com/cold-runner/skylark/biz/entity/user"
@@ -15,6 +13,9 @@ import (
 	"github.com/cold-runner/skylark/biz/infrastructure/sms"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
 	"github.com/cold-runner/skylark/biz/model/user"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterResp, error) {
@@ -35,7 +36,7 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 
 	// 存储到数据库
 	ety := &userEntity.RegisterDto{}
-	if err := ety.IsRegistered(c, ctx, storeIns, req); err != nil {
+	if err = ety.IsRegistered(c, ctx, storeIns, req); err != nil {
 		return nil, err
 	}
 	ov, err := ety.Convert(c, ctx, ossIns, req)
@@ -110,17 +111,17 @@ func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCo
 	}, nil
 }
 
-func GetUserInfo(c context.Context, ctx *app.RequestContext, req *user.GetUserInfoByIdReq) (*user.GetUserInfoRes, error) {
+func GetUserInfo(c context.Context, ctx *app.RequestContext) (*user.GetUserInfoRes, error) {
 	storeIns := store.GetIns()
 
 	userUuid, _ := ctx.Get("identity")
 	lark := &userEntity.Lark{}
-	storedLark, err := lark.GetById(c, ctx, storeIns, userUuid.(string))
+	err := lark.GetById(c, ctx, storeIns, userUuid.(string))
 	if err != nil {
 		return nil, err
 	}
 
-	basicInfo := lark.Format(storedLark)
+	basicInfo := lark.Format()
 
 	return &user.GetUserInfoRes{
 		Status:    errCode.SuccessStatus,
@@ -132,12 +133,12 @@ func GetUserInfoByStuNum(c context.Context, ctx *app.RequestContext, req *user.G
 	storeIns := store.GetIns()
 
 	lark := &userEntity.Lark{}
-	storedLark, err := lark.GetByStuNum(c, ctx, storeIns, req.StuNum)
+	err := lark.GetByStuNum(c, ctx, storeIns, req.StuNum)
 	if err != nil {
 		return nil, err
 	}
 
-	basicInfo := lark.Format(storedLark)
+	basicInfo := lark.Format()
 
 	return &user.GetUserInfoRes{
 		Status:    errCode.SuccessStatus,
