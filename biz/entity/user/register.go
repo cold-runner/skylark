@@ -3,11 +3,11 @@ package user
 import (
 	"context"
 	"encoding/base64"
+	"github.com/cold-runner/skylark/biz/infrastructure/oss"
 	"strconv"
 	"time"
 
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
-	"github.com/cold-runner/skylark/biz/infrastructure/oss"
 	"github.com/cold-runner/skylark/biz/infrastructure/store"
 	"github.com/cold-runner/skylark/biz/infrastructure/store/orm_gen"
 	"github.com/cold-runner/skylark/biz/model/user"
@@ -23,7 +23,8 @@ import (
 type RegisterDto struct {
 }
 
-func (r *RegisterDto) IsRegistered(c context.Context, ctx *app.RequestContext, storeIns store.Store, req *user.RegisterReq) *errors.Error {
+func (r *RegisterDto) IsRegistered(c context.Context, ctx *app.RequestContext, req *user.RegisterReq) *errors.Error {
+	storeIns := store.GetIns()
 	_, err := storeIns.GetLark(c, storeIns.LarkByStuNum(req.StuNum))
 	if err == nil {
 		return errCode.WrapBizErr(ctx, stdErr.New("学号为"+req.StuNum+"的用户已注册!"), errCode.ErrUserAlreadyExist)
@@ -34,7 +35,8 @@ func (r *RegisterDto) IsRegistered(c context.Context, ctx *app.RequestContext, s
 	return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 }
 
-func (r *RegisterDto) Convert(c context.Context, ctx *app.RequestContext, ossIns oss.Oss, req *user.RegisterReq) (*orm_gen.Lark, *errors.Error) {
+func (r *RegisterDto) Convert(c context.Context, ctx *app.RequestContext, req *user.RegisterReq) (*orm_gen.Lark, *errors.Error) {
+	ossIns := oss.GetIns()
 	encrypted, err := util.Crypt(req.Password)
 	if err != nil {
 		errMsg := "encrypt password failed! err: " + err.Error()
@@ -68,8 +70,9 @@ func (r *RegisterDto) Convert(c context.Context, ctx *app.RequestContext, ossIns
 	}, nil
 }
 
-func (r *RegisterDto) Store(c context.Context, ctx *app.RequestContext, store store.Store, lark *orm_gen.Lark) *errors.Error {
-	err := store.CreateLark(c, lark)
+func (r *RegisterDto) Store(c context.Context, ctx *app.RequestContext, lark *orm_gen.Lark) *errors.Error {
+	storeIns := store.GetIns()
+	err := storeIns.CreateLark(c, lark)
 	if err == nil {
 		return nil
 	}

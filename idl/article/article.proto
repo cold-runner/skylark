@@ -8,6 +8,7 @@ import "api.proto";
 import "response.proto";
 import "articleBasic.proto";
 import "category.proto";
+import "userBasic.proto";
 
 message GetArticleFeedReq {
   string req_id = 1;
@@ -15,9 +16,9 @@ message GetArticleFeedReq {
   int32 limit = 3;
 }
 
-message GetArticleFeedRes {
-  response.Status status = 1;
-  repeated ArticlesInfo articles = 2;
+message GetArticleFeedResp {
+    response.Status status = 1;
+    repeated ArticlesInfo articles = 2;
 }
 
 message GetArticleReq {
@@ -25,24 +26,26 @@ message GetArticleReq {
   string article_id = 2[(api.path) = "article_id"];
 }
 
-message GetArticleRes {
-  response.Status status = 1;
-  ArticlesInfo article = 2;
+message GetArticleResp {
+    response.Status status = 1;
+    string content = 2;
+    user.Basic author_info = 3;
+    article.UserInteractionInfo interaction = 4;
 }
 
 message SearchArticleReq {
-  string keyword = 1[(api.body) = "keyword"];
-  int32 from = 2[(api.body) = "from"];
-  int32 max_results = 3[(api.body) = "max_results"];
-  string start_time = 4[(api.body) = "start_time"];
-  string end_time = 5[(api.body) = "end_time"];
+  string keyword = 1[(api.query) = "keyword"];
+  int32 from = 2[(api.query) = "from"];
+  int32 max_results = 3[(api.query) = "max_results"];
+  string start_time = 4[(api.query) = "start_time"];
+  string end_time = 5[(api.query) = "end_time"];
 
   string req_id = 6;
 }
 
-message SearchArticleRes {
-  response.Status status = 1;
-  repeated ArticlesInfo articles = 2;
+message SearchArticleResp {
+    response.Status status = 1;
+    repeated ArticlesInfo articles = 2;
 }
 
 message CategoriesReq {
@@ -50,18 +53,18 @@ message CategoriesReq {
 }
 
 message CategoriesResp {
-  response.Status status = 1;
-  repeated Category categories = 2;
+    response.Status status = 1;
+    repeated Category categories = 2;
 }
 
 service Article {
-  rpc GetArticleFeed(GetArticleFeedReq) returns (GetArticleFeedRes){
+  rpc GetArticleFeed(GetArticleFeedReq) returns (GetArticleFeedResp){
     option (api.get) = "/feed";
   };
-  rpc GetArticle(GetArticleReq) returns (GetArticleRes){
+  rpc GetArticle(GetArticleReq) returns (GetArticleResp){
     option (api.get) = "/article/:article_id";
   };
-  rpc SearchArticle(SearchArticleReq) returns (SearchArticleRes){
+  rpc SearchArticle(SearchArticleReq) returns (SearchArticleResp){
     option (api.get) = "/search";
   };
   rpc Category(CategoriesReq) returns(CategoriesResp){

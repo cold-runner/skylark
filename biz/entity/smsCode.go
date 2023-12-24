@@ -17,7 +17,8 @@ import (
 type SmsCode struct {
 }
 
-func (s *SmsCode) Validate(c context.Context, ctx *app.RequestContext, cacheIns cache.Cache, phone, recvSmsCode string) *errors.Error {
+func (s *SmsCode) Validate(c context.Context, ctx *app.RequestContext, phone, recvSmsCode string) *errors.Error {
+	cacheIns := cache.GetIns()
 	smsCode, err := cacheIns.Get(c, phone)
 	if err != nil {
 		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
@@ -32,7 +33,8 @@ func (s *SmsCode) Validate(c context.Context, ctx *app.RequestContext, cacheIns 
 	return nil
 }
 
-func (s *SmsCode) DeleteSmsCode(c context.Context, ctx *app.RequestContext, cacheIns cache.Cache, phone string) *errors.Error {
+func (s *SmsCode) DeleteSmsCode(c context.Context, ctx *app.RequestContext, phone string) *errors.Error {
+	cacheIns := cache.GetIns()
 	err := cacheIns.Del(c, phone)
 	if err != nil {
 		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
@@ -40,7 +42,8 @@ func (s *SmsCode) DeleteSmsCode(c context.Context, ctx *app.RequestContext, cach
 	return nil
 }
 
-func (s *SmsCode) AlreadySend(c context.Context, ctx *app.RequestContext, cacheIns cache.Cache, phone string) error {
+func (s *SmsCode) AlreadySend(c context.Context, ctx *app.RequestContext, phone string) error {
+	cacheIns := cache.GetIns()
 	isExpired, err := cacheIns.IsExpired(c, phone)
 	if err != nil {
 		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
@@ -51,14 +54,16 @@ func (s *SmsCode) AlreadySend(c context.Context, ctx *app.RequestContext, cacheI
 	return nil
 }
 
-func (s *SmsCode) SendSmsCode(c context.Context, ctx *app.RequestContext, smsClient sms.Sms, phone, smsCode string, expireTime int) *errors.Error {
+func (s *SmsCode) SendSmsCode(c context.Context, ctx *app.RequestContext, phone, smsCode string, expireTime int) *errors.Error {
+	smsClient := sms.GetClient()
 	if err := smsClient.SendToSingle(c, phone, []string{smsCode, strconv.Itoa(expireTime)}); err != nil {
 		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 	}
 	return nil
 }
 
-func (s *SmsCode) SetCache(c context.Context, ctx *app.RequestContext, cacheIns cache.Cache, phone, smsCode string, expireTime time.Duration) *errors.Error {
+func (s *SmsCode) SetCache(c context.Context, ctx *app.RequestContext, phone, smsCode string, expireTime time.Duration) *errors.Error {
+	cacheIns := cache.GetIns()
 	if err := cacheIns.SetExpiration(c, phone, smsCode, expireTime); err != nil {
 		return errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 	}

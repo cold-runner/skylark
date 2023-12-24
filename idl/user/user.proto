@@ -31,8 +31,8 @@ message PasswordLoginReq {
 }
 
 message LoginResp {
-  response.Status status = 1;
-  string token = 2[(api.body)="token"];
+    response.Status status = 1;
+    string token = 2[(api.body)="token"];
 }
 
 message PhoneLoginReq {
@@ -45,8 +45,8 @@ message SendSmsCodeReq {
   string req_id = 2;
 }
 
-message  SendSmsCodeRes {
-  response.Status status = 1;
+message  SendSmsCodeResp {
+    response.Status status = 1;
 }
 
 message GetUserInfoByIdReq {
@@ -59,9 +59,9 @@ message GetUserInfoByStuNumReq {
   string req_id = 2;
 }
 
-message GetUserInfoRes {
-  response.Status status = 1;
-  user.Basic basic_info = 2;
+message GetUserInfoResp {
+    response.Status status = 1;
+    user.Basic basic_info = 2;
 }
 
 service User {
@@ -74,13 +74,13 @@ service User {
   rpc phoneLogin(PhoneLoginReq) returns(LoginResp){
     option (api.get) = "/login/phone";
   }
-  rpc SendSmsCode(SendSmsCodeReq) returns (SendSmsCodeRes){
+  rpc SendSmsCode(SendSmsCodeReq) returns (SendSmsCodeResp){
     option (api.get) = "/sendSmsCode";
   };
-  rpc getUserInfoById(GetUserInfoByIdReq) returns (GetUserInfoRes){
+  rpc getUserInfoById(GetUserInfoByIdReq) returns (GetUserInfoResp){
     option (api.get) = "/user/getInfoById";
   }
-  rpc getUserInfoByStuNum(GetUserInfoByIdReq) returns (GetUserInfoRes){
+  rpc getUserInfoByStuNum(GetUserInfoByIdReq) returns (GetUserInfoResp){
     option (api.get) = "/getLark";
   }
 }

@@ -57,6 +57,7 @@ type Lark interface {
 	CreateLark(c context.Context, user *orm_gen.Lark) error
 	GetLark(c context.Context, conds ...gen.Condition) (*orm_gen.Lark, error)
 	GetLarkAllDetail(column, value string) (map[string]interface{}, error)
+	IsFollowed(c context.Context, userId, tarId string) (bool, error)
 	GetLarkList(c context.Context, conds ...gen.Condition) ([]*orm_gen.Lark, error)
 	LarkListAllDetail() ([]map[string]interface{}, error)
 	UpdateLarkSelect(c context.Context, selectScopes []field.Expr, whereScope []gen.Condition, lark *orm_gen.Lark) error
@@ -71,8 +72,8 @@ type LarkScope interface {
 
 // Comment 评论模块接口
 type Comment interface {
-	// PostComment 发布评论
-	//PostComment(c context.Context)
+	// CreateComment 发布评论
+	CreateComment(c context.Context, comment *orm_gen.Comment) error
 }
 type CommentScope interface {
 }

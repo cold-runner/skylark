@@ -23,6 +23,20 @@ func (m *mysqlIns) GetLarkList(c context.Context, conds ...gen.Condition) ([]*or
 	return m.Query.Lark.WithContext(c).Where(conds...).Find()
 }
 
+func (m *mysqlIns) IsFollowed(c context.Context, userId, tarId string) (bool, error) {
+	t := m.Query.UserInteraction
+	res, err := t.WithContext(c).Where(t.UserID.Eq(userId)).Find()
+	if err != nil {
+		return false, err
+	}
+	for i := range res {
+		if res[i].FollowedID == tarId {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 func (m *mysqlIns) LarkListAllDetail() ([]map[string]interface{}, error) {
 	return m.Query.Lark.GetAllDetail()
 }

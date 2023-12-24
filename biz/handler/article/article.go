@@ -25,7 +25,7 @@ func GetArticleFeed(ctx context.Context, c *app.RequestContext) {
 	var req article.GetArticleFeedReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		errCode.ResponseValidationFailed(c, err)
 		return
 	}
 
@@ -50,7 +50,7 @@ func SearchArticle(ctx context.Context, c *app.RequestContext) {
 	var req article.SearchArticleReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		errCode.ResponseValidationFailed(c, err)
 		return
 	}
 

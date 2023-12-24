@@ -4,15 +4,12 @@ package handler
 
 import (
 	"context"
-
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
 )
 
 // Ping .
 func Ping(ctx context.Context, c *app.RequestContext) {
-	c.JSON(consts.StatusOK, utils.H{
-		"message": "pong",
-	})
+	c.JSON(consts.StatusOK, errCode.SuccessStatus)
 }

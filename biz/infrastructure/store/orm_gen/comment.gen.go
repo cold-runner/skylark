@@ -15,15 +15,15 @@ const TableNameComment = "comment"
 
 // Comment 评论表
 type Comment struct {
-	ID          uuid.UUID      `gorm:"column:id;type:uuid;primaryKey;default:uuid_generate_v4();comment:自然主键" json:"id"`                             // 自然主键
-	CreatedAt   time.Time      `gorm:"column:created_at;type:datetime;not null;comment:创建时间" json:"created_at"`                                      // 创建时间
-	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;index:deleted_at,priority:1;comment:删除时间（软删除）" json:"deleted_at"`              // 删除时间（软删除）
-	UpdatedAt   time.Time      `gorm:"column:updated_at;type:datetime;comment:更新时间" json:"updated_at"`                                               // 更新时间
-	PostID      string         `gorm:"column:post_id;type:char(36);not null;comment:评论所属文章(考虑性能，不加约束)" json:"post_id"`                               // 评论所属文章(考虑性能，不加约束)
-	UserID      string         `gorm:"column:user_id;type:char(36);not null;comment:评论者id(考虑性能，不加约束)" json:"user_id"`                                // 评论者id(考虑性能，不加约束)
-	ReplyUserID string         `gorm:"column:reply_user_id;type:char(36);not null;comment:回复评论(考虑性能，不加约束)" json:"reply_user_id"`                     // 回复评论(考虑性能，不加约束)
-	ParentID    string         `gorm:"column:parent_id;type:char(36);not null;uniqueIndex:comment_pk2,priority:1;comment:回复的父评论id" json:"parent_id"` // 回复的父评论id
-	Content     string         `gorm:"column:content;type:text;not null;comment:评论内容" json:"content"`                                                // 评论内容
+	ID        uuid.UUID      `gorm:"column:id;type:uuid;primaryKey;default:uuid_generate_v4();comment:自然主键" json:"id"`                             // 自然主键
+	CreatedAt time.Time      `gorm:"column:created_at;type:datetime;not null;comment:创建时间" json:"created_at"`                                      // 创建时间
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;index:deleted_at,priority:1;comment:删除时间（软删除）" json:"deleted_at"`              // 删除时间（软删除）
+	UpdatedAt time.Time      `gorm:"column:updated_at;type:datetime;comment:更新时间" json:"updated_at"`                                               // 更新时间
+	PostID    string         `gorm:"column:post_id;type:char(36);not null;comment:评论所属文章(考虑性能，不加约束)" json:"post_id"`                               // 评论所属文章(考虑性能，不加约束)
+	UserID    string         `gorm:"column:user_id;type:char(36);not null;comment:评论者id(考虑性能，不加约束)" json:"user_id"`                                // 评论者id(考虑性能，不加约束)
+	ParentID  string         `gorm:"column:parent_id;type:char(36);not null;uniqueIndex:comment_pk2,priority:1;comment:回复的父评论id" json:"parent_id"` // 回复的父评论id
+	Content   string         `gorm:"column:content;type:text;not null;comment:评论内容" json:"content"`                                                // 评论内容
+	Like      int64          `gorm:"column:like;type:int;not null;comment:点赞数" json:"like"`                                                        // 点赞数
 }
 
 // TableName Comment's table name

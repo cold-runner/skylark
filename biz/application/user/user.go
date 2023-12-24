@@ -7,43 +7,34 @@ import (
 	"github.com/cold-runner/skylark/biz/config"
 	"github.com/cold-runner/skylark/biz/entity"
 	userEntity "github.com/cold-runner/skylark/biz/entity/user"
-	"github.com/cold-runner/skylark/biz/infrastructure/cache"
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
-	"github.com/cold-runner/skylark/biz/infrastructure/oss"
-	"github.com/cold-runner/skylark/biz/infrastructure/sms"
-	"github.com/cold-runner/skylark/biz/infrastructure/store"
 	"github.com/cold-runner/skylark/biz/model/user"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
-func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterResp, error) {
-	c := context.Background()
-	cacheIns := cache.GetIns()
-	storeIns := store.GetIns()
-	ossIns := oss.GetIns()
-
-	// 校验验证码
+func Register(c context.Context, ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterResp, error) {
 	smsCodeEntity := &entity.SmsCode{}
-	err := smsCodeEntity.Validate(c, ctx, cacheIns, req.Phone, req.SmsCode)
+	// 校验验证码
+	err := smsCodeEntity.Validate(c, ctx, req.Phone, req.SmsCode)
 	if err != nil {
 		return nil, err
 	}
-	if err := smsCodeEntity.DeleteSmsCode(c, ctx, cacheIns, req.Phone); err != nil {
+	if err := smsCodeEntity.DeleteSmsCode(c, ctx, req.Phone); err != nil {
 		hlog.Warnf("注册时校验验证码通过，但删除验证码失败！err: %v", err)
 	}
 
 	// 存储到数据库
 	ety := &userEntity.RegisterDto{}
-	if err = ety.IsRegistered(c, ctx, storeIns, req); err != nil {
+	if err = ety.IsRegistered(c, ctx, req); err != nil {
 		return nil, err
 	}
-	ov, err := ety.Convert(c, ctx, ossIns, req)
+	ov, err := ety.Convert(c, ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	err = ety.Store(c, ctx, storeIns, ov)
+	err = ety.Store(c, ctx, ov)
 	if err != nil {
 		return nil, err
 	}
@@ -55,10 +46,8 @@ func Register(ctx *app.RequestContext, req *user.RegisterReq) (*user.RegisterRes
 }
 
 func PasswordLogin(c context.Context, ctx *app.RequestContext, req *user.PasswordLoginReq) error {
-	storeIns := store.GetIns()
-
 	loginEntity := &userEntity.LoginUser{}
-	if err := loginEntity.PasswordLogin(c, ctx, storeIns, req); err != nil {
+	if err := loginEntity.PasswordLogin(c, ctx, req); err != nil {
 		return err
 	}
 
@@ -66,26 +55,20 @@ func PasswordLogin(c context.Context, ctx *app.RequestContext, req *user.Passwor
 }
 
 func PhoneLogin(c context.Context, ctx *app.RequestContext, req *user.PhoneLoginReq) error {
-	storeIns := store.GetIns()
-	cacheIns := cache.GetIns()
-
 	loginEntity := &userEntity.LoginUser{}
-	if err := loginEntity.PhoneLogin(c, ctx, storeIns, cacheIns, req); err != nil {
+	if err := loginEntity.PhoneLogin(c, ctx, req); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCodeReq) (*user.SendSmsCodeRes, error) {
-	smsClient := sms.GetClient()
-	cacheIns := cache.GetIns()
+func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCodeReq) (*user.SendSmsCodeResp, error) {
 	conf := config.GetConfig().GetServer()
-
 	smsEntity := &entity.SmsCode{}
 
 	// 是否已经发送过还没过期
-	if err := smsEntity.AlreadySend(c, ctx, cacheIns, req.Phone); err != nil {
+	if err := smsEntity.AlreadySend(c, ctx, req.Phone); err != nil {
 		return nil, err
 	}
 
@@ -97,50 +80,44 @@ func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCo
 
 	// 在缓存中设置验证码和过期时间
 	expireTime := time.Duration(conf.SmsExpiration) * time.Minute
-	if err = smsEntity.SetCache(c, ctx, cacheIns, req.Phone, smsCode, expireTime); err != nil {
+	if err = smsEntity.SetCache(c, ctx, req.Phone, smsCode, expireTime); err != nil {
 		return nil, err
 	}
 
 	// 发送验证码
-	if err = smsEntity.SendSmsCode(c, ctx, smsClient, req.Phone, smsCode, conf.SmsExpiration); err != nil {
+	if err = smsEntity.SendSmsCode(c, ctx, req.Phone, smsCode, conf.SmsExpiration); err != nil {
 		return nil, err
 	}
 
-	return &user.SendSmsCodeRes{
+	return &user.SendSmsCodeResp{
 		Status: errCode.SuccessStatus,
 	}, nil
 }
 
-func GetUserInfo(c context.Context, ctx *app.RequestContext) (*user.GetUserInfoRes, error) {
-	storeIns := store.GetIns()
-
+func GetUserInfo(c context.Context, ctx *app.RequestContext) (*user.GetUserInfoResp, error) {
 	userUuid, _ := ctx.Get("identity")
 	lark := &userEntity.Lark{}
-	err := lark.GetById(c, ctx, storeIns, userUuid.(string))
+	err := lark.GetById(c, ctx, userUuid.(string))
 	if err != nil {
 		return nil, err
 	}
 
 	basicInfo := lark.Format()
-
-	return &user.GetUserInfoRes{
+	return &user.GetUserInfoResp{
 		Status:    errCode.SuccessStatus,
 		BasicInfo: basicInfo,
 	}, nil
 }
 
-func GetUserInfoByStuNum(c context.Context, ctx *app.RequestContext, req *user.GetUserInfoByStuNumReq) (*user.GetUserInfoRes, error) {
-	storeIns := store.GetIns()
-
+func GetUserInfoByStuNum(c context.Context, ctx *app.RequestContext, req *user.GetUserInfoByStuNumReq) (*user.GetUserInfoResp, error) {
 	lark := &userEntity.Lark{}
-	err := lark.GetByStuNum(c, ctx, storeIns, req.StuNum)
+	err := lark.GetByStuNum(c, ctx, req.StuNum)
 	if err != nil {
 		return nil, err
 	}
 
 	basicInfo := lark.Format()
-
-	return &user.GetUserInfoRes{
+	return &user.GetUserInfoResp{
 		Status:    errCode.SuccessStatus,
 		BasicInfo: basicInfo,
 	}, nil

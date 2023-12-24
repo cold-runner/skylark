@@ -24,7 +24,8 @@ type LoginUser struct {
 	Uuid uuid.UUID `json:"uuid"`
 }
 
-func (l *LoginUser) PasswordLogin(c context.Context, ctx *app.RequestContext, storeIns store.Store, req *user.PasswordLoginReq) *errors.Error {
+func (l *LoginUser) PasswordLogin(c context.Context, ctx *app.RequestContext, req *user.PasswordLoginReq) *errors.Error {
+	storeIns := store.GetIns()
 	lark, err := storeIns.GetLark(c, storeIns.LarkByStuNum(req.StuNum))
 
 	switch {
@@ -42,7 +43,9 @@ func (l *LoginUser) PasswordLogin(c context.Context, ctx *app.RequestContext, st
 	}
 }
 
-func (l *LoginUser) PhoneLogin(c context.Context, ctx *app.RequestContext, storeIns store.Store, cacheIns cache.Cache, req *user.PhoneLoginReq) *errors.Error {
+func (l *LoginUser) PhoneLogin(c context.Context, ctx *app.RequestContext, req *user.PhoneLoginReq) *errors.Error {
+	storeIns := store.GetIns()
+	cacheIns := cache.GetIns()
 	lark, err := storeIns.GetLark(c, storeIns.LarkByPhone(req.Phone))
 
 	switch {
@@ -78,7 +81,8 @@ type Lark struct {
 	EssayCount    uint64 `json:"essay_count"`
 }
 
-func (l *Lark) GetById(c context.Context, ctx *app.RequestContext, storeIns store.Store, uuid string) *errors.Error {
+func (l *Lark) GetById(c context.Context, ctx *app.RequestContext, uuid string) *errors.Error {
+	storeIns := store.GetIns()
 	lark, err := storeIns.GetLarkAllDetail("id", uuid)
 	switch {
 	case stdErr.Is(err, gorm.ErrRecordNotFound):
@@ -92,7 +96,8 @@ func (l *Lark) GetById(c context.Context, ctx *app.RequestContext, storeIns stor
 	return nil
 }
 
-func (l *Lark) GetByStuNum(c context.Context, ctx *app.RequestContext, storeIns store.Store, stuNum string) *errors.Error {
+func (l *Lark) GetByStuNum(c context.Context, ctx *app.RequestContext, stuNum string) *errors.Error {
+	storeIns := store.GetIns()
 	lark, err := storeIns.GetLarkAllDetail("stu_num", stuNum)
 	switch {
 	case stdErr.Is(err, gorm.ErrRecordNotFound):

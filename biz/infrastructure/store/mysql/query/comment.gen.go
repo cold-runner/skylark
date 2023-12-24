@@ -33,9 +33,9 @@ func newComment(db *gorm.DB, opts ...gen.DOOption) comment {
 	_comment.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_comment.PostID = field.NewString(tableName, "post_id")
 	_comment.UserID = field.NewString(tableName, "user_id")
-	_comment.ReplyUserID = field.NewString(tableName, "reply_user_id")
 	_comment.ParentID = field.NewString(tableName, "parent_id")
 	_comment.Content = field.NewString(tableName, "content")
+	_comment.Like = field.NewInt64(tableName, "like")
 
 	_comment.fillFieldMap()
 
@@ -46,16 +46,16 @@ func newComment(db *gorm.DB, opts ...gen.DOOption) comment {
 type comment struct {
 	commentDo
 
-	ALL         field.Asterisk
-	ID          field.Field  // 自然主键
-	CreatedAt   field.Time   // 创建时间
-	DeletedAt   field.Field  // 删除时间（软删除）
-	UpdatedAt   field.Time   // 更新时间
-	PostID      field.String // 评论所属文章(考虑性能，不加约束)
-	UserID      field.String // 评论者id(考虑性能，不加约束)
-	ReplyUserID field.String // 回复评论(考虑性能，不加约束)
-	ParentID    field.String // 回复的父评论id
-	Content     field.String // 评论内容
+	ALL       field.Asterisk
+	ID        field.Field  // 自然主键
+	CreatedAt field.Time   // 创建时间
+	DeletedAt field.Field  // 删除时间（软删除）
+	UpdatedAt field.Time   // 更新时间
+	PostID    field.String // 评论所属文章(考虑性能，不加约束)
+	UserID    field.String // 评论者id(考虑性能，不加约束)
+	ParentID  field.String // 回复的父评论id
+	Content   field.String // 评论内容
+	Like      field.Int64  // 点赞数
 
 	fieldMap map[string]field.Expr
 }
@@ -78,9 +78,9 @@ func (c *comment) updateTableName(table string) *comment {
 	c.UpdatedAt = field.NewTime(table, "updated_at")
 	c.PostID = field.NewString(table, "post_id")
 	c.UserID = field.NewString(table, "user_id")
-	c.ReplyUserID = field.NewString(table, "reply_user_id")
 	c.ParentID = field.NewString(table, "parent_id")
 	c.Content = field.NewString(table, "content")
+	c.Like = field.NewInt64(table, "like")
 
 	c.fillFieldMap()
 
@@ -104,9 +104,9 @@ func (c *comment) fillFieldMap() {
 	c.fieldMap["updated_at"] = c.UpdatedAt
 	c.fieldMap["post_id"] = c.PostID
 	c.fieldMap["user_id"] = c.UserID
-	c.fieldMap["reply_user_id"] = c.ReplyUserID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["content"] = c.Content
+	c.fieldMap["like"] = c.Like
 }
 
 func (c comment) clone(db *gorm.DB) comment {

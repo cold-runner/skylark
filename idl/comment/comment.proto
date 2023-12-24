@@ -5,21 +5,21 @@ package comment;
 option go_package = "comment";
 
 import "api.proto";
+import "response.proto";
 
-message ArticleCommentInfo {
-  string id = 1;
-  string article_id = 2;
-  string user_id = 3;
-  string content = 4;
-  string reply_id = 5;
-  string reply_name = 6;
-  string reply_content = 7;
+message CommentPostReq {
+  string user_id = 1;
+  string post_id = 2;
+  string content = 3;
+  string parent_id = 5;
 }
 
-
+message CommentPostResp {
+    response.Status status = 1;
+}
 
 service Comment {
-  rpc CommentPost() returns() {
-    option (api.post) = "/register";
+  rpc CommentPost(CommentPostReq) returns(CommentPostResp) {
+    option (api.post) = "/comment";
   }
 }

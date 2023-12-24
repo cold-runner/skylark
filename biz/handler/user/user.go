@@ -29,7 +29,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp, err := service.Register(c, &req)
+	resp, err := service.Register(ctx, c, &req)
 	if err != nil {
 		errCode.ResponseFailed(c)
 		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())

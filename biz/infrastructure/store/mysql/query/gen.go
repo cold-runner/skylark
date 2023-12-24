@@ -20,6 +20,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		db:              db,
 		Categorie:       newCategorie(db, opts...),
 		Comment:         newComment(db, opts...),
+		CommentLike:     newCommentLike(db, opts...),
 		Draft:           newDraft(db, opts...),
 		Essay:           newEssay(db, opts...),
 		Lark:            newLark(db, opts...),
@@ -39,6 +40,7 @@ type Query struct {
 
 	Categorie       categorie
 	Comment         comment
+	CommentLike     commentLike
 	Draft           draft
 	Essay           essay
 	Lark            lark
@@ -59,6 +61,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		db:              db,
 		Categorie:       q.Categorie.clone(db),
 		Comment:         q.Comment.clone(db),
+		CommentLike:     q.CommentLike.clone(db),
 		Draft:           q.Draft.clone(db),
 		Essay:           q.Essay.clone(db),
 		Lark:            q.Lark.clone(db),
@@ -86,6 +89,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		db:              db,
 		Categorie:       q.Categorie.replaceDB(db),
 		Comment:         q.Comment.replaceDB(db),
+		CommentLike:     q.CommentLike.replaceDB(db),
 		Draft:           q.Draft.replaceDB(db),
 		Essay:           q.Essay.replaceDB(db),
 		Lark:            q.Lark.replaceDB(db),
@@ -103,6 +107,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 type queryCtx struct {
 	Categorie       ICategorieDo
 	Comment         ICommentDo
+	CommentLike     ICommentLikeDo
 	Draft           IDraftDo
 	Essay           IEssayDo
 	Lark            ILarkDo
@@ -120,6 +125,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		Categorie:       q.Categorie.WithContext(ctx),
 		Comment:         q.Comment.WithContext(ctx),
+		CommentLike:     q.CommentLike.WithContext(ctx),
 		Draft:           q.Draft.WithContext(ctx),
 		Essay:           q.Essay.WithContext(ctx),
 		Lark:            q.Lark.WithContext(ctx),
