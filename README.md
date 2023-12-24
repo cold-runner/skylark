@@ -20,30 +20,7 @@ skylark是沈阳师范大学软件学院sky工作室开发的社区论坛项目�
 ## 架构
 ![skylark-architecture](./doc/architecture.png)
 ## 快速开始
-
-Clone本项目
-
-```bash
-git clone https://github.com/cold-runner/skylark.git
-```
-
-前往项目目录，将conf.example.yaml中的内容修改成你自己的，然后重命名`conf`目录下的`conf.example.yaml`文件为`conf.yaml`
-
-```bash
-cd skylark && cp conf/conf.example.yaml conf/conf.yaml
-```
-
-安装依赖
-
-```bash
-go build
-```
-
-启动服务器
-
-```bash
-./skylark
-```
+需要zinc、mysql、redis
 
 ## 路线图
 
