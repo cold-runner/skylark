@@ -21,6 +21,8 @@ var ErrMap = map[BizErrCode]*BizError{
 	ErrUserAlreadyExist:  {consts.StatusBadRequest, "user already exist"},
 
 	// 文章相关
+
+	// 评论相关
 }
 
 var ErrBackendMap = map[BizErrCode]*BizError{

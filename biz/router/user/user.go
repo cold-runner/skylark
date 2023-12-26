@@ -17,16 +17,16 @@ import (
 func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
-	root.GET("/getLark", append(_getuserinfobystunumMw(), user.GetUserInfoByStuNum)...)
-	root.POST("/register", append(_registerMw(), user.Register)...)
-	root.GET("/sendSmsCode", append(_sendsmscodeMw(), user.SendSmsCode)...)
-	{
-		_login := root.Group("/login", _loginMw()...)
-		_login.GET("/password", append(_passwordloginMw(), user.PasswordLogin)...)
-		_login.GET("/phone", append(_phoneloginMw(), user.PhoneLogin)...)
-	}
 	{
 		_user := root.Group("/user", _userMw()...)
 		_user.GET("/getInfoById", append(_getuserinfobyidMw(), user.GetUserInfoById)...)
+		_user.GET("/getLark", append(_getuserinfobystunumMw(), user.GetUserInfoByStuNum)...)
+		_user.POST("/register", append(_registerMw(), user.Register)...)
+		_user.GET("/sendSmsCode", append(_sendsmscodeMw(), user.SendSmsCode)...)
+		{
+			_login := _user.Group("/login", _loginMw()...)
+			_login.GET("/password", append(_passwordloginMw(), user.PasswordLogin)...)
+			_login.GET("/phone", append(_phoneloginMw(), user.PhoneLogin)...)
+		}
 	}
 }

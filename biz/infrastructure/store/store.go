@@ -74,7 +74,12 @@ type LarkScope interface {
 type Comment interface {
 	// CreateComment 发布评论
 	CreateComment(c context.Context, comment *orm_gen.Comment) error
+	UpdateComment(c context.Context, commentId, content string) error
+	DeleteComment(c context.Context, commentId string) error
+	QueryComment(c context.Context, postId string, idx, limit int) ([]*orm_gen.Comment, error)
+	QueryReplyComment(c context.Context, postId, parentId string, idx, limit int) ([]*orm_gen.Comment, error)
 }
+
 type CommentScope interface {
 }
 

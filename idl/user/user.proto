@@ -66,21 +66,21 @@ message GetUserInfoResp {
 
 service User {
   rpc register(RegisterReq) returns(RegisterResp) {
-    option (api.post) = "/register";
+    option (api.post) = "/user/register";
   }
   rpc passwordLogin(PasswordLoginReq) returns(LoginResp){
-    option (api.get) = "/login/password";
+    option (api.get) = "/user/login/password";
   }
   rpc phoneLogin(PhoneLoginReq) returns(LoginResp){
-    option (api.get) = "/login/phone";
+    option (api.get) = "/user/login/phone";
   }
   rpc SendSmsCode(SendSmsCodeReq) returns (SendSmsCodeResp){
-    option (api.get) = "/sendSmsCode";
+    option (api.get) = "/user/sendSmsCode";
   };
   rpc getUserInfoById(GetUserInfoByIdReq) returns (GetUserInfoResp){
     option (api.get) = "/user/getInfoById";
   }
   rpc getUserInfoByStuNum(GetUserInfoByIdReq) returns (GetUserInfoResp){
-    option (api.get) = "/getLark";
+    option (api.get) = "/user/getLark";
   }
 }

@@ -6,6 +6,7 @@ option go_package = "comment";
 
 import "api.proto";
 import "response.proto";
+import "commentBasic.proto";
 
 message CommentPostReq {
   string user_id = 1;
@@ -15,11 +16,65 @@ message CommentPostReq {
 }
 
 message CommentPostResp {
-    response.Status status = 1;
+  response.Status status = 1;
+}
+
+message DeleteCommentReq {
+  string user_id = 1;
+  string comment_id = 2;
+}
+
+message DeleteCommentResp {
+  response.Status status = 1;
+}
+
+message UpdateCommentReq {
+  string user_id = 1;
+  string comment_id = 2;
+  string content = 3;
+}
+
+message UpdateCommentResp {
+  response.Status status = 1;
+}
+
+message GetCommentReq {
+  string post_id = 2;
+  int32 cursor = 3;
+  int32 limit = 4;
+}
+
+message GetCommentResp {
+  response.Status status = 1;
+  repeated ArticleCommentInfo comments = 2;
+}
+
+message GetReplyCommentReq {
+  string parent_id = 1;
+  string post_id = 2;
+  int32 cursor = 3;
+  int32 limit = 4;
+}
+
+message GetReplyCommentResp {
+  response.Status status = 1;
+  repeated ArticleCommentInfo comments = 2;
 }
 
 service Comment {
-  rpc CommentPost(CommentPostReq) returns(CommentPostResp) {
-    option (api.post) = "/comment";
+  rpc CreateComment(CommentPostReq) returns(CommentPostResp) {
+    option (api.post) = "/comment/create";
+  }
+  rpc DeleteComment(DeleteCommentReq) returns(DeleteCommentResp) {
+    option (api.delete) = "/comment/delete";
+  }
+  rpc UpdateComment(UpdateCommentReq) returns(UpdateCommentResp) {
+    option (api.put) = "/comment/update";
+  }
+  rpc GetComments(GetCommentReq) returns(GetCommentResp) {
+    option (api.get) = "/comment/get";
+  }
+  rpc GetReplyComments(GetReplyCommentReq) returns(GetReplyCommentResp) {
+    option (api.get) = "/comment/getReply";
   }
 }

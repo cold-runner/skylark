@@ -17,5 +17,12 @@ import (
 func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
-	root.POST("/comment", append(_commentpostMw(), comment.CommentPost)...)
+	{
+		_comment := root.Group("/comment", _commentMw()...)
+		_comment.POST("/create", append(_createcommentMw(), comment.CreateComment)...)
+		_comment.DELETE("/delete", append(_deletecommentMw(), comment.DeleteComment)...)
+		_comment.GET("/get", append(_getcommentsMw(), comment.GetComments)...)
+		_comment.GET("/getReply", append(_getreplycommentsMw(), comment.GetReplyComments)...)
+		_comment.PUT("/update", append(_updatecommentMw(), comment.UpdateComment)...)
+	}
 }

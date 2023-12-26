@@ -10,8 +10,16 @@ import (
 
 func GetArticleFeed(c context.Context, ctx *app.RequestContext, req *article.GetArticleFeedReq) (*article.GetArticleFeedResp, error) {
 	//根据热度排序从全文搜索引擎中检索出文章列表
-	//zinc := searchEngine.GetZincClient()
-	return nil, nil
+	articleEntity := &entity.ArticleEntity{}
+	articles, err := articleEntity.Feed(c, ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &article.GetArticleFeedResp{
+		Status:   errCode.SuccessStatus,
+		Articles: articles,
+	}, nil
 }
 
 func GetCategories(c context.Context, ctx *app.RequestContext, req *article.CategoriesReq) (*article.CategoriesResp, error) {

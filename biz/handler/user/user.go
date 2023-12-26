@@ -17,7 +17,7 @@ import (
 // Register .
 // @router /register [POST]
 func Register(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 
@@ -43,7 +43,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 // PasswordLogin .
 // @router /login/password [GET]
 func PasswordLogin(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 
@@ -68,7 +68,7 @@ func PasswordLogin(ctx context.Context, c *app.RequestContext) {
 // PhoneLogin .
 // @router /login/phone [GET]
 func PhoneLogin(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 
@@ -93,7 +93,7 @@ func PhoneLogin(ctx context.Context, c *app.RequestContext) {
 // SendSmsCode .
 // @router /sendSmsCode [GET]
 func SendSmsCode(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 
@@ -119,7 +119,7 @@ func SendSmsCode(ctx context.Context, c *app.RequestContext) {
 // GetUserInfoById .
 // @router /user/getInfoById [GET]
 func GetUserInfoById(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 
@@ -145,7 +145,7 @@ func GetUserInfoById(ctx context.Context, c *app.RequestContext) {
 // GetUserInfoByStuNum .
 // @router /getLark [GET]
 func GetUserInfoByStuNum(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 

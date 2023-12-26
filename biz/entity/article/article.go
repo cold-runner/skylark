@@ -81,42 +81,7 @@ func (e *ArticleEntity) Search(c context.Context, ctx *app.RequestContext, req *
 		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrSearchPosts)
 	}
 
-	origins := res.Hits.Hits
-	articles := make([]*article.ArticlesInfo, len(origins))
-	for i := range origins {
-		m := origins[i].Source.(map[string]any)
-		var tags []*article.TagBasicInfo
-		ts := m["tags"].([]interface{})
-		for idx := range ts {
-			tags = append(tags, &article.TagBasicInfo{
-				Name: ts[idx].(string),
-			})
-		}
-		userInfo := origins[i].Source.(map[string]any)["user_info"].(map[string]any)
-		articles[i] = &article.ArticlesInfo{
-			Basic: &article.ArticleBasicInfo{
-				ArticleId:    m["id"].(string),
-				Tags:         tags,
-				LinkUrl:      "",
-				CoverImage:   m["cover_image"].(string),
-				Title:        m["title"].(string),
-				BriefContent: m["summary"].(string),
-				Content:      m["content"].(string),
-				ViewCount:    int64(m["view_count"].(float64)),
-				CollectCount: int64(m["star_count"].(float64)),
-				LikeCount:    int64(m["like_count"].(float64)),
-				CommentCount: int64(m["comment_count"].(float64)),
-				ShareCount:   int64(m["share_count"].(float64)),
-				Temperature:  int64(m["temperature"].(float64)),
-			},
-			AuthorInfo: &user.Basic{
-				UserId:  userInfo["user_id"].(string),
-				StuName: userInfo["name"].(string),
-			},
-		}
-	}
-
-	return articles, nil
+	return transfer(res.Hits.Hits), nil
 }
 
 func (e *ArticleEntity) GetSingle(c context.Context, ctx *app.RequestContext, req *article.GetArticleReq) (*article.GetArticleResp, *errors.Error) {
@@ -151,6 +116,59 @@ func (e *ArticleEntity) GetSingle(c context.Context, ctx *app.RequestContext, re
 	return &article.GetArticleResp{
 		Content:     origin["content"].(string),
 		AuthorInfo:  u,
-		Interaction: nil,
+		Interaction: nil, // TODO 社会交互信息
 	}, nil
+}
+
+func (e *ArticleEntity) Feed(c context.Context, ctx *app.RequestContext, req *article.GetArticleFeedReq) ([]*article.ArticlesInfo, *errors.Error) {
+	searchIns := searchEngine.GetIns()
+	reqBody := &searchReqBody{
+		SearchType: "alldocuments",
+		From:       req.Cursor,
+		MaxResults: req.Limit,
+		Source:     []string{}, // TODO 考虑是否返回content
+	}
+	res, err := searchIns.ApiQuery(c, "post", reqBody)
+	if err != nil {
+		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrSearchPosts)
+	}
+	return transfer(res.Hits.Hits), nil
+}
+
+func transfer(hits []*searchEngine.HitItem) []*article.ArticlesInfo {
+	articles := make([]*article.ArticlesInfo, len(hits))
+	for i := range hits {
+		m := hits[i].Source.(map[string]any)
+		var tags []*article.TagBasicInfo
+		ts := m["tags"].([]interface{})
+		for idx := range ts {
+			tags = append(tags, &article.TagBasicInfo{
+				Name: ts[idx].(string),
+			})
+		}
+		userInfo := hits[i].Source.(map[string]any)["user_info"].(map[string]any)
+		articles[i] = &article.ArticlesInfo{
+			Basic: &article.ArticleBasicInfo{
+				ArticleId:    m["id"].(string),
+				Tags:         tags,
+				LinkUrl:      "",
+				CoverImage:   m["cover_image"].(string),
+				Title:        m["title"].(string),
+				BriefContent: m["summary"].(string),
+				Content:      m["content"].(string),
+				ViewCount:    int64(m["view_count"].(float64)),
+				CollectCount: int64(m["star_count"].(float64)),
+				LikeCount:    int64(m["like_count"].(float64)),
+				CommentCount: int64(m["comment_count"].(float64)),
+				ShareCount:   int64(m["share_count"].(float64)),
+				Temperature:  int64(m["temperature"].(float64)),
+			},
+			AuthorInfo: &user.Basic{
+				UserId:  userInfo["user_id"].(string),
+				StuName: userInfo["name"].(string),
+			},
+		}
+	}
+
+	return articles
 }

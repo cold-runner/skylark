@@ -17,7 +17,7 @@ import (
 // GetArticleFeed .
 // @router /feed [GET]
 func GetArticleFeed(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 
@@ -43,7 +43,7 @@ func GetArticleFeed(ctx context.Context, c *app.RequestContext) {
 // SearchArticle .
 // @router /search [GET]
 func SearchArticle(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 	var err error
@@ -68,7 +68,7 @@ func SearchArticle(ctx context.Context, c *app.RequestContext) {
 // Category .
 // @router category [GET]
 func Category(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 
@@ -94,7 +94,7 @@ func Category(ctx context.Context, c *app.RequestContext) {
 // GetArticle .
 // @router /article/:article_id [GET]
 func GetArticle(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 	var err error

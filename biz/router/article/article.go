@@ -17,11 +17,11 @@ import (
 func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
-	root.GET("/category", append(_categoryMw(), article.Category)...)
-	root.GET("/feed", append(_getarticlefeedMw(), article.GetArticleFeed)...)
-	root.GET("/search", append(_searcharticleMw(), article.SearchArticle)...)
 	{
 		_article := root.Group("/article", _articleMw()...)
 		_article.GET("/:article_id", append(_getarticleMw(), article.GetArticle)...)
+		_article.GET("/category", append(_categoryMw(), article.Category)...)
+		_article.GET("/feed", append(_getarticlefeedMw(), article.GetArticleFeed)...)
+		_article.GET("/search", append(_searcharticleMw(), article.SearchArticle)...)
 	}
 }

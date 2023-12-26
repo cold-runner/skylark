@@ -15,3 +15,33 @@ func rootMw() []app.HandlerFunc {
 func _commentpostMw() []app.HandlerFunc {
 	return []app.HandlerFunc{user.JwtMiddleware.MiddlewareFunc()}
 }
+
+func _commentMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _deletecommentMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getcommentsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _updatecommentMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _createcommentMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getreplycommentsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

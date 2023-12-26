@@ -12,5 +12,6 @@ message ArticleCommentInfo {
   string user_id = 3;
   string content = 4;
   string parent_id = 5;
-  string created_at = 6;
+  int32 like = 6;
+  string created_at = 7;
 }

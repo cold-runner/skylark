@@ -46,10 +46,6 @@ func _userMw() []app.HandlerFunc {
 	return nil
 }
 
-func _getuserinfoMw() []app.HandlerFunc {
-	return []app.HandlerFunc{user.JwtMiddleware.MiddlewareFunc()}
-}
-
 func _getuserinfobystunumMw() []app.HandlerFunc {
 	// your code...
 	return nil

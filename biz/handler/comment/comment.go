@@ -14,10 +14,10 @@ import (
 	comment "github.com/cold-runner/skylark/biz/model/comment"
 )
 
-// CommentPost .
-// @router /comment [POST]
-func CommentPost(ctx context.Context, c *app.RequestContext) {
-	routerPath := string(c.URI().LastPathSegment())
+// CreateComment .
+// @router /comment/create [POST]
+func CreateComment(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().Path())
 
 	hlog.Debugf(log.ROUTE_PATH, routerPath)
 	var err error
@@ -29,6 +29,106 @@ func CommentPost(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp, err := service.Comment(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
+
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
+	c.JSON(consts.StatusOK, resp)
+}
+
+// DeleteComment .
+// @router /comment/delete [DELETE]
+func DeleteComment(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().Path())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
+	var err error
+	var req comment.DeleteCommentReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		errCode.ResponseValidationFailed(c, err)
+		return
+	}
+
+	resp, err := service.DeleteComment(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
+
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
+	c.JSON(consts.StatusOK, resp)
+}
+
+// UpdateComment .
+// @router /comment/update [POST]
+func UpdateComment(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().Path())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
+	var err error
+	var req comment.UpdateCommentReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		errCode.ResponseValidationFailed(c, err)
+		return
+	}
+
+	resp, err := service.UpdateComment(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
+
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetComments .
+// @router /comment/get [POST]
+func GetComments(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().Path())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
+	var err error
+	var req comment.GetCommentReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		errCode.ResponseValidationFailed(c, err)
+		return
+	}
+
+	resp, err := service.GetComments(ctx, c, &req)
+	if err != nil {
+		errCode.ResponseFailed(c)
+		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())
+		return
+	}
+
+	hlog.Debugf(log.REQUEST_SUCCESSFUL, routerPath)
+	c.JSON(consts.StatusOK, resp)
+}
+
+// GetReplyComments .
+// @router /comment/getReply [GET]
+func GetReplyComments(ctx context.Context, c *app.RequestContext) {
+	routerPath := string(c.URI().Path())
+
+	hlog.Debugf(log.ROUTE_PATH, routerPath)
+	var err error
+	var req comment.GetReplyCommentReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		errCode.ResponseValidationFailed(c, err)
+		return
+	}
+
+	resp, err := service.GetReplyComments(ctx, c, &req)
 	if err != nil {
 		errCode.ResponseFailed(c)
 		hlog.Warnf(log.REQUEST_FAILED+log.EXTRA_ERROR_INFO, routerPath, c.Errors.Last())

@@ -12,8 +12,8 @@ import "userBasic.proto";
 
 message GetArticleFeedReq {
   string req_id = 1;
-  string cursor = 2;
-  int32 limit = 3;
+  int32 cursor = 2[(api.query) = "cursor"];
+  int32 limit = 3[(api.query) = "limit"];
 }
 
 message GetArticleFeedResp {
@@ -59,15 +59,15 @@ message CategoriesResp {
 
 service Article {
   rpc GetArticleFeed(GetArticleFeedReq) returns (GetArticleFeedResp){
-    option (api.get) = "/feed";
+    option (api.get) = "/article/feed";
   };
   rpc GetArticle(GetArticleReq) returns (GetArticleResp){
     option (api.get) = "/article/:article_id";
   };
   rpc SearchArticle(SearchArticleReq) returns (SearchArticleResp){
-    option (api.get) = "/search";
+    option (api.get) = "/article/search";
   };
   rpc Category(CategoriesReq) returns(CategoriesResp){
-    option(api.get) = "/category";
+    option(api.get) = "/article/category";
   };
 }
