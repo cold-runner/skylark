@@ -26,13 +26,13 @@ type ArticleCommentInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id        string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" form:"id" query:"id"`
-	PostId    string `protobuf:"bytes,2,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty" form:"post_id" query:"post_id"`
-	UserId    string `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" form:"user_id" query:"user_id"`
-	Content   string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty" form:"content" query:"content"`
-	ParentId  string `protobuf:"bytes,5,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty" form:"parent_id" query:"parent_id"`
-	Like      int32  `protobuf:"varint,6,opt,name=like,proto3" json:"like,omitempty" form:"like" query:"like"`
-	CreatedAt string `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" form:"created_at" query:"created_at"`
+	Id        string `protobuf:"bytes,1,opt,name=id,proto3" json:"id" form:"id" query:"id"`
+	PostId    string `protobuf:"bytes,2,opt,name=post_id,json=postId,proto3" json:"post_id" form:"post_id" query:"post_id"`
+	UserId    string `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" query:"user_id"`
+	Content   string `protobuf:"bytes,4,opt,name=content,proto3" json:"content" form:"content" query:"content"`
+	ParentId  string `protobuf:"bytes,5,opt,name=parent_id,json=parentId,proto3" json:"parent_id" form:"parent_id" query:"parent_id"`
+	Like      int32  `protobuf:"varint,6,opt,name=like,proto3" json:"like" form:"like" query:"like"`
+	CreatedAt string `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at" form:"created_at" query:"created_at"`
 }
 
 func (x *ArticleCommentInfo) Reset() {

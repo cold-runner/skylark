@@ -5,7 +5,6 @@ package article;
 option go_package = "article";
 
 import "api.proto";
-import "response.proto";
 import "articleBasic.proto";
 import "category.proto";
 import "userBasic.proto";
@@ -17,8 +16,12 @@ message GetArticleFeedReq {
 }
 
 message GetArticleFeedResp {
-    response.Status status = 1;
-    repeated ArticlesInfo articles = 2;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
+  message Data {
+    repeated ArticlesInfo articles = 1;
+  }
+  Data data = 3;
 }
 
 message GetArticleReq {
@@ -27,10 +30,13 @@ message GetArticleReq {
 }
 
 message GetArticleResp {
-    response.Status status = 1;
-    string content = 2;
-    user.Basic author_info = 3;
-    article.UserInteractionInfo interaction = 4;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
+  message Data {
+    string content = 1;
+    user.Basic author_info = 2;
+  }
+  Data data = 3;
 }
 
 message SearchArticleReq {
@@ -44,8 +50,12 @@ message SearchArticleReq {
 }
 
 message SearchArticleResp {
-    response.Status status = 1;
-    repeated ArticlesInfo articles = 2;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
+  message Data {
+    repeated ArticlesInfo articles = 1;
+  }
+  Data data = 3;
 }
 
 message CategoriesReq {
@@ -53,8 +63,12 @@ message CategoriesReq {
 }
 
 message CategoriesResp {
-    response.Status status = 1;
-    repeated Category categories = 2;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
+  message Data {
+    repeated Category categories = 1;
+  }
+  Data data = 3;
 }
 
 service Article {

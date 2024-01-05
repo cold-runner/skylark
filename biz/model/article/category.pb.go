@@ -8,7 +8,6 @@ package article
 
 import (
 	_ "github.com/cold-runner/skylark/biz/model/api"
-	_ "github.com/cold-runner/skylark/biz/model/response"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,12 +26,12 @@ type Category struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" form:"id" query:"id"`
-	Name        string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty" form:"name" query:"name"`
-	CategoryUrl string `protobuf:"bytes,3,opt,name=category_url,json=categoryUrl,proto3" json:"category_url,omitempty" form:"category_url" query:"category_url"`
-	Rank        int32  `protobuf:"varint,4,opt,name=rank,proto3" json:"rank,omitempty" form:"rank" query:"rank"`
-	BackGround  string `protobuf:"bytes,5,opt,name=back_ground,json=backGround,proto3" json:"back_ground,omitempty" form:"back_ground" query:"back_ground"`
-	Icon        string `protobuf:"bytes,6,opt,name=icon,proto3" json:"icon,omitempty" form:"icon" query:"icon"`
+	Id          string `protobuf:"bytes,1,opt,name=id,proto3" json:"id" form:"id" query:"id"`
+	Name        string `protobuf:"bytes,2,opt,name=name,proto3" json:"name" form:"name" query:"name"`
+	CategoryUrl string `protobuf:"bytes,3,opt,name=category_url,json=categoryUrl,proto3" json:"category_url" form:"category_url" query:"category_url"`
+	Rank        int32  `protobuf:"varint,4,opt,name=rank,proto3" json:"rank" form:"rank" query:"rank"`
+	BackGround  string `protobuf:"bytes,5,opt,name=back_ground,json=backGround,proto3" json:"back_ground" form:"back_ground" query:"back_ground"`
+	Icon        string `protobuf:"bytes,6,opt,name=icon,proto3" json:"icon" form:"icon" query:"icon"`
 }
 
 func (x *Category) Reset() {
@@ -114,7 +113,6 @@ var File_category_proto protoreflect.FileDescriptor
 var file_category_proto_rawDesc = []byte{
 	0x0a, 0x0e, 0x63, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x12, 0x07, 0x61, 0x72, 0x74, 0x69, 0x63, 0x6c, 0x65, 0x1a, 0x09, 0x61, 0x70, 0x69, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x0e, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x22, 0x9a, 0x01, 0x0a, 0x08, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72,
 	0x79, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
 	0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,

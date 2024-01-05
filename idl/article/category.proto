@@ -5,10 +5,6 @@ package article;
 option go_package = "article";
 
 import "api.proto";
-import "response.proto";
-
-
-
 
 message Category {
   string id = 1;

@@ -5,12 +5,14 @@ package article;
 option go_package = "article";
 
 import "api.proto";
-import "userBasic.proto";
 
 message ArticlesInfo {
   ArticleBasicInfo basic = 1;
-  user.Basic author_info = 2;
-  UserInteractionInfo interaction = 3;
+  message UserInfo {
+    string name = 1;
+    string user_id = 2;
+  }
+  UserInfo userInfo = 2;
 }
 
 message ArticleBasicInfo {
@@ -49,12 +51,6 @@ message ArticleBasicInfo {
 message TagBasicInfo {
   string id = 1;
   string name = 2;
-}
-
-message UserInteractionInfo {
-  string id = 1;
-  string user_id = 2;
-  bool is_followed = 3;
 }
 
 message CategoryInfo {

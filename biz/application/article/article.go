@@ -2,10 +2,12 @@ package article
 
 import (
 	"context"
-	"github.com/cloudwego/hertz/pkg/app"
+
 	entity "github.com/cold-runner/skylark/biz/entity/article"
 	"github.com/cold-runner/skylark/biz/infrastructure/errCode"
 	"github.com/cold-runner/skylark/biz/model/article"
+
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
 func GetArticleFeed(c context.Context, ctx *app.RequestContext, req *article.GetArticleFeedReq) (*article.GetArticleFeedResp, error) {
@@ -17,8 +19,9 @@ func GetArticleFeed(c context.Context, ctx *app.RequestContext, req *article.Get
 	}
 
 	return &article.GetArticleFeedResp{
-		Status:   errCode.SuccessStatus,
-		Articles: articles,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
+		Data: &article.GetArticleFeedResp_Data{Articles: articles},
 	}, nil
 }
 
@@ -32,8 +35,9 @@ func GetCategories(c context.Context, ctx *app.RequestContext, req *article.Cate
 	resp := categoryEntity.FormatCategoryList(stored)
 
 	return &article.CategoriesResp{
-		Status:     errCode.SuccessStatus,
-		Categories: resp,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
+		Data: &article.CategoriesResp_Data{Categories: resp},
 	}, nil
 }
 
@@ -43,12 +47,7 @@ func GetArticleById(c context.Context, ctx *app.RequestContext, req *article.Get
 	if err != nil {
 		return nil, err
 	}
-	return &article.GetArticleResp{
-		Status:      errCode.SuccessStatus,
-		Content:     res.Content,
-		AuthorInfo:  res.AuthorInfo,
-		Interaction: res.Interaction,
-	}, nil
+	return res, nil
 }
 
 func SearchArticle(c context.Context, ctx *app.RequestContext, req *article.SearchArticleReq) (*article.SearchArticleResp, error) {
@@ -59,7 +58,8 @@ func SearchArticle(c context.Context, ctx *app.RequestContext, req *article.Sear
 	}
 
 	return &article.SearchArticleResp{
-		Status:   errCode.SuccessStatus,
-		Articles: articleList,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
+		Data: &article.SearchArticleResp_Data{Articles: articleList},
 	}, nil
 }

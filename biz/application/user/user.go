@@ -41,7 +41,8 @@ func Register(c context.Context, ctx *app.RequestContext, req *user.RegisterReq)
 
 	// 返回响应
 	return &user.RegisterResp{
-		Status: errCode.SuccessStatus,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
 	}, nil
 }
 
@@ -90,7 +91,8 @@ func SendSmsCode(c context.Context, ctx *app.RequestContext, req *user.SendSmsCo
 	}
 
 	return &user.SendSmsCodeResp{
-		Status: errCode.SuccessStatus,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
 	}, nil
 }
 
@@ -104,8 +106,9 @@ func GetUserInfo(c context.Context, ctx *app.RequestContext) (*user.GetUserInfoR
 
 	basicInfo := lark.Format()
 	return &user.GetUserInfoResp{
-		Status:    errCode.SuccessStatus,
-		BasicInfo: basicInfo,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
+		Data: &user.GetUserInfoResp_Data{BasicInfo: basicInfo},
 	}, nil
 }
 
@@ -118,7 +121,8 @@ func GetUserInfoByStuNum(c context.Context, ctx *app.RequestContext, req *user.G
 
 	basicInfo := lark.Format()
 	return &user.GetUserInfoResp{
-		Status:    errCode.SuccessStatus,
-		BasicInfo: basicInfo,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
+		Data: &user.GetUserInfoResp_Data{BasicInfo: basicInfo},
 	}, nil
 }

@@ -5,7 +5,6 @@ package user;
 option go_package = "user";
 
 import "api.proto";
-import "response.proto";
 import "userBasic.proto";
 
 message RegisterReq {
@@ -22,7 +21,8 @@ message RegisterReq {
 }
 
 message RegisterResp {
-  response.Status status = 1;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
 }
 
 message PasswordLoginReq {
@@ -31,8 +31,12 @@ message PasswordLoginReq {
 }
 
 message LoginResp {
-    response.Status status = 1;
-    string token = 2[(api.body)="token"];
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
+  message Data {
+    string token = 1[(api.body)="token"];
+  }
+  Data data = 3;
 }
 
 message PhoneLoginReq {
@@ -46,7 +50,8 @@ message SendSmsCodeReq {
 }
 
 message  SendSmsCodeResp {
-    response.Status status = 1;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
 }
 
 message GetUserInfoByIdReq {
@@ -60,8 +65,12 @@ message GetUserInfoByStuNumReq {
 }
 
 message GetUserInfoResp {
-    response.Status status = 1;
-    user.Basic basic_info = 2;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
+  message Data {
+    user.Basic basic_info = 1;
+  }
+  Data data = 3;
 }
 
 service User {

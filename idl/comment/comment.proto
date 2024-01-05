@@ -5,7 +5,6 @@ package comment;
 option go_package = "comment";
 
 import "api.proto";
-import "response.proto";
 import "commentBasic.proto";
 
 message CommentPostReq {
@@ -16,7 +15,8 @@ message CommentPostReq {
 }
 
 message CommentPostResp {
-  response.Status status = 1;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
 }
 
 message DeleteCommentReq {
@@ -25,7 +25,8 @@ message DeleteCommentReq {
 }
 
 message DeleteCommentResp {
-  response.Status status = 1;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
 }
 
 message UpdateCommentReq {
@@ -35,7 +36,8 @@ message UpdateCommentReq {
 }
 
 message UpdateCommentResp {
-  response.Status status = 1;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
 }
 
 message GetCommentReq {
@@ -45,8 +47,12 @@ message GetCommentReq {
 }
 
 message GetCommentResp {
-  response.Status status = 1;
-  repeated ArticleCommentInfo comments = 2;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
+  message Data {
+    repeated ArticleCommentInfo comments = 1;
+  }
+  Data data = 3;
 }
 
 message GetReplyCommentReq {
@@ -57,8 +63,12 @@ message GetReplyCommentReq {
 }
 
 message GetReplyCommentResp {
-  response.Status status = 1;
-  repeated ArticleCommentInfo comments = 2;
+  int32 code = 1[(api.body)="code"];
+  string msg = 2[(api.body)="msg"];
+  message Data {
+    repeated ArticleCommentInfo comments = 1;
+  }
+  Data data = 3;
 }
 
 service Comment {

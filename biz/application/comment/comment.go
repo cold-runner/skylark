@@ -17,7 +17,8 @@ func Comment(c context.Context, ctx *app.RequestContext, req *comment.CommentPos
 		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 	}
 	return &comment.CommentPostResp{
-		Status: errCode.SuccessStatus,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
 	}, nil
 }
 
@@ -27,7 +28,8 @@ func DeleteComment(c context.Context, ctx *app.RequestContext, req *comment.Dele
 		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 	}
 	return &comment.DeleteCommentResp{
-		Status: errCode.SuccessStatus,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
 	}, nil
 }
 
@@ -37,7 +39,8 @@ func UpdateComment(c context.Context, ctx *app.RequestContext, req *comment.Upda
 		return nil, errCode.WrapBizErr(ctx, err, errCode.ErrUnknown)
 	}
 	return &comment.UpdateCommentResp{
-		Status: errCode.SuccessStatus,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
 	}, nil
 }
 
@@ -49,8 +52,9 @@ func GetComments(c context.Context, ctx *app.RequestContext, req *comment.GetCom
 	}
 
 	return &comment.GetCommentResp{
-		Status:   errCode.SuccessStatus,
-		Comments: comments,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
+		Data: &comment.GetCommentResp_Data{Comments: comments},
 	}, nil
 }
 
@@ -62,7 +66,8 @@ func GetReplyComments(c context.Context, ctx *app.RequestContext, req *comment.G
 	}
 
 	return &comment.GetReplyCommentResp{
-		Status:   errCode.SuccessStatus,
-		Comments: comments,
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
+		Data: &comment.GetReplyCommentResp_Data{Comments: comments},
 	}, nil
 }

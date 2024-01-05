@@ -114,9 +114,12 @@ func (e *ArticleEntity) GetSingle(c context.Context, ctx *app.RequestContext, re
 	_ = json.Unmarshal(data, u)
 
 	return &article.GetArticleResp{
-		Content:     origin["content"].(string),
-		AuthorInfo:  u,
-		Interaction: nil, // TODO 社会交互信息
+		Code: errCode.SuccessStatus.Code,
+		Msg:  errCode.SuccessStatus.Msg,
+		Data: &article.GetArticleResp_Data{
+			Content:    origin["content"].(string),
+			AuthorInfo: u,
+		},
 	}, nil
 }
 
@@ -163,9 +166,9 @@ func transfer(hits []*searchEngine.HitItem) []*article.ArticlesInfo {
 				ShareCount:   int64(m["share_count"].(float64)),
 				Temperature:  int64(m["temperature"].(float64)),
 			},
-			AuthorInfo: &user.Basic{
-				UserId:  userInfo["user_id"].(string),
-				StuName: userInfo["name"].(string),
+			UserInfo: &article.ArticlesInfo_UserInfo{
+				Name:   userInfo["name"].(string),
+				UserId: userInfo["user_id"].(string),
 			},
 		}
 	}

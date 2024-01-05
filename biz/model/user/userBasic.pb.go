@@ -26,19 +26,19 @@ type Basic struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId            string `protobuf:"bytes,1,opt,name=userId,proto3" form:"user_id" json:"user_id,omitempty"`
-	StuNum            string `protobuf:"bytes,2,opt,name=stuNum,proto3" form:"stu_num" json:"stu_num,omitempty"`
-	AvatarUrl         string `protobuf:"bytes,3,opt,name=avatarUrl,proto3" form:"avatar_url" json:"avatar_url,omitempty"`
-	StuName           string `protobuf:"bytes,4,opt,name=stuName,proto3" form:"stu_name" json:"stu_name,omitempty"`
-	BriefIntroduction string `protobuf:"bytes,5,opt,name=briefIntroduction,proto3" form:"brief_introduction" json:"brief_introduction,omitempty"`
-	College           string `protobuf:"bytes,6,opt,name=college,proto3" form:"college" json:"college,omitempty"`
-	Major             string `protobuf:"bytes,7,opt,name=major,proto3" form:"major" json:"major,omitempty"`
-	Grade             string `protobuf:"bytes,8,opt,name=grade,proto3" form:"grade" json:"grade,omitempty"`
-	FolloweeCount     uint64 `protobuf:"varint,9,opt,name=followeeCount,proto3" form:"followee_count" json:"followee_count,omitempty"`
-	FollowerCount     uint64 `protobuf:"varint,10,opt,name=followerCount,proto3" form:"follower_count" json:"follower_count,omitempty"`
-	PostArticleCount  uint64 `protobuf:"varint,11,opt,name=postArticleCount,proto3" form:"post_article_count" json:"post_article_count,omitempty"`
-	EssayArticleCount uint64 `protobuf:"varint,12,opt,name=essayArticleCount,proto3" form:"essay_article_count" json:"essay_article_count,omitempty"`
-	Power             uint64 `protobuf:"varint,13,opt,name=power,proto3" form:"power" json:"power,omitempty"`
+	UserId            string `protobuf:"bytes,1,opt,name=userId,proto3" form:"user_id" json:"user_id"`
+	StuNum            string `protobuf:"bytes,2,opt,name=stuNum,proto3" form:"stu_num" json:"stu_num"`
+	AvatarUrl         string `protobuf:"bytes,3,opt,name=avatarUrl,proto3" form:"avatar_url" json:"avatar_url"`
+	StuName           string `protobuf:"bytes,4,opt,name=stuName,proto3" form:"stu_name" json:"stu_name"`
+	BriefIntroduction string `protobuf:"bytes,5,opt,name=briefIntroduction,proto3" form:"brief_introduction" json:"brief_introduction"`
+	College           string `protobuf:"bytes,6,opt,name=college,proto3" form:"college" json:"college"`
+	Major             string `protobuf:"bytes,7,opt,name=major,proto3" form:"major" json:"major"`
+	Grade             string `protobuf:"bytes,8,opt,name=grade,proto3" form:"grade" json:"grade"`
+	FolloweeCount     uint64 `protobuf:"varint,9,opt,name=followeeCount,proto3" form:"followee_count" json:"followee_count"`
+	FollowerCount     uint64 `protobuf:"varint,10,opt,name=followerCount,proto3" form:"follower_count" json:"follower_count"`
+	PostArticleCount  uint64 `protobuf:"varint,11,opt,name=postArticleCount,proto3" form:"post_article_count" json:"post_article_count"`
+	EssayArticleCount uint64 `protobuf:"varint,12,opt,name=essayArticleCount,proto3" form:"essay_article_count" json:"essay_article_count"`
+	Power             uint64 `protobuf:"varint,13,opt,name=power,proto3" form:"power" json:"power"`
 }
 
 func (x *Basic) Reset() {

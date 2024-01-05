@@ -47,8 +47,9 @@ func InitAuthenticatorAndAuthorization(cfg config.Conf) {
 		},
 		LoginResponse: func(c context.Context, ctx *app.RequestContext, _ int, token string, _ time.Time) {
 			ctx.JSON(consts.StatusOK, user.LoginResp{
-				Status: errCode.SuccessStatus,
-				Token:  token,
+				Code: errCode.SuccessStatus.Code,
+				Msg:  errCode.SuccessStatus.Msg,
+				Data: &user.LoginResp_Data{Token: token},
 			})
 		},
 		IdentityHandler: func(ctx context.Context, c *app.RequestContext) interface{} {
