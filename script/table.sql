@@ -1,7 +1,6 @@
 drop database if exists skylark;
 create database skylark;
 use skylark;
-
 create table comment
 (
     id         char(36)      not null comment '自然主键'
@@ -13,9 +12,7 @@ create table comment
     user_id    char(36)      not null comment '评论者id(考虑性能，不加约束)',
     parent_id  char(36)      null comment '回复的父评论id',
     content    text          not null comment '评论内容',
-    `like`     int default 0 not null comment '点赞数',
-    constraint comment_pk2
-        unique (parent_id)
+    `like`     int default 0 not null comment '点赞数'
 )
     comment '评论表';
 
